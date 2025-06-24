@@ -417,9 +417,9 @@
                         <h4>Call Us On</h4>
 
                         <p>
-                            @foreach ($systeminformation as $sysinfor)
+                            {{-- @foreach ($systeminformation as $sysinfor)
                             {{ $sysinfor->contact_number}}
-                            @endforeach
+                            @endforeach --}}
                         </p>
 
                     </div>
