@@ -111,7 +111,8 @@
 
                         </h2>
 
-                    <p>Delve into a world of knowledge with our curated archive of theses, showcasing the depth and breadth of academic research</p>
+                    <p>Track smarter, sell faster, and manage your business with confidence! Stay ahead of the competition with real-time inventory insights, seamless sales control,
+                        and powerful tools that help you make smarter decisions, boost efficiency, and drive growth—every step of the way.</p>
 
                     {{-- <a href="#" class="btn btn-transparent">View Projects</a> --}}
 
