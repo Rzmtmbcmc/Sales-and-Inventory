@@ -482,7 +482,7 @@ nav.navbar.bootsnav.navbar-fixed .button-holder {
     color:#fff;
     text-decoration: none;
    }
- 
+
   .css-href:hover{
    color:black;
    text-decoration: none;
@@ -491,11 +491,11 @@ nav.navbar.bootsnav.navbar-fixed .button-holder {
 #home {
     position: relative;
     padding: 190px 0px 120px 0px;
-    background: url(../img/banner.jpeg);
+    background: url(../img/Background2.jpg);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat; }
-    
+
     #home .caption {
       padding: 60px 0px; }
       #home .caption h2 {
@@ -527,7 +527,7 @@ nav.navbar.bootsnav.navbar-fixed .button-holder {
         color: #555;
         background-color: #fff;
         border-radius: 3px; }
-  
+
 #particles-js {
     position: absolute;
     width: 100%;
