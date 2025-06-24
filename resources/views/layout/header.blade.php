@@ -20,9 +20,9 @@
 
 
 
-    @foreach ($systeminformation as $sysinfor)
+    {{-- @foreach ($systeminformation as $sysinfor)
         <title>{{ $sysinfor->system_name }}</title>
-    @endforeach
+    @endforeach --}}
 
 
 
