@@ -67,7 +67,7 @@
 
                     <li class="button-holder">
 
-                     <button type="button" class="btn btn-blue navbar-btn" ><a href="{{ route('view_loginstaff')}}" class="css-href">Login as Staff</a></button>
+                     <button type="button" class="btn btn-blue navbar-btn" ><a href="" class="css-href">Login as Staff</a></button>
                     </li>
 
                 </ul>
@@ -94,9 +94,9 @@
 
                     <h2 style="font-weight:bold">
 
-                        @foreach ($systeminformation as $sysinfor)
+                        {{-- @foreach ($systeminformation as $sysinfor)
                         {{ $sysinfor->system_name }}
-                        @endforeach
+                        @endforeach --}}
                     </h2>
 
                     <h2>
@@ -122,11 +122,11 @@
 
                 <div class="col-md-5">
 
-                    @if(session()->has('mgs'))
+                    {{-- @if(session()->has('mgs'))
                     <div class="alert alert-success">
                       {{ session()->get('mgs') }}
                     </div>
-                  @endif
+                  @endif --}}
 
                   <form class="signup-form"  method="POST">
                     <div id="login-Message"></div>
@@ -194,9 +194,9 @@
             <h2>About Us</h2>
 
             <p>
-                @foreach ($systeminformation as $sysinfor)
+                {{-- @foreach ($systeminformation as $sysinfor)
                 {{ $sysinfor->about }}
-                @endforeach
+                @endforeach --}}
             </p>
 
             <div class="row">
@@ -210,9 +210,9 @@
                         <h4>How It Works:</h4>
 
                         <p>
-                            @foreach ($systeminformation as $sysinfor)
+                            {{-- @foreach ($systeminformation as $sysinfor)
                             {{ $sysinfor->description}}
-                            @endforeach
+                            @endforeach --}}
                         </p>
 
                     </div>
@@ -250,11 +250,11 @@
 
                         <div class="caption">
 
-                            <h4>Alexander Josh Bea</h4>
+                            <h4>Name</h4>
 
                             <h6>Documentation</h6>
 
-                            <p>IT701P</p>
+                            <p>Section</p>
 
                             <hr>
 
@@ -290,11 +290,11 @@
 
                         <div class="caption">
 
-                            <h4>Geo De Leon</h4>
+                            <h4>Name</h4>
 
                             <h6>Designer</h6>
 
-                            <p>IT701P</p>
+                            <p>Section</p>
 
                             <hr>
 
@@ -330,11 +330,11 @@
 
                         <div class="caption">
 
-                            <h4>Lawrence Dan Albano</h4>
+                            <h4>Name</h4>
 
                             <h6>Developer</h6>
 
-                            <p>IT701P</p>
+                            <p>Section</p>
 
                             <hr>
 
@@ -399,9 +399,9 @@
                         <h4>Address</h4>
 
                         <p>
-                            @foreach ($systeminformation as $sysinfor)
+                            {{-- @foreach ($systeminformation as $sysinfor)
                             {{ $sysinfor->address}}
-                            @endforeach
+                            @endforeach --}}
                         </p>
 
                     </div>
@@ -435,9 +435,9 @@
                         <h4>Email us on</h4>
 
                         <p>
-                            @foreach ($systeminformation as $sysinfor)
+                            {{-- @foreach ($systeminformation as $sysinfor)
                             {{ $sysinfor->email}}
-                            @endforeach
+                            @endforeach --}}
                         </p>
 
                     </div>
