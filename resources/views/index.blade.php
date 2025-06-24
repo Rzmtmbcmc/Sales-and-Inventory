@@ -227,142 +227,44 @@
 
 
     <!--======================================
-           Team
+           Our Services
     ========================================-->
 
     <section id="team" class="section-padding">
 
         <div class="container">
 
-            <h2>Capstone Members</h2>
+            <h2>Our Services</h2>
 
-            {{-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, optio.</p> --}}
+                <p>
+                {{-- @foreach ($systeminformation as $sysinfor)
+                {{ $sysinfor->about }}
+                @endforeach --}}
+            </p>
 
             <div class="row">
 
-                <div class="col-md-6 col-lg-4">
+                <div class="col-md-12">
 
-                    <!--**Team-Member**-->
+                    <div class="icon-box">
 
-                    <div class="thumbnail team-member">
+                        {{-- <i class="material-icons">favorite</i> --}}
 
-                        <img src="assets/img/team-1.jpg" class="img-responsive img-circle" alt="team-1">
+                        <h4>How It Works:</h4>
 
-                        <div class="caption">
-
-                            <h4>Name</h4>
-
-                            <h6>Documentation</h6>
-
-                            <p>Section</p>
-
-                            <hr>
-
-                            {{-- <div class="team-social">
-
-                                <ul class="liste-unstyled">
-
-                                    <li><a href="#facebook"><i class="fa fa-facebook"></i></a></li>
-
-                                    <li><a href="#twitter"><i class="fa fa-twitter"></i></a></li>
-
-                                    <li><a href="#linkedin"><i class="fa fa-linkedin"></i></a></li>
-
-                                    <li><a href="#instagram"><i class="fa fa-instagram"></i></a></li>
-
-                                </ul>
-
-                            </div> --}}
-
-                        </div>
+                        <p>
+                            {{-- @foreach ($systeminformation as $sysinfor)
+                            {{ $sysinfor->description}}
+                            @endforeach --}}
+                        </p>
 
                     </div>
 
                 </div>
-
-                <div class="col-md-6 col-lg-4">
-
-                    <!--**Team-Member**-->
-
-                    <div class="thumbnail team-member">
-
-                        <img src="assets/img/team-2.jpg" class="img-responsive img-circle" alt="team-2">
-
-                        <div class="caption">
-
-                            <h4>Name</h4>
-
-                            <h6>Designer</h6>
-
-                            <p>Section</p>
-
-                            <hr>
-
-                            {{-- <div class="team-social">
-
-                                <ul class="liste-unstyled">
-
-                                    <li><a href="#facebook"><i class="fa fa-facebook"></i></a></li>
-
-                                    <li><a href="#twitter"><i class="fa fa-twitter"></i></a></li>
-
-                                    <li><a href="#linkedin"><i class="fa fa-linkedin"></i></a></li>
-
-                                    <li><a href="#instagram"><i class="fa fa-instagram"></i></a></li>
-
-                                </ul>
-
-                            </div> --}}
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-6 col-lg-4">
-
-                    <!--**Team-Member**-->
-
-                    <div class="thumbnail team-member">
-
-                        <img src="assets/img/team-3.jpg" class="img-responsive img-circle" alt="team-3">
-
-                        <div class="caption">
-
-                            <h4>Name</h4>
-
-                            <h6>Developer</h6>
-
-                            <p>Section</p>
-
-                            <hr>
-
-                            {{-- <div class="team-social">
-
-                                <ul class="liste-unstyled">
-
-                                    <li><a href="#facebook"><i class="fa fa-facebook"></i></a></li>
-
-                                    <li><a href="#twitter"><i class="fa fa-twitter"></i></a></li>
-
-                                    <li><a href="#linkedin"><i class="fa fa-linkedin"></i></a></li>
-
-                                    <li><a href="#instagram"><i class="fa fa-instagram"></i></a></li>
-
-                                </ul>
-
-                            </div> --}}
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
 
             </div>
+
+
 
         </div>
 
