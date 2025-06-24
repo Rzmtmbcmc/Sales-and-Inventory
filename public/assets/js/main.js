@@ -1,9 +1,9 @@
 $(document).ready(function () {
-    
+
     "use strict";
-    
+
     // Preloader
-    
+
     $(window).load(function () { // makes sure the whole site is loaded
         $('.page-preloader spinner').fadeOut(); // will first fade out the loading animation
         $('.page-preloader').delay(350).fadeOut('slow');
@@ -12,16 +12,16 @@ $(document).ready(function () {
             'overflow': 'visible'
         });
     })
-    
+
     // Animated typing text
 
     $(".animated-text").typed({
         strings: [
-            "Seamless Archiving",
-             "Robust Security",
-             "Global Access",
-            // "mobile first",
-            // "startup template"
+            "Real-Time Accuracy",
+            "Streamlined Operations",
+            "Smart Sales Insights",
+            "Easy Inventory Tracking",
+            "Faster Decision-Making"
         ],
         typeSpeed: 40,
         loop: true,
@@ -91,7 +91,7 @@ $(document).ready(function () {
             disableDefaultUI: true,
             scrollwheel: false,
 
-            // How you would like to style the map. 
+            // How you would like to style the map.
             // This is where you would paste any style found on Snazzy Maps.
             styles: [{
                 "stylers": [{
@@ -116,7 +116,7 @@ $(document).ready(function () {
             }]
         };
 
-        // Get the HTML DOM element that will contain your map 
+        // Get the HTML DOM element that will contain your map
         // We are using a div with id="map" seen below in the <body>
         var mapElement = document.getElementById('map');
 
@@ -130,5 +130,5 @@ $(document).ready(function () {
             title: 'Hello World!'
         });
     }
-    
+
 });
