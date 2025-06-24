@@ -755,10 +755,10 @@ nav.navbar.bootsnav.navbar-fixed .button-holder {
     position: relative;
     top: 100px;
     z-index: 1;
-    background: #0e2433;
+    background: #fff;
     box-shadow: 0px 0px 60px 0px rgba(68, 197, 238, 0.6);
     padding: 30px;
-    color: #fff; }
+    color: #0e2433; }
     #contact .contact-info i {
       font-size: 46px; }
   #contact #map {
