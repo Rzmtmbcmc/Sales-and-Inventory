@@ -67,7 +67,7 @@
 
                     <li class="button-holder">
 
-                     <button type="button" class="btn btn-blue navbar-btn" ><a href="" class="css-href">Login as Staff</a></button>
+                     <button type="button" class="btn btn-blue navbar-btn" ><a href="" class="css-href">Sign Up</a></button>
                     </li>
 
                 </ul>
@@ -134,7 +134,7 @@
                     @csrf
 
 
-                        <h2 class="text-center">Login as Student</h2>
+                        <h2 class="text-center">Login</h2>
 
                         <hr>
 
