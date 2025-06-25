@@ -188,7 +188,7 @@
            About Us
     ========================================-->
 
-    <section id="about" class="section-padding">
+    <section id="team" class="section-padding">
 
         <div class="container">
 
