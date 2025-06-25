@@ -162,9 +162,9 @@
                               <img src="{{asset('assets/img/4202105_microsoft_logo_social_social media_icon.svg')}}" height="30px" width="30px">&nbsp;&nbsp;Login with Microsoft
                             </a> --}}
 
-                            <a href="" class="btn microsoft-login-btn btn-block mt-2 d-flex">
+                            {{-- <a href="" class="btn microsoft-login-btn btn-block mt-2 d-flex">
                                 <img src="" height="30px" width="30px">&nbsp;&nbsp;Login with Google
-                              </a>
+                              </a> --}}
 
                         </div>
 
