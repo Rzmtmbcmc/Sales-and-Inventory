@@ -153,8 +153,8 @@
 
                         <div class="form-group">
 
-                            <input type="contact" class="form-control" id="contact" placeholder="Phone number">
-                            <span class="text-danger" id="number_mgs"></span>
+                            <input type="phone" class="form-control" id="phone" placeholder="Phone number">
+                            <span class="text-danger" id="contact_mgs"></span>
                         </div>
 
                         <div class="form-group">
