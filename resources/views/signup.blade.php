@@ -68,7 +68,7 @@
                     <li class="button-holder">
 
                      <button type="button" onclick="window.location.href='{{ route('Login') }}'" class="btn btn-blue navbar-btn" >Login</button>
-                     
+
                     </li>
 
                 </ul>
@@ -153,7 +153,7 @@
 
                         <div class="form-group">
 
-                            <input type="number" class="form-control" id="number" placeholder="Phone number">
+                            <input type="contact" class="form-control" id="contact" placeholder="Phone number">
                             <span class="text-danger" id="number_mgs"></span>
                         </div>
 
