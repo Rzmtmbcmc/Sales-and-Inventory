@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\signup;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('signup');
+    return view('index');
+});
+Route::get('signup',[signup::class,'showForm'])->name('Signup');
+
+Route::get('/Login', function () {
+    return "You are Logged In";
 });
