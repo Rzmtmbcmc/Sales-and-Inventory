@@ -67,7 +67,7 @@
 
                     <li class="button-holder">
 
-                     <button type="button" class="btn btn-blue navbar-btn" ><a href="" class="css-href">Sign Up</a></button>
+                     <button type="button" class="btn btn-blue navbar-btn" ><a href="{{ route('Signup') }}" class="css-href">Sign Up</a></button>
                     </li>
 
                 </ul>
