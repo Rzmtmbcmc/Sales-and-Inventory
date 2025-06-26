@@ -20,4 +20,4 @@ Route::get('/', function () {
 });
 Route::get('signup',[signup::class,'showForm'])->name('Signup');
 
-Route::get('/Login', [login::class,'showForm'])->name('Login');
+Route::get('login', [login::class,'showForm'])->name('Login');
