@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\Http\Controllers\login;
 use App\Http\Controllers\signup;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,14 @@ use App\Http\Controllers\MainController;
 */
 
 Route::get('/', function () {
+    if (!User::where('email','Owner@example.com')->exists()) {
+        User::create([
+        'name' => 'Owner',
+        'email' => 'Owner@example.com',
+        'password' => bcrypt('12345678'),
+        'Role' => 'Owner',
+    ]);
+    }
     return view('index');
 });
 Route::get('signup',[signup::class,'showForm'])->name('Signup');
@@ -24,7 +33,7 @@ Route::get('signup',[signup::class,'showForm'])->name('Signup');
 Route::get('login', [login::class,'showForm'])->name('Login');
 Route::post('login', [login::class,'loginUser'])->name('loginUser');
 
-Route::get('logout', [login::class,'logout'])->name('logout');
+Route::post('logout', [login::class,'logout'])->name('logout');
 
 Route::post('signup',[signup::class,'createUser'])->name('createUser');
 

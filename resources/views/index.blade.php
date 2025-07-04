@@ -66,8 +66,11 @@
                     <li class="scroll"><a href="#contact">Contact</a></li>
                     @auth
                     <li class="button-holder">
-
-                     <button type="button" onclick="window.location.href='{{ route('logout') }}'" class="btn btn-blue navbar-btn" >Logout</button>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-blue navbar-btn" >Logout</button>
+                        </form>
+                     {{-- <button type="button" onclick="window.location.href='{{ route('logout') }}'" class="btn btn-blue navbar-btn" >Logout</button> --}}
                     </li>
                     @else
                     <li class="button-holder">
