@@ -130,56 +130,59 @@
                     </div>
                   @endif --}}
 
-                  <form class="signup-form"  method="POST">
+                  <form class="signup-form" action="{{ route('createUser') }}" method="POST">
+                    @csrf
                     <div id="login-Message"></div>
                     {{-- action="{{ route('user.login') }}" --}}
-                    @csrf
-
-
                         <h2 class="text-center">Sign up</h2>
-
                         <hr>
                         <div class="form-group">
 
-                            <input type="name" class="form-control" id="name" placeholder="Name">
-                            <span class="text-danger" id="name_mgs"></span>
+                            <input type="name" name="name" class="form-control" id="name" placeholder="Name">
+                            @error('name')
+                            <span class="text-danger" id="name_mgs">{{ $message }}</span>
+                            @enderror
                         </div>
-
+                    <!--
                         <div class="form-group">
 
                             <input type="lastname" class="form-control" id="lastname" placeholder="Lastname">
                             <span class="text-danger" id="Lastname_mgs"></span>
                         </div>
-
+                    -->
                         <div class="form-group">
 
-                            <input type="phone" class="form-control" id="phone" placeholder="Phone number">
+                            <input type="phone" name="phone" class="form-control" id="phone" placeholder="Phone number">
                             <span class="text-danger" id="contact_mgs"></span>
                         </div>
 
                         <div class="form-group">
 
-                            <input type="email" class="form-control" id="email" placeholder="Email Address">
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Email Address">
+                            @error('email')
+                            <span class="text-danger" id="email_mgs">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+
+                            <input type="address" name="address" class="form-control" id="address" placeholder="Address">
                             <span class="text-danger" id="email_mgs"></span>
                         </div>
 
                         <div class="form-group">
 
-                            <input type="address" class="form-control" id="address" placeholder="Address">
-                            <span class="text-danger" id="email_mgs"></span>
-                        </div>
-
-                        <div class="form-group">
-
-                            <input type="password" class="form-control" id="password" placeholder="Password">
-                            <span class="text-danger" id="password_mgs"></span>
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+                            @error('password')
+                            <span class="text-danger" id="password_mgs">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <hr>
 
                         <div class="form-group text-center">
 
-                            <button type="button" class="btn btn-blue btn-block btn-login">Register</button>
+                            <button type="submit" class="btn btn-blue btn-block btn-login">Register</button>
                             {{-- <a href="{{ url('/login/microsoft') }}" class="btn microsoft-login-btn btn-block mt-2 d-flex">
                               <img src="{{asset('assets/img/4202105_microsoft_logo_social_social media_icon.svg')}}" height="30px" width="30px">&nbsp;&nbsp;Login with Microsoft
                             </a> --}}

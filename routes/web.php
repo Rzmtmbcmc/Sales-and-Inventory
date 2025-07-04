@@ -3,6 +3,7 @@
 use App\Http\Controllers\login;
 use App\Http\Controllers\signup;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MainController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +22,12 @@ Route::get('/', function () {
 Route::get('signup',[signup::class,'showForm'])->name('Signup');
 
 Route::get('login', [login::class,'showForm'])->name('Login');
+Route::post('login', [login::class,'loginUser'])->name('loginUser');
+
+Route::get('logout', [login::class,'logout'])->name('logout');
+
+Route::post('signup',[signup::class,'createUser'])->name('createUser');
+
+Route::get('customer',[MainController::class,'customer'])->name('customer');
+Route::get('manager',[MainController::class,'manager'])->name('manager');
+Route::get('owner',[MainController::class,'owner'])->name('owner');

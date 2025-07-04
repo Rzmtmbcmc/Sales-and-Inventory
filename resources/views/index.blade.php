@@ -64,12 +64,16 @@
                     <li class="scroll"><a href="#about">About</a></li>
 
                     <li class="scroll"><a href="#contact">Contact</a></li>
-
+                    @auth
                     <li class="button-holder">
 
+                     <button type="button" onclick="window.location.href='{{ route('logout') }}'" class="btn btn-blue navbar-btn" >Logout</button>
+                    </li>
+                    @else
+                    <li class="button-holder">
                      <button type="button" onclick="window.location.href='{{ route('Signup') }}'" class="btn btn-blue navbar-btn" >Sign Up</button>
                     </li>
-
+                    @endauth
                 </ul>
 
             </div>
@@ -121,15 +125,23 @@
 
                 <!-- Sign Up -->
 
-                <div class="col-md-5">
+                @auth
+                    <div class="form-group text-center">
 
-                    {{-- @if(session()->has('mgs'))
+                            <button type="submit" onclick="window.location.href='{{ route('customer') }}'" class="btn btn-blue btn-block btn-login">Go to dasboard {{Auth::user()->Role}}</button>
+                            
+
+                        </div>
+                    @else
+                        <div class="col-md-5">
+
+                    
+                @if(session('status'))
                     <div class="alert alert-success">
-                      {{ session()->get('mgs') }}
+                      {{ session('status') }}
                     </div>
-                  @endif --}}
-
-                  <form class="signup-form"  method="POST">
+                  @endif
+                  <form class="signup-form" action='{{route('loginUser') }}' method="POST">
                     <div id="login-Message"></div>
                     {{-- action="{{ route('user.login') }}" --}}
                     @csrf
@@ -142,22 +154,24 @@
 
                         <div class="form-group">
 
-                            <input type="email" class="form-control" id="email" placeholder="Email Address">
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Email Address">
                             <span class="text-danger" id="email_mgs"></span>
                         </div>
 
 
                         <div class="form-group">
 
-                            <input type="password" class="form-control" id="password" placeholder="Password">
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Password">
                             <span class="text-danger" id="password_mgs"></span>
                         </div>
-
+                         
+                            <label for="remember"><input type="checkbox" name="remember"{{old('remember')=='on'?'checked':''}} id="remember">Remember me</label>
+                            
                         <hr>
 
                         <div class="form-group text-center">
 
-                            <button type="button" class="btn btn-blue btn-block btn-login">Login</button>
+                            <button type="submit" class="btn btn-blue btn-block btn-login">Login</button>
                             {{-- <a href="{{ url('/login/microsoft') }}" class="btn microsoft-login-btn btn-block mt-2 d-flex">
                               <img src="{{asset('assets/img/4202105_microsoft_logo_social_social media_icon.svg')}}" height="30px" width="30px">&nbsp;&nbsp;Login with Microsoft
                             </a> --}}
@@ -176,6 +190,7 @@
                     </form>
 
                 </div>
+                @endauth
 
             </div>
 
