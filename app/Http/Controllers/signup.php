@@ -16,7 +16,7 @@ class signup extends Controller
         $info = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required',
+            'password' => 'required|min:8',
             'Role' => 'min:3|max:10',
         ]);
         $info['password'] = bcrypt($info['password']);

@@ -157,39 +157,36 @@
 
                         <div class="form-group">
 
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Email Address">
-                            <span class="text-danger" id="email_mgs"></span>
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Email Address" value="{{old('email')}}">
+                            @error('email')
+                            <span class="text-danger" id="email_mgs">{{$message}}</span>
+                            @enderror
                         </div>
 
 
                         <div class="form-group">
 
                             <input type="password" name="password" class="form-control" id="password" placeholder="Password">
-                            <span class="text-danger" id="password_mgs"></span>
+                            @error('password')
+                            <span class="text-danger" id="password_mgs">{{$message}}</span>
+                            @enderror
                         </div>
+
+                        <div class="form-group">
+                            {{-- This div helps with vertical spacing for the whole group --}}{{-- This is the key Bootstrap 3/4 class for alignment --}}
+                            <label for="remember"><input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me</label>
+                         </div>
                          
-                            <label for="remember"><input type="checkbox" name="remember"{{old('remember')=='on'?'checked':''}} id="remember">Remember me</label>
-                            
-                        <hr>
 
                         <div class="form-group text-center">
 
                             <button type="submit" class="btn btn-blue btn-block btn-login">Login</button>
-                            {{-- <a href="{{ url('/login/microsoft') }}" class="btn microsoft-login-btn btn-block mt-2 d-flex">
-                              <img src="{{asset('assets/img/4202105_microsoft_logo_social_social media_icon.svg')}}" height="30px" width="30px">&nbsp;&nbsp;Login with Microsoft
-                            </a> --}}
-
-                            {{-- <a href="" class="btn microsoft-login-btn btn-block mt-2 d-flex">
-                                <img src="" height="30px" width="30px">&nbsp;&nbsp;Login with Google
-                              </a> --}}
+                            
 
                         </div>
 
-
-                        {{-- <div class="form-group">
-                            Don't Have an account?<a href="{{route('main')}}"> <b style="color:#a31414">Sign up here</b></a>
-                         </a>
-                         </div> --}}
+                       
+                        
                     </form>
 
                 </div>

@@ -520,6 +520,16 @@ nav.navbar.bootsnav.navbar-fixed .button-holder {
         border: 1px solid #eee;
         height: 38px;
         box-shadow: none !important; }
+
+
+        /*MODIFIED*/
+        #home .signup-form input[type=checkbox] {
+          vertical-align: middle;
+          position: relative;
+          bottom: 2.5px;
+        }
+
+        
       #home .signup-form input:focus {
         border-color: #0866ff; }
       #home .signup-form .form-control {

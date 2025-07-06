@@ -138,7 +138,7 @@
                         <hr>
                         <div class="form-group">
 
-                            <input type="name" name="name" class="form-control" id="name" placeholder="Name">
+                            <input type="name" name="name" class="form-control" id="name" placeholder="Name" value="{{old('name')}}">
                             @error('name')
                             <span class="text-danger" id="name_mgs">{{ $message }}</span>
                             @enderror
@@ -152,13 +152,13 @@
                     -->
                         <div class="form-group">
 
-                            <input type="phone" name="phone" class="form-control" id="phone" placeholder="Phone number">
+                            <input type="phone" name="phone" class="form-control" id="phone" placeholder="Phone number" value="{{old('phone')}}">
                             <span class="text-danger" id="contact_mgs"></span>
                         </div>
 
                         <div class="form-group">
 
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Email Address">
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Email Address" value="{{old('email')}}">
                             @error('email')
                             <span class="text-danger" id="email_mgs">{{ $message }}</span>
                             @enderror
@@ -166,7 +166,7 @@
 
                         <div class="form-group">
 
-                            <input type="address" name="address" class="form-control" id="address" placeholder="Address">
+                            <input type="address" name="address" class="form-control" id="address" placeholder="Address" value="{{old('address')}}">
                             <span class="text-danger" id="email_mgs"></span>
                         </div>
 
