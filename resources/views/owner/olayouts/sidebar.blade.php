@@ -44,7 +44,7 @@
 
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="fa fa-user"></i> Hello!, {{ Auth::user()->email }}
+            <i class="fa fa-user"></i> Hello!,  <!-- {{ Auth::user()->email }}  Name of usser who login-->
           </a>
         </li>
 
@@ -81,7 +81,7 @@
       <!-- Brand Logo -->
       <a href="" class="brand-link">
 
-        <img src="{{ asset('assets/img/logo.jpg') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">STI Panel</span>
       </a>
 
