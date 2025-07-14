@@ -73,9 +73,6 @@
                      {{-- <button type="button" onclick="window.location.href='{{ route('logout') }}'" class="btn btn-blue navbar-btn" >Logout</button> --}}
                     </li>
                     @else
-                    <li class="button-holder">
-                     <button type="button" onclick="window.location.href='{{ route('Signup') }}'" class="btn btn-blue navbar-btn" >Sign Up</button>
-                    </li>
                     @endauth
                 </ul>
 
@@ -131,7 +128,7 @@
                 @auth
                     <div class="form-group text-center">
 
-                            <button type="submit" onclick="window.location.href='{{ route('customer') }}'" class="btn btn-blue btn-block btn-login">Go to dasboard {{Auth::user()->Role}}</button>
+                            <button type="submit" onclick="window.location.href='{{ route(strtolower(Auth::user()->Role)) }}'" class="btn btn-blue btn-block btn-login">Go to dasboard {{Auth::user()->Role}}</button>
                             
 
                         </div>
