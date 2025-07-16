@@ -116,7 +116,7 @@
                   console.log(id);
 
                   $.ajax({
-                      url: '{{ route("admin.updatepassword") }}',
+                      url: '{{ route("owner.updatepassword") }}',
                       method: 'post',
                       data: {
                           email:email,
