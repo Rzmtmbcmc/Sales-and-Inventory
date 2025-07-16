@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
-
+use Session;
 class MainController extends Controller
 {
     public function owner():View|RedirectResponse{
@@ -32,5 +32,23 @@ class MainController extends Controller
     public function AuthenticateUser():bool{
         $result = Auth::check();
         return $result;
+    }
+
+    public function ownerChangePassword():View|RedirectResponse{
+        $userlog = Auth::user();
+        return view('owner.changepassword')->with('userlog',$userlog);
+    }
+
+    public function ownerUpdatePassword(Request $request):View|RedirectResponse{
+        $request->validate([
+            'email'=>'required',
+            'password'=>'required'
+        ]);
+        $userlog = Auth::user();
+        $userlog->password = bcrypt($request->password);
+        $userlog->save();
+        Session::flush();
+        Auth::logout();
+        return redirect()->route('Login')->with('status','Password Changed Successfully Login Again');
     }
 }

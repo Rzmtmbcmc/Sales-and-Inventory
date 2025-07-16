@@ -56,7 +56,7 @@
           </a>
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <div class="dropdown-divider"></div>
-            <a href="" class="dropdown-item mt-2">
+            <a href="{{route('owner.password.edit')}}" class="dropdown-item mt-2">
               <i class="fa fa-lock"></i> Change Password
             </a>
             @auth

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class Inventory extends Controller
+class InventoryController extends Controller
 {
     public function addInventory(Request $request){
         $request->validate([

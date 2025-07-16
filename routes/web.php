@@ -40,3 +40,6 @@ Route::post('signup',[signup::class,'createUser'])->name('createUser');
 Route::get('customer',[MainController::class,'customer'])->name('customer');
 Route::get('manager',[MainController::class,'manager'])->name('manager');
 Route::get('owner',[MainController::class,'owner'])->name('owner');
+
+Route::get('owner/change-password',[MainController::class,'ownerChangePassword'])->name('owner.password.edit');
+Route::put('change-password',[MainController::class,'ownerUpdatePassword'])->name('owner.password.update');
