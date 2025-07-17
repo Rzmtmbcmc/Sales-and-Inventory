@@ -12,7 +12,8 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="">Home</a></li>
+              {{--<li class="breadcrumb-item"><a href="{{ route('admin.dashboard')}}">Home</a></li>
+              <li class="breadcrumb-item"><a href="">Home</a></li>--}}
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -36,12 +37,13 @@
                 <div class="card mt-4">
                     <div class="card-body">
                       <h3 class="text-center">Change Password here</h3><hr>
-                        <form method="POST">
+                        <form action="{{ route("owner.password.update") }}" method="POST">
+                          @csrf
+                          @method('put')
                        <div id="mgs2"></div>
-                       @foreach ($userlog as $row)
                         <div class="form-group">
                             <label for="status" class="control-label text-navy"><b>Email:</b></label>
-                               <input type="text" class="form-control" id="edit_email" value="{{$row->email}}">
+                               <input type="text" name="email" class="form-control" id="edit_email" value="{{$userlog->email}}" readonly>
                                <span class="text-danger">
                                    <strong id="email-error"></strong>
                                 </span>
@@ -49,17 +51,16 @@
 
                            <div class="form-group">
                             <label for="status" class="control-label text-navy"><b>Password:</b></label>
-                               <input type="password" class="form-control" id="edit_password">
+                               <input type="password" name="password" class="form-control" id="edit_password">
                                <span class="text-danger">
                                    <strong id="password-error"></strong>
                                 </span>
                            </div>
+                              
+                               <input type="hidden" id="edit_id" value="{{$userlog->id}}">
+                               <input type="hidden" id="default_password" value="{{$userlog->password}}">
 
-                               <input type="hidden" id="edit_id" value="{{$row->id}}">
-                               <input type="hidden" id="default_password" value="{{$row->password}}">
-                            @endforeach
-
-                            <button type="button" class="btn btn-primary" id="btn-changepassword">Change password</button>
+                            <button type="submit" class="btn btn-primary" id="changepassword">Change password</button>
                         </form>
 
 
@@ -81,11 +82,11 @@
 
   @endsection
 
-  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
-  <script type="text/javascript">
+  {{--<script type="text/javascript">
 
     $(document).ready(function(){
 
@@ -116,7 +117,7 @@
                   console.log(id);
 
                   $.ajax({
-                      url: '{{ route("manager.updatepassword") }}',
+                      url: {{ route("owner.password.update") }},
                       method: 'post',
                       data: {
                           email:email,
@@ -160,4 +161,4 @@
 
       });
 
-    </script>
+    </script>--}}

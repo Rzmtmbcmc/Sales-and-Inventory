@@ -39,6 +39,11 @@ class MainController extends Controller
         return view('owner.changepassword')->with('userlog',$userlog);
     }
 
+    public function managerChangePassword():View|RedirectResponse{
+        $userlog = Auth::user();
+        return view('manager.changepassword')->with('userlog',$userlog);
+    }
+
     public function ownerUpdatePassword(Request $request):View|RedirectResponse{
         $request->validate([
             'email'=>'required',

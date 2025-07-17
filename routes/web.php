@@ -43,3 +43,5 @@ Route::get('owner',[MainController::class,'owner'])->name('owner');
 
 Route::get('owner/change-password',[MainController::class,'ownerChangePassword'])->name('owner.password.edit');
 Route::put('change-password',[MainController::class,'ownerUpdatePassword'])->name('owner.password.update');
+
+Route::get('manager/change-password',[MainController::class,'managerChangePassword'])->name('manager.password.edit');
