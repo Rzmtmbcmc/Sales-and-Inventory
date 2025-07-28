@@ -28,20 +28,19 @@ Route::get('/', function () {
     }
     return view('index');
 });
+//routes: login, signup, logout
 Route::get('signup',[signup::class,'showForm'])->name('Signup');
-
 Route::get('login', [login::class,'showForm'])->name('Login');
 Route::post('login', [login::class,'loginUser'])->name('loginUser');
-
 Route::post('logout', [login::class,'logout'])->name('logout');
-
 Route::post('signup',[signup::class,'createUser'])->name('createUser');
-
+//routes: main page
 Route::get('customer',[MainController::class,'customer'])->name('customer');
 Route::get('manager',[MainController::class,'manager'])->name('manager');
 Route::get('owner',[MainController::class,'owner'])->name('owner');
 
+//routes: change password
 Route::get('owner/change-password',[MainController::class,'ownerChangePassword'])->name('owner.password.edit');
 Route::put('change-password',[MainController::class,'ownerUpdatePassword'])->name('owner.password.update');
-
 Route::get('manager/change-password',[MainController::class,'managerChangePassword'])->name('manager.password.edit');
+

@@ -14,19 +14,19 @@ class MainController extends Controller
         if(!$this->AuthenticateUser()){
             return redirect()->route('Login')->with('status','Login to access Owner');
         }
-        return view('owner.index');
+        return view('owner.dashboard');
     }
     public function customer():View|RedirectResponse{
         if(!$this->AuthenticateUser()){
             return redirect()->route('Login')->with('status','Login to access Customer');
         }
-        return view('customer.index');
+        return view('customer.dashboard');
     }
     public function manager():View|RedirectResponse{
         if(!$this->AuthenticateUser()){
             return redirect()->route('Login')->with('status','Login to access Manager');
         }
-        return view('manager.index');
+        return view('manager.dashboard');
     }
 
     public function AuthenticateUser():bool{
