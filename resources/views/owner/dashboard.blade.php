@@ -50,11 +50,11 @@
 
     <section class="content">
       <div class="container-fluid">
-
+{{--Sample page--}}
           <div class="row">
 
-{{--Sample page--}}
-            <div class="container py-4">
+
+    <div class="container py-4">
         <div class="dashboard-header">Owner Dashboard</div>
         <div class="row g-4 mb-4">
             <div class="col-md-3">
@@ -152,8 +152,11 @@
             }
         });
     </script>
-{{--Sample Page End--}}
           </div>
+          {{--Sample Page End--}}
+
+          
+
       </div>
     </section>
 

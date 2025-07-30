@@ -5,6 +5,8 @@ use App\Http\Controllers\login;
 use App\Http\Controllers\signup;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\InventoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +36,7 @@ Route::get('login', [login::class,'showForm'])->name('Login');
 Route::post('login', [login::class,'loginUser'])->name('loginUser');
 Route::post('logout', [login::class,'logout'])->name('logout');
 Route::post('signup',[signup::class,'createUser'])->name('createUser');
-//routes: main page
+//routes: dashboard
 Route::get('customer',[MainController::class,'customer'])->name('customer');
 Route::get('manager',[MainController::class,'manager'])->name('manager');
 Route::get('owner',[MainController::class,'owner'])->name('owner');
@@ -43,4 +45,9 @@ Route::get('owner',[MainController::class,'owner'])->name('owner');
 Route::get('owner/change-password',[MainController::class,'ownerChangePassword'])->name('owner.password.edit');
 Route::put('change-password',[MainController::class,'ownerUpdatePassword'])->name('owner.password.update');
 Route::get('manager/change-password',[MainController::class,'managerChangePassword'])->name('manager.password.edit');
+
+//routes: products
+Route::get('owner/products',[ProductController::class,'showView'])->name('owner.products');
+Route::post('owner/products',[ProductController::class,'addProduct'])->name('owner.products.add');
+
 

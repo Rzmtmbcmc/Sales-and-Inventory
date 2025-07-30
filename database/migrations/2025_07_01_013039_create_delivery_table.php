@@ -8,6 +8,7 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * Not Possible for not to implement so never mind this one
      */
     public function up(): void
     {

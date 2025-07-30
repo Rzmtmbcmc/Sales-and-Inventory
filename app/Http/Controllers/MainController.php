@@ -33,7 +33,6 @@ class MainController extends Controller
         $result = Auth::check();
         return $result;
     }
-
     public function ownerChangePassword():View|RedirectResponse{
         $userlog = Auth::user();
         return view('owner.changepassword')->with('userlog',$userlog);

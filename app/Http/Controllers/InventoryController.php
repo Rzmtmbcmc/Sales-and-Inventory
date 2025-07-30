@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class InventoryController extends Controller
 {
+    
+
     public function addInventory(Request $request){
         $request->validate([
             'ItemName'=>'required',
@@ -30,6 +34,7 @@ class InventoryController extends Controller
         ]);
     }
     public function viewInventory(){
-        return view('Inventory.index');
+        $populate = Inventory::all();
+        return view('owner.inventory', ['populate' => $populate]);
     }
 }
