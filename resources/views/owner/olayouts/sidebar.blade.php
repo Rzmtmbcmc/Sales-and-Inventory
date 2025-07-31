@@ -113,7 +113,7 @@
               <a href="{{route('owner.products')}}" class="nav-link{{ request()->routeIs('owner.products') ? ' active' : '' }}">
                   <i class="nav-icon fa fa-box"></i>
                 <p>
-                  Products
+                  Inventory
                 </p>
               </a>
             </li>

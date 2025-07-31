@@ -18,7 +18,9 @@ use App\Http\Controllers\InventoryController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::get('root',function(){
+    return view('index');
+})->name('root');
 Route::get('/', function () {
     if (!User::where('email','Owner@example.com')->exists()) {
         User::create([
@@ -48,6 +50,6 @@ Route::get('manager/change-password',[MainController::class,'managerChangePasswo
 
 //routes: products
 Route::get('owner/products',[ProductController::class,'showView'])->name('owner.products');
-Route::post('owner/products',[ProductController::class,'addProduct'])->name('owner.products.add');
+//Route::post('owner/products',[ProductController::class,'addProduct'])->name('owner.products.add');
 
 

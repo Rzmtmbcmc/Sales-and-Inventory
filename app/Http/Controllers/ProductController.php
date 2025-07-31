@@ -11,8 +11,7 @@ class ProductController extends Controller
 {
     //
     public function showView():View|RedirectResponse{
-        $populate = Products::all();
-        return view('owner.products', ['populate' => $populate]);
+        return view('owner.products');
     }
     /**
      * Handle the request to add a new product.
