@@ -37,7 +37,7 @@
                 <div class="card mt-4">
                     <div class="card-body">
                       <h3 class="text-center">Change Password here</h3><hr>
-                        <form action="{{ route("owner.password.update") }}" method="POST">
+                        <form action="{{ route(owner.password.update) }}" method="POST">
                           @csrf
                           @method('put')
                        <div id="mgs2"></div>
