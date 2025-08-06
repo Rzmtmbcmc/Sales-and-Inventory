@@ -12,4 +12,7 @@ class Inventory extends Model
         'product_id',
         'quantity',
     ];
+    public function product(){
+        return $this->hasMany(Product::class);
+    }
 }

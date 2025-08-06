@@ -44,7 +44,7 @@
 
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="fa fa-user"></i> Hello!, <!-- {{ Auth::user()->email }}  Name of usser who login-->
+            <i class="fa fa-user"></i> Hello!, {{ Auth::user()->name }}
           </a>
         </li>
 
@@ -56,18 +56,19 @@
           </a>
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <div class="dropdown-divider"></div>
-            <a href="" class="dropdown-item mt-2">
+            <a href="{{route('manager.password.edit')}}" class="dropdown-item mt-2">
               <i class="fa fa-lock"></i> Change Password
             </a>
-            <form method="POST" action="">
+            @auth
+            <form action="{{ route('logout') }}" method="POST">
               @csrf
-
               <a class="dropdown-item p-3 text-dark"  href=""
                       onclick="event.preventDefault();
                                  this.closest('form').submit();">
-                  <i class="fa fa-arrow-right"></i>  {{ __('Log Out') }}
+                  <i class="fa fa-arrow-right"></i> Log Out
               </a>
           </form>
+          @endauth
 
         </li>
 
@@ -102,7 +103,6 @@
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                   Dashboard
-
                 </p>
               </a>
             </li>

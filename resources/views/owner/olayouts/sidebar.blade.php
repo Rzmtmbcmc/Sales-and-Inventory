@@ -44,7 +44,7 @@
 
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="fa fa-user"></i> Hello!,  <!-- {{ Auth::user()->email }}  Name of usser who login-->
+            <i class="fa fa-user"></i> Hello!,   {{ Auth::user()->name }}  
           </a>
         </li>
 
@@ -56,19 +56,20 @@
           </a>
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <div class="dropdown-divider"></div>
-            <a href="" class="dropdown-item mt-2">
+            <a href="{{route('owner.password.edit')}}" class="dropdown-item mt-2">
               <i class="fa fa-lock"></i> Change Password
             </a>
-            <form method="POST" action="">
+            @auth
+            <form action="{{ route('logout') }}" method="POST">
               @csrf
-
               <a class="dropdown-item p-3 text-dark"  href=""
                       onclick="event.preventDefault();
                                  this.closest('form').submit();">
-                  <i class="fa fa-arrow-right"></i>  {{ __('Log Out') }}
+                  <i class="fa fa-arrow-right"></i> Log Out
               </a>
           </form>
-
+          @endauth
+            
         </li>
 
 
@@ -82,7 +83,7 @@
       <a href="" class="brand-link">
 
         <img src="" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">STI Panel</span>
+        <span class="brand-text font-weight-light">Sales and Inventory</span>
       </a>
 
       <!-- Sidebar -->
@@ -97,12 +98,11 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                  with font-awesome or any other icon font library -->
-            <li class="nav-item menu-open">
-              <a href="" class="nav-link active">
+            <li class="nav-item">
+              <a href="{{route('owner')}}" class="nav-link{{ request()->routeIs('owner') ? ' active' : '' }}">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                   Dashboard
-
                 </p>
               </a>
             </li>
@@ -110,10 +110,10 @@
 
 
             <li class="nav-item">
-              <a href="" class="nav-link">
+              <a href="{{route('owner.products')}}" class="nav-link{{ request()->routeIs('owner.products') ? ' active' : '' }}">
                   <i class="nav-icon fa fa-box"></i>
                 <p>
-                  for edit
+                  Inventory
                 </p>
               </a>
             </li>
