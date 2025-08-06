@@ -356,7 +356,7 @@
 
                     <div class="icon-box">
 
-                        <i class="material-icons">email</i>
+                        <i class="material-icons">emailss</i>
 
                         <h4>Email us on</h4>
 
