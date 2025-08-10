@@ -4,7 +4,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Management System</title>
+    <title>Brand Management </title>
     
     <style>
         .content-wrapper {
@@ -100,7 +100,7 @@
                         <div class="col-sm-6">
                             <h1 class="m-0">
                                 <i class="fas fa-store mr-2"></i>
-                                Customer Management System
+                                Brand Management
                             </h1>
                         </div>
                         <div class="col-sm-6">
