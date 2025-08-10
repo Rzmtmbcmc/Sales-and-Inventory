@@ -32,10 +32,10 @@ class ProductController extends Controller
         if ($request->filled('stock')) {
             switch ($request->stock) {
                 case 'low':
-                    $query->lowStock();
+                    $query->lowStock();//method name is scopeLowStock() in the Product model
                     break;
                 case 'out':
-                    $query->outOfStock();
+                    $query->outOfStock();//method name is scopeOutOfStock() in the Product model
                     break;
             }
         }

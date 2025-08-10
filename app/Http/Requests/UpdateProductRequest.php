@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 
 class UpdateProductRequest extends FormRequest
 {
+    // this methods must be implemented like a interface because it is connected in the FormRequest Class
     public function authorize()
     {
         return true;

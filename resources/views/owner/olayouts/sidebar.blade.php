@@ -121,10 +121,10 @@
 
 
             <li class="nav-item">
-              <a href="" class="nav-link">
+              <a href="{{route('owner.brands')}}" class="nav-link">
                 <i class="nav-icon fa fa-users"></i>
                 <p>
-                   for edit
+                   Brand Management
                 </p>
               </a>
             </li>

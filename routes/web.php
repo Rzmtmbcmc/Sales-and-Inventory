@@ -5,6 +5,7 @@ use App\Http\Controllers\login;
 use App\Http\Controllers\signup;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\InventoryController;
 
@@ -51,5 +52,9 @@ Route::get('manager/change-password',[MainController::class,'managerChangePasswo
 //routes: products
 Route::get('owner/products',[ProductController::class,'showView'])->name('owner.products');
 //Route::post('owner/products',[ProductController::class,'addProduct'])->name('owner.products.add');
+
+//routes: brand
+Route::get('owner/brands',[BrandController::class,'showView'])->name('owner.brands');
+
 
 

@@ -19,24 +19,12 @@ class ProductController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function addProduct(Request $request): JsonResponse {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'perishable_status' => 'required|in:0,1',
-        ]);
-        
-        $product = Products::create([
-            'name' => $validated['name'],
-            'price' => $validated['price'],
-            'perishable_status' => (bool)$validated['perishable_status'],
-        ]);
-        
-        return response()->json([
-            'id' => $product->id,
-            'name' => $product->name,
-            'price' => $product->price,
-            'perishable_status' => $product->perishable_status
-        ], 201);
+    public function checkstock($id){
+        $product = Products::find($id);
+        if($product::where('id',$id)->quantity == 0){
+            $product->delete();
+            return true;
+        }
+        return false;
     }
 }
