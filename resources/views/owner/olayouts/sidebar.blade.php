@@ -121,7 +121,7 @@
 
 
             <li class="nav-item">
-              <a href="{{--route('owner.brands'--)}}" class="nav-link">
+              <a href="{{route('owner.Brands')}}" class="nav-link">
                 <i class="nav-icon fa fa-users"></i>
                 <p>
                    Brand Management
