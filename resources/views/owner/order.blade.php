@@ -485,7 +485,7 @@
         }
 
         async function fetchProducts() {
-            products = await apiRequest('/products');
+            products = await apiRequest('/productss');//must be edited
             return products;
         }
 

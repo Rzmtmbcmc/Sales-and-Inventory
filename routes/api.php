@@ -37,7 +37,7 @@ Route::get('branches', function() {
         })
     ]);
 });
-Route::get('products', function() {
+Route::get('productss', function() {
     return response()->json([
         'data' => \App\Models\Product::all(['id', 'name', 'price'])
     ]);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Management</title>
+    <title>Product Management - AdminLTE</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .product-price {
@@ -95,7 +95,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Inventory Management</h1>
+                        <h1 class="m-0">Product Management</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -257,7 +257,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="modalTitle">Add New Products</h4>
+                    <h4 class="modal-title" id="modalTitle">Add New Product</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -273,7 +273,7 @@
                             <label for="productPrice">Product Price <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">₱</span>
+                                    <span class="input-group-text">$</span>
                                 </div>
                                 <input type="number" class="form-control" id="productPrice" 
                                        step="0.01" min="0" required>
@@ -544,7 +544,7 @@
                     <tr>
                         <td><strong>#${product.id}</strong></td>
                         <td>${product.name}</td>
-                        <td><span class="product-price">₱${parseFloat(product.price).toFixed(2)}</span></td>
+                        <td><span class="product-price">$${parseFloat(product.price).toFixed(2)}</span></td>
                         <td>
                             <span class="quantity-badge ${quantityClass}">
                                 ${product.quantity} ${product.quantity === 1 ? 'unit' : 'units'}
@@ -793,7 +793,7 @@
             
             if (product) {
                 document.getElementById('deleteProductInfo').textContent = 
-                    `${product.name} - ₱${parseFloat(product.price).toFixed(2)} (Qty: ${product.quantity})`;
+                    `${product.name} - $${parseFloat(product.price).toFixed(2)} (Qty: ${product.quantity})`;
                 $('#deleteModal').modal('show');
             }
         }
@@ -848,6 +848,6 @@
             document.getElementById('addProductBtn').addEventListener('click', openAddModal);
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967b0fa696bbb9ff',t:'MTc1Mzk0MzU3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96deb4bec213bc58',t:'MTc1NDk4ODQyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 
 @endsection
