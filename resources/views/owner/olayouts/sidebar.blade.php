@@ -120,14 +120,14 @@
 
 
 
-            <!--li class="nav-item">
+            <li class="nav-item">
               <a href="{{--route('owner.brands'--)}}" class="nav-link">
                 <i class="nav-icon fa fa-users"></i>
                 <p>
                    Brand Management
                 </p>
               </a>
-            </li-->
+            </li>
 
 
             <li class="nav-header">Maintenance</li>
