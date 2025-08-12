@@ -54,7 +54,7 @@ Route::get('owner/products',[ProductController::class,'showView'])->name('owner.
 //Route::post('owner/products',[ProductController::class,'addProduct'])->name('owner.products.add');
 
 //routes: brand
-Route::get('/owner/brands',[BrandController::class,'branding'])->name('owner.brands');
+Route::get('/owner/brands',[BrandController::class,'showView'])->name('owner.brands');
 
 
 
