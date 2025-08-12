@@ -129,6 +129,15 @@
               </a>
             </li>
 
+             <li class="nav-item">
+              <a href="{{route('owner.orders')}}" class="nav-link">
+                <i class="nav-icon fa fa-users"></i>
+                <p>
+                   Order Management
+                </p>
+              </a>
+            </li>
+
 
             <li class="nav-header">Maintenance</li>
 

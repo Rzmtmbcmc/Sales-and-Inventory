@@ -31,4 +31,9 @@ class Branch extends Model
                     ->orWhere('address', 'like', "%{$term}%")
                     ->orWhere('contact', 'like', "%{$term}%");
     }
+
+    public function orders()
+{
+    return $this->hasMany(Order::class);
+}
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\InventoryController;
 
 /*
@@ -55,6 +56,9 @@ Route::get('owner/products',[ProductController::class,'showView'])->name('owner.
 
 //routes: brand
 Route::get('owner/brands',[BrandController::class,'showView'])->name('owner.brands');
+
+//route: order
+Route::get('owner/orders',[OrderController::class,'showView'])->name('owner.orders');
 
 
 
