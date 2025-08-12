@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 class BrandController extends Controller
 {
     public function showView():View{
-        return view('owner.brand');
+        return view('owner.brands');
     }
     /**
      * Get all brands with their branches
