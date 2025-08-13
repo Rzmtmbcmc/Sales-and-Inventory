@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -395,6 +396,7 @@ class OrderController extends Controller
                     'notes' => $order->notes,
                     'items' => $order->items->map(function ($item) {
                         return [
+                            'product_id' => $item->product_id,
                             'name' => $item->name, // Use 'name' field
                             'quantity' => $item->quantity,
                             'price' => number_format($item->price, 2, '.', ''), // Use 'price' field
@@ -476,4 +478,36 @@ class OrderController extends Controller
             ], 500);
         }
     }
+
+    public function deductInventory(Request $request): JsonResponse
+{
+    $validated = $request->validate([
+        'items' => 'required',
+        'items.*.product_id' => 'required',
+        'items.*.quantity' => 'required'
+    ]);
+
+    try {
+        DB::transaction(function () use ($validated) {
+            foreach ($validated['items'] as $item) {
+                $product = Product::findOrFail($item['product_id']);
+                
+                //if ($product->quantity < $item['quantity']) {
+                    //throw new \Exception("Insufficient stock for product: {$product->name}");
+                //}
+                $product->decrement('quantity', $item['quantity']);
+                if($product->quantity == 0 ){
+                    $product->delete();
+                }
+            }
+        });
+        return response()->json(['success' => true],200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Inventory deduction failed: ' . $e->getMessage()
+        ], 400);
+    }
+}
 }

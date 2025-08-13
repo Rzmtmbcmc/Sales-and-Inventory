@@ -59,6 +59,7 @@ Route::get('/owner/brand',[BrandController::class,'showView'])->name('owner.bran
 
 //route: order
 Route::get('owner/orders',[OrderController::class,'showView'])->name('owner.orders');
+Route::post('/api/orders/deduct-inventory', [OrderController::class, 'deductInventory'])->name('owner.orders.deduct-inventory');
 
 
 

@@ -381,7 +381,7 @@
         let branches = [];
         let products = [];
         let editingOrderId = null;
-
+        let finalOrderSummary = {};
         // 🌐 API Helper Functions
         async function apiRequest(endpoint, options = {}) {
             try {
@@ -1044,7 +1044,8 @@
         async function showFinalOrderSummary() {
             try {
                 showLoading(true);
-                const summary = await getFinalOrderSummary();
+                const summary = await getFinalOrderSummary();//Get Data from API
+                finalOrderSummary = summary;
                 renderFinalOrderSummary(summary);
                 $('#finalOrderModal').modal('show');
             } catch (error) {
@@ -1151,7 +1152,8 @@
             `);
         }
 
-        function generatePDF() {
+         function generatePDF() {
+            console.log(finalOrderSummary);
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
@@ -1232,6 +1234,75 @@
             doc.save(fileName);
             
             showNotification('PDF generated successfully!');
+            deductme();
+        }
+
+        async function deductme(){
+            try {
+        // Log the data you are sending for debugging purposes
+        console.log("Request Body:", JSON.stringify({
+            items: finalOrderSummary.brands
+                .flatMap(b => b.branches)
+                .flatMap(b => b.orders)
+                .flatMap(o => o.items)
+        }));
+
+        const response = await fetch('{{ route("owner.orders.deduct-inventory") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                items: finalOrderSummary.brands
+                    .flatMap(b => b.branches)
+                    .flatMap(b => b.orders)
+                    .flatMap(o => o.items)
+            })
+        });
+
+        // Check the Content-Type header before attempting to parse the body
+        const contentType = response.headers.get("content-type");
+        const isJson = contentType && contentType.includes("application/json");
+
+        // 1. Check for a non-successful HTTP status code (4xx or 5xx)
+        if (!response.ok) {
+            let errorMessage = 'Deduction failed due to a server error.';
+            // Attempt to parse the server's error message from the response body
+            if (isJson) {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+            } else {
+                // If not JSON, get the raw text (e.g., HTML error page)
+                const errorText = await response.text();
+                errorMessage = `Server responded with status ${response.status} but not JSON. Response body: ${errorText.substring(0, 200)}...`;
+            }
+            // Throw a custom error to be caught by the catch block below
+            throw new Error(errorMessage);
+        }
+
+        // 2. If the response is OK and is JSON, parse the data
+        if (!isJson) {
+            throw new Error('Expected a JSON response but received a different format.');
+        }
+
+        const data = await response.json();
+
+        // 3. Now, check the 'success' property from the server's JSON response
+        if (data.success) {
+            console.log('Server Response:', data);
+            showNotification('Inventory updated successfully!', 'success');
+            // Continue with other success logic here...
+        } else {
+            // Handle cases where the response is 200 OK, but the server's logic failed
+            throw new Error(data.message || 'Deduction failed. Server reported an issue.');
+        }
+
+    } catch (error) {
+        // This catch block will handle all errors from the try block
+        console.error('Deduction error:', error);
+        showNotification('Inventory update failed', 'error');
+    }
         }
 
         function showErrorState() {
