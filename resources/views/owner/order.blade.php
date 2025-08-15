@@ -1153,7 +1153,6 @@
         }
 
          function generatePDF() {
-            console.log(finalOrderSummary);
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
@@ -1244,7 +1243,8 @@
             items: finalOrderSummary.brands
                 .flatMap(b => b.branches)
                 .flatMap(b => b.orders)
-                .flatMap(o => o.items)
+                .flatMap(o => o.items),
+                order_id: finalOrderSummary
         }));
 
         const response = await fetch('{{ route("owner.orders.deduct-inventory") }}', {
@@ -1257,7 +1257,8 @@
                 items: finalOrderSummary.brands
                     .flatMap(b => b.branches)
                     .flatMap(b => b.orders)
-                    .flatMap(o => o.items)
+                    .flatMap(o => o.items),
+                order_id: finalOrderSummary
             })
         });
 
@@ -1292,6 +1293,7 @@
         if (data.success) {
             console.log('Server Response:', data);
             showNotification('Inventory updated successfully!', 'success');
+            loadInitialData();
             // Continue with other success logic here...
         } else {
             // Handle cases where the response is 200 OK, but the server's logic failed

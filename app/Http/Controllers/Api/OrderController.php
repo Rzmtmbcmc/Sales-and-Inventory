@@ -482,10 +482,11 @@ class OrderController extends Controller
     public function deductInventory(Request $request): JsonResponse
 {
     $validated = $request->validate([
-        'items' => 'required',
-        'items.*.product_id' => 'required',
-        'items.*.quantity' => 'required'
-    ]);
+            'order_id' => 'required',
+            'items' => 'required',
+            'items.*.product_id' => 'required',
+            'items.*.quantity' => 'required'
+        ]);
 
     try {
         DB::transaction(function () use ($validated) {
@@ -500,7 +501,12 @@ class OrderController extends Controller
                     $product->delete();
                 }
             }
+            $orders = Order::all();
+            foreach ($orders as $order) {
+                $order->delete();
+            }
         });
+        
         return response()->json(['success' => true],200);
 
     } catch (\Exception $e) {
