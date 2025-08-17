@@ -70,6 +70,7 @@ class DashboardController extends Controller
             // Find the top and bottom products based on the filtered orders' IDs
             $pastOrderIds = $filteredOrders->pluck('id');
 
+            
             // Find top 10 products
             $top10Products = PastOrderItem::select('past_order_items.product_id', DB::raw('SUM(past_order_items.quantity) as total_quantity_sold'), 'products.name')
                 ->join('products', 'past_order_items.product_id', '=', 'products.id')
@@ -87,9 +88,18 @@ class DashboardController extends Controller
                 ->orderBy('total_quantity_sold')
                 ->take(10)
                 ->get();
-
+            
+                $productSales = PastOrderItem::select('past_order_items.product_id', DB::raw('SUM(past_order_items.quantity * price) as total_sales'))
+                ->whereIn('past_order_id', $pastOrderIds)
+                ->with('product:id,name')
+                ->groupBy('product_id')
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return [$item->product->name => $item->total_sales];
+                });
             return response()->json([
                 'success' => true,
+                'product_sales' => $productSales,
                 'graph_data' => $graphData,
                 'rankings' => [
                     'top_10_products' => $top10Products,

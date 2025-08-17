@@ -134,6 +134,21 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="col-lg-8">
+                <div class="card card-info mt-4">
+    <div class="card-header">
+        <h3 class="card-title">Product Sales This Year</h3>
+    </div>
+    <div class="card-body">
+        <canvas id="productSalesChart" style="height: 300px;"></canvas>
+    </div>
+                </div>
+            </div>
+                </div>
+            </div>
+
         </div>
     </section>
 </div>
@@ -142,7 +157,7 @@
 <script>
     $(document).ready(function() {
         let salesChart;
-
+        
         // Fetch brands, branches, and products for filters
         async function fetchFilters() {
     try {
@@ -198,12 +213,11 @@
 
                 if (response.success) {
                     const data = response.rankings;
+                    initProductSalesChart(response.product_sales);
                     $('#totalOrdersYear').text(data.total_orders_this_year);
                     $('#totalSalesYear').text(`₱${data.total_sales_this_year.toLocaleString()}`);
                     $('#totalOrdersMonth').text(data.most_orders_this_month);
                     $('#totalSalesMonth').text(`₱${data.total_sales_this_month.toLocaleString()}`);
-                    console.log(data.top_10_products);
-                    console.log(data.bottom_10_products);
                     // Update rankings
                     updateRankingList('top10List', data.top_10_products, 'total_quantity_sold');
                     updateRankingList('bottom10List', data.bottom_10_products, 'total_quantity_sold');
@@ -299,6 +313,54 @@
         fetchFilters();
         fetchDashboardData();
     });
+let productSalesChart;
+    function initProductSalesChart(data) {
+    const ctx = document.getElementById('productSalesChart').getContext('2d');
+    
+    // Destroy existing chart
+    if (productSalesChart) {
+        productSalesChart.destroy();
+    }
+    
+    productSalesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                label: 'Sales per Product',
+                data: Object.values(data),
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderWidth: 0 // Add this to prevent border rendering issues
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        callback: function(value) {
+                            return '₱' + value;
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    enabled: true,
+                    position: 'nearest'
+                }
+            }
+        }
+    });
+}
+
 </script>
 
 @endsection
