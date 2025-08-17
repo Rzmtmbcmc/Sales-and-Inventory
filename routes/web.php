@@ -6,9 +6,11 @@ use App\Http\Controllers\signup;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\Api\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +46,8 @@ Route::post('signup',[signup::class,'createUser'])->name('createUser');
 Route::get('customer',[MainController::class,'customer'])->name('customer');
 Route::get('manager',[MainController::class,'manager'])->name('manager');
 Route::get('owner',[MainController::class,'owner'])->name('owner');
-
+Route::get('owner/dashboard', [DashboardController::class, 'showView'])->name('owner.dashboard');
+Route::get('api/analytics', [DashboardController::class, 'analytics']);
 //routes: change password
 Route::get('owner/change-password',[MainController::class,'ownerChangePassword'])->name('owner.password.edit');
 Route::put('change-password',[MainController::class,'ownerUpdatePassword'])->name('owner.password.update');
@@ -60,6 +63,11 @@ Route::get('/owner/brand',[BrandController::class,'showView'])->name('owner.bran
 //route: order
 Route::get('owner/orders',[OrderController::class,'showView'])->name('owner.orders');
 Route::post('/api/orders/deduct-inventory', [OrderController::class, 'deductInventory'])->name('owner.orders.deduct-inventory');
+
+
+Route::get('api/brands', [BrandController::class, 'index']);
+Route::get('api/branches', [BranchController::class, 'allBranches']);
+Route::get('api/products', [ProductController::class, 'index']);
 
 
 

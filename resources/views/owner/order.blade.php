@@ -1240,10 +1240,6 @@
             try {
         // Log the data you are sending for debugging purposes
         console.log("Request Body:", JSON.stringify({
-            items: finalOrderSummary.brands
-                .flatMap(b => b.branches)
-                .flatMap(b => b.orders)
-                .flatMap(o => o.items),
                 order_id: finalOrderSummary
         }));
 

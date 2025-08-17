@@ -8,13 +8,15 @@ use App\Models\Order;
 use App\Models\Branch;
 use App\Models\Product;
 use App\Models\OrderItem;
+use App\Models\PastOrder;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Models\PastOrderItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -480,40 +482,77 @@ class OrderController extends Controller
     }
 
     public function deductInventory(Request $request): JsonResponse
-{
-    $validated = $request->validate([
-            'order_id' => 'required',
-            'items' => 'required',
-            'items.*.product_id' => 'required',
-            'items.*.quantity' => 'required'
-        ]);
+    {
+        try {
+            // Manually get the JSON data
+            $requestData = $request->json()->all();
+            
+            // Check if the JSON has the expected structure
+            if (!isset($requestData['order_id']['brands'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid JSON structure. "brands" key not found.'
+                ], 400);
+            }
 
-    try {
-        DB::transaction(function () use ($validated) {
-            foreach ($validated['items'] as $item) {
-                $product = Product::findOrFail($item['product_id']);
-                
-                //if ($product->quantity < $item['quantity']) {
-                    //throw new \Exception("Insufficient stock for product: {$product->name}");
-                //}
-                $product->decrement('quantity', $item['quantity']);
-                if($product->quantity == 0 ){
-                    $product->delete();
+            // Begin a database transaction
+            DB::beginTransaction();
+
+            // Loop through each brand
+            foreach ($requestData['order_id']['brands'] as $brandData) {
+                // Loop through each branch within the brand
+                foreach ($brandData['branches'] as $branchData) {
+                    // Loop through each order within the branch
+                    foreach ($branchData['orders'] as $orderData) {
+                        $orderId = $orderData['id'];
+
+                        // Find the order in the database
+                        $order = Order::findOrFail($orderId);
+                        
+                        // Transfer the order to the past_orders table
+                        $pastOrder = PastOrder::create([
+                            'brand_id' => $order->brand_id,
+                            'branch_id' => $order->branch_id,
+                            'total_amount' => $order->total_amount,
+                            'created_at' => $order->created_at,
+                            'updated_at' => $order->updated_at,
+                        ]);
+
+                        // Transfer the order items to the past_order_items table
+                        foreach ($order->items as $item) {
+                            PastOrderItem::create([
+                                'past_order_id' => $pastOrder->id,
+                                'product_id' => $item->product_id,
+                                'quantity' => $item->quantity,
+                                'price' => $item->price,
+                            ]);
+
+                            // Decrement product inventory
+                            $product = Product::findOrFail($item->product_id);
+                            $product->decrement('quantity', $item->quantity);
+                            
+                            // Delete product if quantity is zero
+                            if ($product->quantity <= 0) {
+                                $product->delete();
+                            }
+                        }
+                        
+                        // Delete the original order
+                        $order->delete();
+                    }
                 }
             }
-            $orders = Order::all();
-            foreach ($orders as $order) {
-                $order->delete();
-            }
-        });
-        
-        return response()->json(['success' => true],200);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Inventory deduction failed: ' . $e->getMessage()
-        ], 400);
+            DB::commit(); // Commit the transaction
+            
+            return response()->json(['success' => true, 'message' => 'Inventory deducted and orders archived successfully.'], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack(); // Roll back in case of an error
+            return response()->json([
+                'success' => false,
+                'message' => 'Inventory deduction failed: ' . $e->getMessage()
+            ], 400);
+        }
     }
-}
 }

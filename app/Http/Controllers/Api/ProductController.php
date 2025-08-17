@@ -18,6 +18,11 @@ class ProductController extends Controller
     {
         $query = Product::query();
 
+        // Get all products for dropdowns if 'all' parameter is present
+        if ($request->has('all')) {
+            $products = $query->get(['id', 'name']);
+            return response()->json($products);
+        }
         // Search by product name
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');

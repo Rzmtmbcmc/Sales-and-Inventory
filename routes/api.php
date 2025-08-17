@@ -6,6 +6,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\DashboardController;
 
 
 
@@ -42,6 +43,20 @@ Route::get('productss', function() {
         'data' => \App\Models\Product::all(['id', 'name', 'price'])
     ]);
 });
+
+
+
+Route::get('analytics/sales-data', [App\Http\Controllers\Api\AnalyticsController::class, 'getSalesData']);
+Route::get('analytics/product-sales', [App\Http\Controllers\Api\AnalyticsController::class, 'getProductSalesData']);
+Route::get('analytics/top-bottom-brands', [App\Http\Controllers\Api\AnalyticsController::class, 'getTopBottomBrands']);
+Route::get('analytics/top-bottom-branches', [App\Http\Controllers\Api\AnalyticsController::class, 'getTopBottomBranches']);
+Route::get('analytics/top-bottom-products', [App\Http\Controllers\Api\AnalyticsController::class, 'getTopBottomProducts']);
+
+
+Route::get('/dashboard/analytics', [DashboardController::class, 'analytics']);
+Route::get('/brands', [DashboardController::class, 'brands']);
+Route::get('/branches', [DashboardController::class, 'getBranches']);
+Route::get('/products', [DashboardController::class, 'getProducts']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

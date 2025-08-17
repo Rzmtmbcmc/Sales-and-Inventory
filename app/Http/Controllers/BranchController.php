@@ -108,4 +108,9 @@ class BranchController extends Controller
             'message' => 'Branch deleted successfully'
         ]);
     }
+
+    public function allBranches(): JsonResponse
+    {
+        return response()->json(Branch::all());
+    }
 }
