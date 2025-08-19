@@ -7,12 +7,9 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Order Management System</title>
 
-        <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Font Awesome -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-        <!-- jsPDF Libraries -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
@@ -142,9 +139,7 @@
 
     <body class="hold-transition sidebar-mini layout-fixed">
         <div class="wrapper">
-            <!-- Content Wrapper -->
             <div class="content-wrapper">
-                <!-- Content Header -->
                 <div class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
@@ -168,58 +163,50 @@
                     </div>
                 </div>
 
-                <!-- Main content -->
                 <section class="content">
                     <div class="container-fluid">
-                        <!-- Statistics Row -->
                         <div class="row">
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-info stats-box">
-                                    <div class="inner">
-                                        <h3 id="totalOrders">0</h3>
-                                        <p>Total Orders</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-success stats-box">
-                                    <div class="inner">
-                                        <h3 id="totalValue">₱0</h3>
-                                        <p>Total Value</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-peso-sign"></i>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-info elevation-1"><i
+                                            class="fas fa-shopping-cart"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Total Orders</span>
+                                        <span class="info-box-number" id="totalOrders">0</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-warning stats-box">
-                                    <div class="inner">
-                                        <h3 id="totalBranches">0</h3>
-                                        <p>Active Branches</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-store"></i>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="info-box mb-3">
+                                    <span class="info-box-icon bg-success elevation-1"><i
+                                            class="fas fa-peso-sign"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Total Value</span>
+                                        <span class="info-box-number" id="totalValue">₱0</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-danger stats-box">
-                                    <div class="inner">
-                                        <h3 id="avgOrderValue">₱0</h3>
-                                        <p>Avg Order Value</p>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="info-box mb-3">
+                                    <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-store"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Active Branches</span>
+                                        <span class="info-box-number" id="totalBranches">0</span>
                                     </div>
-                                    <div class="icon">
-                                        <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="info-box mb-3">
+                                    <span class="info-box-icon bg-danger elevation-1"><i
+                                            class="fas fa-chart-line"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Avg Order Value</span>
+                                        <span class="info-box-number" id="avgOrderValue">₱0</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Search and Filter Section -->
                         <div class="search-section">
                             <div class="row">
                                 <div class="col-md-4">
@@ -253,16 +240,13 @@
                             </div>
                         </div>
 
-                        <!-- Orders Grid -->
                         <div class="orders-grid" id="ordersContainer">
-                            <!-- Order cards will be inserted here -->
                         </div>
                     </div>
                 </section>
             </div>
         </div>
 
-        <!-- Order Form Modal -->
         <div class="modal fade" id="orderFormModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -351,7 +335,6 @@
             </div>
         </div>
 
-        <!-- Final Order Summary Modal -->
         <div class="modal fade" id="finalOrderModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
@@ -365,7 +348,6 @@
                         </button>
                     </div>
                     <div class="modal-body" id="finalOrderContent">
-                        <!-- Final order content will be inserted here -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

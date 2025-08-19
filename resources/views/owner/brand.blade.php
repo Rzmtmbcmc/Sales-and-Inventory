@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Customer Management System</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <style>
             .content-wrapper {
@@ -20,9 +21,42 @@
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
 
-            .stats-box {
-                border-radius: 8px;
-                overflow: hidden;
+            /* Info Box Styling from products.blade.php */
+            .info-box {
+                display: flex;
+                align-items: center;
+                min-height: 90px;
+                background: #fff;
+                width: 100%;
+                box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+                border-radius: .25rem;
+                position: relative;
+            }
+
+            .info-box .info-box-icon {
+                border-radius: .25rem;
+                align-items: center;
+                display: flex;
+                font-size: 1.8rem;
+                justify-content: center;
+                text-align: center;
+                width: 70px;
+                background-color: rgba(0, 0, 0, .15);
+            }
+
+            .info-box .info-box-content {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                line-height: 1.8;
+                flex: 1;
+                padding: 0 10px;
+            }
+
+            .info-box .info-box-number {
+                display: block;
+                font-size: 1.2rem;
+                font-weight: 700;
             }
 
             .brand-grid {
@@ -97,9 +131,7 @@
 
     <body class="hold-transition sidebar-mini layout-fixed">
         <div class="wrapper">
-            <!-- Content Wrapper -->
             <div class="content-wrapper">
-                <!-- Content Header -->
                 <div class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
@@ -120,58 +152,49 @@
                     </div>
                 </div>
 
-                <!-- Main content -->
                 <section class="content">
                     <div class="container-fluid">
-                        <!-- Statistics Row -->
                         <div class="row">
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-info stats-box">
-                                    <div class="inner">
-                                        <h3 id="totalBrands">0</h3>
-                                        <p>Total Brands</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-store"></i>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="info-box mb-3">
+                                    <span class="info-box-icon bg-info elevation-1"><i class="fas fa-store"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Total Brands</span>
+                                        <span class="info-box-number" id="totalBrands">0</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-success stats-box">
-                                    <div class="inner">
-                                        <h3 id="totalBranches">0</h3>
-                                        <p>Total Branches</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-map-marker-alt"></i>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="info-box mb-3">
+                                    <span class="info-box-icon bg-success elevation-1"><i class="fas fa-cubes"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Total Branches</span>
+                                        <span class="info-box-number" id="totalBranches">0</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-warning stats-box">
-                                    <div class="inner">
-                                        <h3 id="avgBranches">0</h3>
-                                        <p>Avg per Brand</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-chart-line"></i>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="info-box mb-3">
+                                    <span class="info-box-icon bg-warning elevation-1"><i
+                                            class="fas fa-chart-line"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Avg Branches per Brand</span>
+                                        <span class="info-box-number" id="avgBranches">0</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-danger stats-box">
-                                    <div class="inner">
-                                        <h3 id="recentlyAdded">0</h3>
-                                        <p>This Month</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-calendar-plus"></i>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <div class="info-box mb-3">
+                                    <span class="info-box-icon bg-danger elevation-1"><i
+                                            class="fas fa-calendar-plus"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Brands This Month</span>
+                                        <span class="info-box-number" id="recentlyAdded">0</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Search and Filter Section -->
                         <div class="search-section">
                             <div class="row">
                                 <div class="col-md-8">
@@ -195,16 +218,13 @@
                             </div>
                         </div>
 
-                        <!-- Brands Grid -->
                         <div class="brand-grid" id="brandsContainer">
-                            <!-- Brand cards will be inserted here -->
                         </div>
                     </div>
                 </section>
             </div>
         </div>
 
-        <!-- Branches Modal -->
         <div class="modal fade" id="branchesModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
@@ -218,7 +238,6 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <!-- Branch Controls -->
                         <div class="row mb-3">
                             <div class="col-md-8">
                                 <div class="input-group">
@@ -238,7 +257,6 @@
                             </div>
                         </div>
 
-                        <!-- Branches Table -->
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead class="bg-light">
@@ -250,7 +268,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="branchesTableBody">
-                                    <!-- Branch rows will be inserted here -->
                                 </tbody>
                             </table>
                         </div>
@@ -259,7 +276,6 @@
             </div>
         </div>
 
-        <!-- Brand Form Modal -->
         <div class="modal fade" id="brandFormModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -291,7 +307,6 @@
             </div>
         </div>
 
-        <!-- Branch Form Modal -->
         <div class="modal fade" id="branchFormModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -327,7 +342,6 @@
             </div>
         </div>
 
-        <!-- Bootstrap and jQuery Dependencies -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
         <script>
