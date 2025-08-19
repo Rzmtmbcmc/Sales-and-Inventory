@@ -124,7 +124,7 @@
               <a href="{{route('owner.brands')}}" class="nav-link">
                 <i class="nav-icon fas fa-handshake"></i>
                 <p>
-                   Brand Management
+                   Brand and Branches
                 </p>
               </a>
             </li>
