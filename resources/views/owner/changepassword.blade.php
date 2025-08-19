@@ -1,92 +1,91 @@
 @extends('owner.olayouts.main')
 @section('content')
-
-<!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <div id="loader"></div>
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              {{--<li class="breadcrumb-item"><a href="{{ route('admin.dashboard')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="">Home</a></li>--}}
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-
-    <section class="content">
-      <div class="container-fluid">
-
-          <div class="row">
-
-            <div class="col-md-3">
-
-            </div>
-
-            <div class="col-md-5">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div id="loader"></div>
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            {{-- <li class="breadcrumb-item"><a href="{{ route('admin.dashboard')}}">Home</a></li>
+              <li class="breadcrumb-item"><a href="">Home</a></li> --}}
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
 
-                <div class="card mt-4">
-                    <div class="card-body">
-                      <h3 class="text-center">Change Password here</h3><hr>
-                        <form action="{{ route(owner.password.update) }}" method="POST">
-                          @csrf
-                          @method('put')
-                       <div id="mgs2"></div>
-                        <div class="form-group">
-                            <label for="status" class="control-label text-navy"><b>Email:</b></label>
-                               <input type="text" name="email" class="form-control" id="edit_email" value="{{$userlog->email}}" readonly>
-                               <span class="text-danger">
-                                   <strong id="email-error"></strong>
-                                </span>
-                           </div>
+        <section class="content">
+            <div class="container-fluid">
 
-                           <div class="form-group">
-                            <label for="status" class="control-label text-navy"><b>Password:</b></label>
-                               <input type="password" name="password" class="form-control" id="edit_password">
-                               <span class="text-danger">
-                                   <strong id="password-error"></strong>
-                                </span>
-                           </div>
-                              
-                               <input type="hidden" id="edit_id" value="{{$userlog->id}}">
-                               <input type="hidden" id="default_password" value="{{$userlog->password}}">
+                <div class="row">
 
-                            <button type="submit" class="btn btn-primary" id="changepassword">Change password</button>
-                        </form>
+                    <div class="col-md-3">
+
+                    </div>
+
+                    <div class="col-md-5">
+
+
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h3 class="text-center">Change Password here</h3>
+                                <hr>
+                                <form action="{{ route('owner.password.update') }}" method="POST">
+                                    @csrf
+                                    @method('put')
+                                    <div id="mgs2"></div>
+                                    <div class="form-group">
+                                        <label for="status" class="control-label text-navy"><b>Email:</b></label>
+                                        <input type="text" name="email" class="form-control" id="edit_email"
+                                            value="{{ $userlog->email }}" readonly>
+                                        <span class="text-danger">
+                                            <strong id="email-error"></strong>
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="status" class="control-label text-navy"><b>Password:</b></label>
+                                        <input type="password" name="password" class="form-control" id="edit_password">
+                                        <span class="text-danger">
+                                            <strong id="password-error"></strong>
+                                        </span>
+                                    </div>
+
+                                    <input type="hidden" id="edit_id" value="{{ $userlog->id }}">
+                                    <input type="hidden" id="default_password" value="{{ $userlog->password }}">
+
+                                    <button type="submit" class="btn btn-primary" id="changepassword">Change
+                                        password</button>
+                                </form>
+
+
+                            </div>
+                        </div>
+
 
 
                     </div>
-                  </div>
 
 
-
+                </div>
             </div>
+        </section>
+
+    </div>
+@endsection
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
-          </div>
-      </div>
-    </section>
-
-  </div>
-
-
-
-  @endsection
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-
-  {{--<script type="text/javascript">
+{{-- <script type="text/javascript">
 
     $(document).ready(function(){
 
@@ -161,4 +160,4 @@
 
       });
 
-    </script>--}}
+    </script> --}}
