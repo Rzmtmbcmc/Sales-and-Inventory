@@ -52,10 +52,10 @@
                         <div class="small-box bg-warning">
                             <div class="inner">
                                 <h3 id="totalOrdersMonth">0</h3>
-                                <p>Total Orders per Annum</p>
+                                <p>Total Orders per Month</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-shopping-basket"></i>
+                                <i class="fas fa-shopping-cart"></i>
                             </div>
                             <a href="{{ route('owner.orders') }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
@@ -66,7 +66,7 @@
                         <div class="small-box bg-danger">
                             <div class="inner">
                                 <h3 id="totalSalesMonth">₱0</h3>
-                                <p>Total Sales per Annum</p>
+                                <p>Total Sales per Month</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-dollar-sign"></i>
