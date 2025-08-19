@@ -131,7 +131,7 @@
 
              <li class="nav-item">
               <a href="{{route('owner.orders')}}" class="nav-link">
-                <i class="nav-icon fa fa-users"></i>
+                <i class="nav-icon fas fa-clipboard-list"></i>
                 <p>
                    Order Management
                 </p>
