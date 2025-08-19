@@ -122,7 +122,7 @@
 
             <li class="nav-item">
               <a href="{{route('owner.brands')}}" class="nav-link">
-                <i class="nav-icon fa fa-users"></i>
+                <i class="nav-icon fas fa-handshake"></i>
                 <p>
                    Brand Management
                 </p>
