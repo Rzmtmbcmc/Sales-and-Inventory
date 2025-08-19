@@ -20,72 +20,97 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-shopping-cart"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Orders (This Year)</span>
-                                <span class="info-box-number" id="totalOrdersYear">0</span>
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3 id="totalOrdersYear">0</h3>
+                                <p>Total Orders (This Year)</p>
                             </div>
+                            <div class="icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <a href="{{ route('owner.orders') }}" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-dollar-sign"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Sales (This Year)</span>
-                                <span class="info-box-number" id="totalSalesYear">₱0</span>
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3 id="totalSalesYear">₱0</h3>
+                                <p>Total Sales (This Year)</p>
                             </div>
+                            <div class="icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-shopping-cart"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Orders (This Month)</span>
-                                <span class="info-box-number" id="totalOrdersMonth">0</span>
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3 id="totalOrdersMonth">0</h3>
+                                <p>Total Orders (This Month)</p>
                             </div>
+                            <div class="icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <a href="{{ route('owner.orders') }}" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-dollar-sign"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Sales (This Month)</span>
-                                <span class="info-box-number" id="totalSalesMonth">₱0</span>
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3 id="totalSalesMonth">₱0</h3>
+                                <p>Total Sales (This Month)</p>
                             </div>
+                            <div class="icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
 
                 <div class="card card-primary card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">Analytics Filters</h3>
+                        <h3 class="card-title"><i class="fas fa-filter mr-2"></i>Analytics Filters</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="yearFilter">Year</label>
-                                    <select id="yearFilter" class="form-control"></select>
+                                    <select id="yearFilter" class="form-control select2bs4"></select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="brandFilter">Brand</label>
-                                    <select id="brandFilter" class="form-control"></select>
+                                    <select id="brandFilter" class="form-control select2bs4"></select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="branchFilter">Branch</label>
-                                    <select id="branchFilter" class="form-control"></select>
+                                    <select id="branchFilter" class="form-control select2bs4"></select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="productFilter">Product</label>
-                                    <select id="productFilter" class="form-control"></select>
+                                    <select id="productFilter" class="form-control select2bs4"></select>
                                 </div>
                             </div>
                         </div>
@@ -101,51 +126,105 @@
 
                 <div class="row">
                     <div class="col-lg-8">
-                        <div class="card card-info">
+                        <div class="card card-info card-outline">
                             <div class="card-header">
-                                <h3 class="card-title">Sales Overview</h3>
+                                <h3 class="card-title"><i class="fas fa-chart-line mr-2"></i>Sales Overview</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body">
-                                <canvas id="salesChart" style="height: 300px;"></canvas>
+                                <div class="chart">
+                                    <canvas id="salesChart" style="height: 300px; width: 100%;"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="card card-info">
+                        <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h3 class="card-title">Top 10 Products</h3>
+                                <h3 class="card-title"><i class="fas fa-star mr-2"></i>Top 10 Products</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <ul class="list-group" id="top10List">
-                                    <li class="list-group-item">No data available.</li>
-                                </ul>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th class="text-right">Quantity Sold</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="top10List">
+                                            <tr>
+                                                <td colspan="2" class="text-center">No data available.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                        <div class="card card-danger">
+                        <div class="card card-danger card-outline">
                             <div class="card-header">
-                                <h3 class="card-title">Bottom 10 Products</h3>
+                                <h3 class="card-title"><i class="fas fa-arrow-down mr-2"></i>Bottom 10 Products</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <ul class="list-group" id="bottom10List">
-                                    <li class="list-group-item">No data available.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="card card-info mt-4">
-                            <div class="card-header">
-                                <h3 class="card-title">Product Sales This Year</h3>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="productSalesChart" style="height: 300px;"></canvas>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th class="text-right">Quantity Sold</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="bottom10List">
+                                            <tr>
+                                                <td colspan="2" class="text-center">No data available.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-boxes mr-2"></i>Product Sales This Year</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <canvas id="productSalesChart" style="height: 300px; width: 100%;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -154,6 +233,7 @@
     <script>
         $(document).ready(function() {
             let salesChart;
+            let productSalesChart;
 
             // Fetch brands, branches, and products for filters
             async function fetchFilters() {
@@ -190,6 +270,11 @@
                             `<option value="${product.id}">${product.name}</option>`);
                     });
 
+                    // Initialize Select2 for better dropdown styling
+                    $('.select2bs4').select2({
+                        theme: 'bootstrap4'
+                    });
+
                 } catch (error) {
                     console.error("Error fetching filters:", error);
                 }
@@ -218,8 +303,8 @@
                         $('#totalOrdersMonth').text(data.most_orders_this_month);
                         $('#totalSalesMonth').text(`₱${data.total_sales_this_month.toLocaleString()}`);
                         // Update rankings
-                        updateRankingList('top10List', data.top_10_products, 'total_quantity_sold');
-                        updateRankingList('bottom10List', data.bottom_10_products, 'total_quantity_sold');
+                        updateRankingTable('top10List', data.top_10_products, 'total_quantity_sold');
+                        updateRankingTable('bottom10List', data.bottom_10_products, 'total_quantity_sold');
 
                         // Update chart
                         updateSalesChart(response.graph_data);
@@ -229,18 +314,18 @@
                 }
             }
 
-            function updateRankingList(listId, items, valueKey) {
-                const list = $(`#${listId}`);
-                list.empty();
+            function updateRankingTable(tableId, items, valueKey) {
+                const table = $(`#${tableId}`);
+                table.empty();
                 if (items.length > 0) {
                     items.forEach(item => {
-                        list.append(`<li class="list-group-item d-flex justify-content-between align-items-center">
-                        ${item.name}
-                        <span class="badge badge-primary badge-pill">${item[valueKey]}</span>
-                    </li>`);
+                        table.append(`<tr>
+                        <td>${item.name}</td>
+                        <td class="text-right"><span class="badge bg-primary">${item[valueKey]}</span></td>
+                    </tr>`);
                     });
                 } else {
-                    list.append('<li class="list-group-item">No data available.</li>');
+                    table.append('<tr><td colspan="2" class="text-center">No data available.</td></tr>');
                 }
             }
 
@@ -312,7 +397,6 @@
             fetchFilters();
             fetchDashboardData();
         });
-        let productSalesChart;
 
         function initProductSalesChart(data) {
             const ctx = document.getElementById('productSalesChart').getContext('2d');

@@ -13,12 +13,14 @@ class Product extends Model
         'name',
         'price',
         'quantity',
-        'perishable'
+        'perishable',
+        'expiration_date'
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
-        'quantity' => 'integer'
+        'quantity' => 'integer',
+        'expiration_date' => 'date'
     ];
 
     // Scope for low stock products
@@ -37,5 +39,22 @@ class Product extends Model
     public function scopePerishable($query, $perishable)
     {
         return $query->where('perishable', $perishable);
+    }
+
+    // Check if product has expired
+    public function hasExpired()
+    {
+        if (!$this->expiration_date) {
+            return false;
+        }
+
+        return $this->expiration_date->isPast();
+    }
+
+    // Scope for expired products
+    public function scopeExpired($query)
+    {
+        return $query->whereNotNull('expiration_date')
+                     ->where('expiration_date', '<', now());
     }
 }

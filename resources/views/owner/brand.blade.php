@@ -155,42 +155,60 @@
                 <section class="content">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="info-box mb-3">
-                                    <span class="info-box-icon bg-info elevation-1"><i class="fas fa-store"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Total Brands</span>
-                                        <span class="info-box-number" id="totalBrands">0</span>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-info">
+                                    <div class="inner">
+                                        <h3 id="totalBrands">0</h3>
+                                        <p>Total Brands</p>
                                     </div>
+                                    <div class="icon">
+                                        <i class="fas fa-store"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">
+                                        More info <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="info-box mb-3">
-                                    <span class="info-box-icon bg-success elevation-1"><i class="fas fa-cubes"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Total Branches</span>
-                                        <span class="info-box-number" id="totalBranches">0</span>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-success">
+                                    <div class="inner">
+                                        <h3 id="totalBranches">0</h3>
+                                        <p>Total Branches</p>
                                     </div>
+                                    <div class="icon">
+                                        <i class="fas fa-cubes"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">
+                                        More info <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="info-box mb-3">
-                                    <span class="info-box-icon bg-warning elevation-1"><i
-                                            class="fas fa-chart-line"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Avg Branches per Brand</span>
-                                        <span class="info-box-number" id="avgBranches">0</span>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-warning">
+                                    <div class="inner">
+                                        <h3 id="avgBranches">0</h3>
+                                        <p>Avg Branches per Brand</p>
                                     </div>
+                                    <div class="icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">
+                                        More info <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="info-box mb-3">
-                                    <span class="info-box-icon bg-danger elevation-1"><i
-                                            class="fas fa-calendar-plus"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Brands This Month</span>
-                                        <span class="info-box-number" id="recentlyAdded">0</span>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-danger">
+                                    <div class="inner">
+                                        <h3 id="recentlyAdded">0</h3>
+                                        <p>Brands This Month</p>
                                     </div>
+                                    <div class="icon">
+                                        <i class="fas fa-calendar-plus"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">
+                                        More info <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>

@@ -166,43 +166,60 @@
                 <section class="content">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="info-box">
-                                    <span class="info-box-icon bg-info elevation-1"><i
-                                            class="fas fa-shopping-cart"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Total Orders</span>
-                                        <span class="info-box-number" id="totalOrders">0</span>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-info">
+                                    <div class="inner">
+                                        <h3 id="totalOrders">0</h3>
+                                        <p>Total Orders</p>
                                     </div>
+                                    <div class="icon">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">
+                                        More info <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="info-box mb-3">
-                                    <span class="info-box-icon bg-success elevation-1"><i
-                                            class="fas fa-peso-sign"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Total Value</span>
-                                        <span class="info-box-number" id="totalValue">₱0</span>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-success">
+                                    <div class="inner">
+                                        <h3 id="totalValue">₱0</h3>
+                                        <p>Total Value</p>
                                     </div>
+                                    <div class="icon">
+                                        <i class="fas fa-peso-sign"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">
+                                        More info <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="info-box mb-3">
-                                    <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-store"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Active Branches</span>
-                                        <span class="info-box-number" id="totalBranches">0</span>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-warning">
+                                    <div class="inner">
+                                        <h3 id="totalBranches">0</h3>
+                                        <p>Active Branches</p>
                                     </div>
+                                    <div class="icon">
+                                        <i class="fas fa-store"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">
+                                        More info <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="info-box mb-3">
-                                    <span class="info-box-icon bg-danger elevation-1"><i
-                                            class="fas fa-chart-line"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Avg Order Value</span>
-                                        <span class="info-box-number" id="avgOrderValue">₱0</span>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-danger">
+                                    <div class="inner">
+                                        <h3 id="avgOrderValue">₱0</h3>
+                                        <p>Avg Order Value</p>
                                     </div>
+                                    <div class="icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">
+                                        More info <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -1155,36 +1172,125 @@
                 } = window.jspdf;
                 const doc = new jsPDF();
 
-                // Add title
-                doc.setFontSize(20);
-                doc.text('Final Order Summary', 20, 20);
+                // Document properties
+                const pageWidth = doc.internal.pageSize.width;
+                const pageHeight = doc.internal.pageSize.height;
 
-                // Add date
-                doc.setFontSize(12);
-                doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 35);
+                // Company Information for Header
+                const companyInfo = {
+                    name: "Inventory Management System",
+                    address: "123 Business Street, Metro City",
+                    phone: "(123) 456-7890",
+                    email: "Owner@example.com"
+                };
 
-                let yPosition = 50;
+                // Add Header
+                function addHeader() {
+                    // Company Logo (placeholder - in real implementation, you could add an actual logo)
+                    doc.setDrawColor(0, 123, 255);
+                    doc.setFillColor(0, 123, 255);
+                    doc.rect(15, 10, 180, 25, 'F');
+
+                    // Company Name
+                    doc.setFontSize(18);
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFont(undefined, 'bold');
+                    doc.text(companyInfo.name, 20, 22);
+
+                    // Company Details
+                    doc.setFontSize(10);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(companyInfo.address, 20, 28);
+                    doc.text(`Phone: ${companyInfo.phone} | Email: ${companyInfo.email}`, 20, 33);
+
+                    // Document Title
+                    doc.setFontSize(22);
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont(undefined, 'bold');
+                    doc.text('FINAL ORDER SUMMARY', pageWidth / 2, 55, null, null, 'center');
+
+                    // Generation Date
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    doc.setTextColor(100, 100, 100);
+                    doc.text(`Generated on: ${new Date().toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        weekday: 'long'
+                    })}`, pageWidth / 2, 62, null, null, 'center');
+
+                    // Add a line separator
+                    doc.setDrawColor(200, 200, 200);
+                    doc.line(15, 70, pageWidth - 15, 70);
+                }
+
+                // Add Footer
+                function addFooter() {
+                    const pageCount = doc.internal.getNumberOfPages();
+                    for (let i = 1; i <= pageCount; i++) {
+                        doc.setPage(i);
+                        // Footer line
+                        doc.setDrawColor(200, 200, 200);
+                        doc.line(15, pageHeight - 25, pageWidth - 15, pageHeight - 25);
+
+                        // Footer text
+                        doc.setFontSize(10);
+                        doc.setTextColor(150, 150, 150);
+                        doc.setFont(undefined, 'normal');
+                        doc.text('Confidential - For Internal Use Only', 15, pageHeight - 15);
+                        doc.text(`Page ${i} of ${pageCount}`, pageWidth - 30, pageHeight - 15, null, null, 'right');
+                        doc.text('© 2025 Sales and Inventory Management System. All rights reserved.', pageWidth / 2,
+                            pageHeight - 15,
+                            null, null, 'center');
+                    }
+                }
+
+                // Add Header on first page
+                addHeader();
+
+                let yPosition = 80;
                 let grandTotal = 0;
 
                 // Get summary data from modal
                 $('#finalOrderContent .mb-4').each(function() {
                     const brandName = $(this).find('h4').text().replace('🏪', '').trim();
 
-                    // Add brand header
+                    // Check if we need a new page
+                    if (yPosition > pageHeight - 80) {
+                        doc.addPage();
+                        addHeader();
+                        yPosition = 80;
+                    }
+
+                    // Add brand header with better styling
                     doc.setFontSize(16);
                     doc.setTextColor(0, 123, 255);
+                    doc.setFont(undefined, 'bold');
                     doc.text(brandName, 20, yPosition);
-                    yPosition += 10;
+                    yPosition += 12;
 
                     // Process each branch
                     $(this).find('.branch-section').each(function() {
                         const branchName = $(this).find('h5').text().replace('📍', '').trim();
                         const branchTotal = $(this).find('.badge').text().replace('Total: ', '');
 
-                        // Add branch header
+                        // Check if we need a new page
+                        if (yPosition > pageHeight - 80) {
+                            doc.addPage();
+                            addHeader();
+                            yPosition = 80;
+                        }
+
+                        // Add branch header with better styling
                         doc.setFontSize(14);
                         doc.setTextColor(0, 0, 0);
-                        doc.text(`${branchName} - ${branchTotal}`, 30, yPosition);
+                        doc.setFont(undefined, 'bold');
+                        doc.text(`${branchName}`, 25, yPosition);
+
+                        // Add branch total
+                        doc.setFont(undefined, 'normal');
+                        doc.text(branchTotal, pageWidth - 30, yPosition, null, null, 'right');
                         yPosition += 8;
 
                         // Prepare table data
@@ -1197,7 +1303,7 @@
                             tableData.push(row);
                         });
 
-                        // Add table
+                        // Add table with improved styling
                         if (tableData.length > 0) {
                             doc.autoTable({
                                 head: [
@@ -1206,34 +1312,90 @@
                                 body: tableData,
                                 startY: yPosition,
                                 margin: {
-                                    left: 40
+                                    left: 30,
+                                    right: 30
                                 },
                                 styles: {
-                                    fontSize: 10
+                                    fontSize: 10,
+                                    cellPadding: 3
                                 },
                                 headStyles: {
-                                    fillColor: [240, 240, 240]
+                                    fillColor: [0, 123, 255],
+                                    textColor: [255, 255, 255],
+                                    fontStyle: 'bold'
+                                },
+                                bodyStyles: {
+                                    textColor: [50, 50, 50]
+                                },
+                                alternateRowStyles: {
+                                    fillColor: [245, 245, 245]
+                                },
+                                columnStyles: {
+                                    0: {
+                                        cellWidth: 80
+                                    },
+                                    1: {
+                                        cellWidth: 30,
+                                        halign: 'center'
+                                    },
+                                    2: {
+                                        cellWidth: 30,
+                                        halign: 'right'
+                                    },
+                                    3: {
+                                        cellWidth: 30,
+                                        halign: 'right'
+                                    }
+                                },
+                                didDrawPage: function(data) {
+                                    // Add header on new pages
+                                    if (data.pageNumber > 1) {
+                                        addHeader();
+                                    }
                                 }
                             });
 
-                            yPosition = doc.lastAutoTable.finalY + 10;
+                            yPosition = doc.lastAutoTable.finalY + 15;
                         }
 
                         // Check if we need a new page
-                        if (yPosition > 250) {
+                        if (yPosition > pageHeight - 80) {
                             doc.addPage();
-                            yPosition = 20;
+                            addHeader();
+                            yPosition = 80;
                         }
                     });
 
-                    yPosition += 5;
+                    yPosition += 10;
                 });
 
-                // Add grand total
+                // Add grand total with better styling
                 const grandTotalText = $('#finalOrderContent .final-total').text().replace('🧮', '').trim();
-                doc.setFontSize(16);
-                doc.setTextColor(40, 167, 69);
-                doc.text(grandTotalText, 20, yPosition);
+
+                // Check if we need a new page for the grand total
+                if (yPosition > pageHeight - 50) {
+                    doc.addPage();
+                    addHeader();
+                    yPosition = 80;
+                }
+
+                doc.setDrawColor(0, 123, 255);
+                doc.setLineWidth(0.5);
+                doc.line(20, yPosition, pageWidth - 20, yPosition);
+                yPosition += 10;
+
+                doc.setFontSize(18);
+                doc.setTextColor(0, 123, 255);
+                doc.setFont(undefined, 'bold');
+                doc.text(grandTotalText, pageWidth - 30, yPosition, null, null, 'right');
+                yPosition += 15;
+
+                doc.setDrawColor(0, 123, 255);
+                doc.setLineWidth(0.5);
+                doc.line(20, yPosition, pageWidth - 20, yPosition);
+
+                // Add footer to all pages
+                addFooter();
 
                 // Save the PDF
                 const fileName = `Final_Order_Summary_${new Date().toISOString().split('T')[0]}.pdf`;
