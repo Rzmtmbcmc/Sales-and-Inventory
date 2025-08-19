@@ -100,7 +100,7 @@
                  with font-awesome or any other icon font library -->
             <li class="nav-item">
               <a href="{{route('owner')}}" class="nav-link{{ request()->routeIs('owner') ? ' active' : '' }}">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <i class="nav-icon fas fa-chart-line"></i>
                 <p>
                   Dashboard
                 </p>
