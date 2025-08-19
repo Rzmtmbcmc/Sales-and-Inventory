@@ -27,7 +27,7 @@
                                 <p>Total Orders per Annum</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-shopping-cart"></i>
+                                <i class="fas fa-shopping-basket"></i>
                             </div>
                             <a href="{{ route('owner.orders') }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
@@ -55,7 +55,7 @@
                                 <p>Total Orders per Month</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-shopping-cart"></i>
+                                <i class="fas fa-boxes-packing"></i>
                             </div>
                             <a href="{{ route('owner.orders') }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
