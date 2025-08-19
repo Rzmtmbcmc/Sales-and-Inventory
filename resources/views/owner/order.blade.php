@@ -145,8 +145,7 @@
                         <div class="row mb-2">
                             <div class="col-sm-6">
                                 <h1 class="m-0">
-                                    <i class="fas fa-shopping-cart mr-2"></i>
-                                    Order Management System
+                                    ORDER CREATION
                                 </h1>
                             </div>
                             <div class="col-sm-6">
