@@ -439,14 +439,20 @@
 
             async function updateBrand(brandId, brandData) {
                 return await apiRequest(`/brands/${brandId}`, {
-                    method: 'PUT',
-                    body: JSON.stringify(brandData)
+                    method: 'POST',
+                    body: JSON.stringify({
+                        ...brandData,
+                        _method: 'PUT'
+                    })
                 });
             }
 
             async function deleteBrandAPI(brandId) {
                 return await apiRequest(`/brands/${brandId}`, {
-                    method: 'DELETE'
+                    method: 'POST',
+                    body: JSON.stringify({
+                        _method: 'DELETE'
+                    })
                 });
             }
 
@@ -471,14 +477,20 @@
 
             async function updateBranch(brandId, branchId, branchData) {
                 return await apiRequest(`/brands/${brandId}/branches/${branchId}`, {
-                    method: 'PUT',
-                    body: JSON.stringify(branchData)
+                    method: 'POST',
+                    body: JSON.stringify({
+                        ...branchData,
+                        _method: 'PUT'
+                    })
                 });
             }
 
             async function deleteBranchAPI(brandId, branchId) {
                 return await apiRequest(`/brands/${brandId}/branches/${branchId}`, {
-                    method: 'DELETE'
+                    method: 'POST',
+                    body: JSON.stringify({
+                        _method: 'DELETE'
+                    })
                 });
             }
 

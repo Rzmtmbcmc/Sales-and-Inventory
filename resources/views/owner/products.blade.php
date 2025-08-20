@@ -617,9 +617,22 @@
 
             // Update product
             async function updateProduct(id, productData) {
+                // Create FormData object for method spoofing
+                const formData = new FormData();
+                formData.append('_method', 'PUT');
+                for (const key in productData) {
+                    if (productData.hasOwnProperty(key)) {
+                        formData.append(key, productData[key]);
+                    }
+                }
+
                 const response = await apiRequest(`${API_CONFIG.endpoints.product}/${id}`, {
-                    method: 'PUT',
-                    body: JSON.stringify(productData)
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': API_CONFIG.headers['X-CSRF-TOKEN']
+                        // Remove Content-Type header to let browser set it with boundary for FormData
+                    }
                 });
 
                 if (response) {
@@ -643,8 +656,17 @@
 
             // Delete product
             async function deleteProductAPI(id) {
+                // Create FormData object for method spoofing
+                const formData = new FormData();
+                formData.append('_method', 'DELETE');
+
                 const response = await apiRequest(`${API_CONFIG.endpoints.product}/${id}`, {
-                    method: 'DELETE'
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': API_CONFIG.headers['X-CSRF-TOKEN']
+                        // Remove Content-Type header to let browser set it with boundary for FormData
+                    }
                 });
 
                 if (response) {

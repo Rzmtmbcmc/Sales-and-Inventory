@@ -16,6 +16,9 @@ class ProductController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        // Automatically delete expired products when accessing the product list
+        $this->deleteExpiredProducts();
+        
         $query = Product::query();
 
         // Get all products for dropdowns if 'all' parameter is present
@@ -56,17 +59,36 @@ class ProductController extends Controller
     }
 
       public function store(StoreProductRequest $request): JsonResponse
-    {
-        $product = Product::create($request->validated());
+   {
+       $validatedData = $request->validated();
+       
+       // Ensure expiration_date is properly handled
+       if (isset($validatedData['expiration_date'])) {
+           $validatedData['expiration_date'] = $validatedData['expiration_date'] ?: null;
+       }
 
-        return response()->json([
-            'message' => 'Product created successfully',
-            'data' => $product
-        ], 201);
-    }
+       $product = Product::create($validatedData);
 
+       return response()->json([
+           'message' => 'Product created successfully',
+           'data' => $product
+       ], 201);
+   }
+
+    /**
+     * Display the specified product
+     */
     public function show(Product $product): JsonResponse
     {
+        // Check if the product has expired and delete it if so
+        if ($product->hasExpired()) {
+            $product->delete();
+            return response()->json([
+                'error' => 'Product not found or has expired',
+                'message' => 'The requested product has expired and has been deleted'
+            ], 404);
+        }
+        
         return response()->json([
             'data' => $product
         ]);
@@ -74,7 +96,14 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
-        $product->update($request->validated());
+        $validatedData = $request->validated();
+        
+        // Ensure expiration_date is properly handled
+        if (isset($validatedData['expiration_date'])) {
+            $validatedData['expiration_date'] = $validatedData['expiration_date'] ?: null;
+        }
+
+        $product->update($validatedData);
 
         return response()->json([
             'message' => 'Product updated successfully',
@@ -97,8 +126,14 @@ class ProductController extends Controller
     /**
      * Get product statistics
      */
+    /**
+     * Get product statistics
+     */
     public function stats(): JsonResponse
     {
+        // Automatically delete expired products when getting stats
+        $this->deleteExpiredProducts();
+        
         $stats = [
             'total_products' => Product::count(),
             'total_quantity' => Product::sum('quantity'),
@@ -109,5 +144,33 @@ class ProductController extends Controller
         ];
 
         return response()->json($stats);
+    }
+    
+    /**
+     * Delete all expired products
+     */
+    public function deleteExpiredProducts(): JsonResponse
+    {
+        try {
+            $expiredProducts = Product::expired()->get();
+            $deletedCount = 0;
+            
+            foreach ($expiredProducts as $product) {
+                $product->delete();
+                $deletedCount++;
+            }
+            
+            return response()->json([
+                'message' => "Successfully deleted {$deletedCount} expired products",
+                'deleted_count' => $deletedCount
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error deleting expired products: ' . $e->getMessage());
+            
+            return response()->json([
+                'error' => 'Failed to delete expired products',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

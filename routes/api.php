@@ -22,8 +22,8 @@ use App\Http\Controllers\Api\DashboardController;
 */
 Route::apiResource('brands', BrandController::class);
 Route::apiResource('brands.branches', BranchController::class);
-Route::apiResource('products', ProductController::class);
-Route::post('products/delete-expired', [App\Http\Controllers\ProductController::class, 'deleteExpiredProducts']);
+Route::apiResource('products', App\Http\Controllers\Api\ProductController::class);
+Route::post('products/delete-expired', [App\Http\Controllers\Api\ProductController::class, 'deleteExpiredProducts']);
 
 Route::get('orders/final-summary', [OrderController::class, 'finalSummary']);
 Route::get('orders/statistics', [OrderController::class, 'statistics']);
