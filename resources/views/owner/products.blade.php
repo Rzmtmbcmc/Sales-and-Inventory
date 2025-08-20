@@ -963,12 +963,15 @@
                 const diffTime = expDate - today;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+                // Format date to show only year, month, and day (Y-m-d)
+                const formattedDate = expDate.toISOString().split('T')[0];
+
                 if (diffDays < 0) {
-                    return `<span class="expiration-badge expiration-expired" title="Expired ${Math.abs(diffDays)} days ago">${expirationDate} (EXPIRED)</span>`;
+                    return `<span class="expiration-badge expiration-expired" title="Expired ${Math.abs(diffDays)} days ago">${formattedDate} (EXPIRED)</span>`;
                 } else if (diffDays <= 3) {
-                    return `<span class="expiration-badge expiration-soon" title="Expires in ${diffDays} days">${expirationDate} (EXPIRING SOON)</span>`;
+                    return `<span class="expiration-badge expiration-soon" title="Expires in ${diffDays} days">${formattedDate} (EXPIRING SOON)</span>`;
                 } else {
-                    return `<span class="expiration-badge expiration-fresh" title="Expires in ${diffDays} days">${expirationDate}</span>`;
+                    return `<span class="expiration-badge expiration-fresh" title="Expires in ${diffDays} days">${formattedDate}</span>`;
                 }
             }
 

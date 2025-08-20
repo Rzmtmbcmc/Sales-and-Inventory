@@ -397,6 +397,7 @@
             fetchFilters();
             fetchDashboardData();
         });
+        let productSalesChart;
 
         function initProductSalesChart(data) {
             const ctx = document.getElementById('productSalesChart').getContext('2d');
