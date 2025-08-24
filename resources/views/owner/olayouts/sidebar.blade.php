@@ -119,7 +119,7 @@
 
 
             <li class="nav-item">
-              <a href="{{route('owner.brands')}}" class="nav-link">
+              <a href="{{route('owner.brands')}}" class="nav-link {{ request()->routeIs('owner.brands') ? ' active' : '' }}"">
                 <i class="nav-icon fas fa-handshake"></i>
                 <p>
                    Brand and Branches
@@ -128,7 +128,7 @@
             </li>
 
              <li class="nav-item">
-              <a href="{{route('owner.orders')}}" class="nav-link">
+              <a href="{{route('owner.orders')}}" class="nav-link {{ request()->routeIs('owner.orders') ? ' active' : '' }}">
                 <i class="nav-icon fas fa-clipboard-list"></i>
                 <p>
                    Order Creation
