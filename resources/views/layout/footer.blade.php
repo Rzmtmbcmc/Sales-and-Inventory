@@ -7,7 +7,7 @@
 
                 <div class="footer-caption">
 
-                    <img src="{{ asset('assets/img/logo.jpg') }}" class="img-responsive center-block" alt="logo" style="border-radius: 50%">
+                    <img src="{{ asset('/storage/icons/logo.jpg') }}" class="img-responsive center-block" alt="logo" style="border-radius: 50%">
 
                     <hr>
 
