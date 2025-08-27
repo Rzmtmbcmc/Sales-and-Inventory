@@ -182,6 +182,10 @@
 
                         </div>
 
+                        <div class="form-group text-center">
+                            <a href="{{ route('password.request') }}">Forgot Your Password?</a>
+                        </div>
+
                        
                         
                     </form>

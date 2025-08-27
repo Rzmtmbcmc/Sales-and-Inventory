@@ -43,6 +43,11 @@ Route::get('login', [login::class,'showForm'])->name('Login');
 Route::post('login', [login::class,'loginUser'])->name('loginUser');
 Route::post('logout', [login::class,'logout'])->name('logout');
 Route::post('signup',[signup::class,'createUser'])->name('createUser');
+// Password Reset Routes...
+Route::get('password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/update', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 //routes: dashboard
 Route::get('customer',[MainController::class,'customer'])->name('customer');
 Route::get('manager',[MainController::class,'manager'])->name('manager');
@@ -72,4 +77,3 @@ Route::get('api/products', [ProductController::class, 'index']);
 
 //route Manager Accounts
 Route::get('owner/managers',[ManagerController::class,'showView'])->name('owner.managers');
-
