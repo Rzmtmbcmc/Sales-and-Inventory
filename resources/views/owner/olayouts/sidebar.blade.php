@@ -144,7 +144,7 @@
               <a href="{{route('owner.managers')}}" class="nav-link {{ request()->routeIs('owner.managers') ? ' active' : '' }}">
                 <i class="nav-icon fas fa-clipboard-list"></i>
                 <p>
-                   Manager Accounts
+                   Manage Accounts
                 </p>
               </a>
             </li>
