@@ -1,3 +1,4 @@
+@ -0,0 +1,546 @@
 @extends('owner.olayouts.main')
 @section('content')
 
@@ -178,13 +179,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="managerName">Full Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="managerName" required>
+                                        <input type="text" class="form-control" id="managerName" name="name" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="managerEmail">Email <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" id="managerEmail" required>
+                                        <input type="email" class="form-control" id="managerEmail" name="email" required>
                                     </div>
                                 </div>
                             </div>
@@ -193,7 +194,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="managerPhone">Phone</label>
-                                        <input type="tel" class="form-control" id="managerPhone">
+                                        <input type="tel" class="form-control" id="managerPhone" name="phone">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="managerPassword">Password</label>
+                                        <input type="password" class="form-control" id="managerPassword" name="password" autocomplete="new-password">
+                                        <small id="passwordHelp" class="form-text text-muted" style="display: none;">Leave blank to keep current password.</small>
                                     </div>
                                 </div>
                             </div>
@@ -201,7 +209,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="managerNotes">Notes</label>
-                                        <textarea class="form-control" id="managerNotes" rows="3" placeholder="Additional notes..."></textarea>
+                                        <textarea class="form-control" id="managerNotes" name="notes" rows="3" placeholder="Additional notes..."></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -231,19 +239,25 @@
                 try {
                     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-                    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    const fetchOptions = {
+                        ...options,
                         headers: {
-                            'Content-Type': 'application/json',
                             'Accept': 'application/json',
                             'X-Requested-With': 'XMLHttpRequest',
-                            ...(csrfToken && {
-                                'X-CSRF-TOKEN': csrfToken
-                            }),
+                            ...(csrfToken && { 'X-CSRF-TOKEN': csrfToken }),
                             ...options.headers
                         },
                         credentials: 'same-origin',
-                        ...options
-                    });
+                    };
+
+                    if (!(options.body instanceof FormData)) {
+                        fetchOptions.headers['Content-Type'] = 'application/json';
+                        if (options.body && typeof options.body !== 'string') {
+                            fetchOptions.body = JSON.stringify(options.body);
+                        }
+                    }
+
+                    const response = await fetch(`${API_BASE_URL}${endpoint}`, fetchOptions);
 
                     if (!response.ok) {
                         const errorData = await response.json().catch(() => ({}));
@@ -255,7 +269,8 @@
                         throw new Error(errorMessage);
                     }
 
-                    return await response.json();
+                    const responseText = await response.text();
+                    return responseText ? JSON.parse(responseText) : {};
                 } catch (error) {
                     console.error('API Error:', error);
                     showNotification(`${error.message}`, 'error');
@@ -460,27 +475,24 @@
             async function handleManagerSubmit(e) {
                 e.preventDefault();
 
-                const managerData = {
-                    name: $('#managerName').val(),
-                    email: $('#managerEmail').val(),
-                    phone: $('#managerPhone').val(),
-                    notes: $('#managerNotes').val()
-                };
+                const form = document.getElementById('managerForm');
+                const formData = new FormData(form);
 
                 try {
                     showLoading(true);
-                    
+
+                    let response;
                     if (editingManagerId) {
-                        managerData._method = 'PUT';
-                        await apiRequest(`/managers/${editingManagerId}`, {
+                        formData.append('_method', 'PUT');
+                        response = await apiRequest(`/managers/${editingManagerId}`, {
                             method: 'POST',
-                            body: JSON.stringify(managerData)
+                            body: formData,
                         });
                         showNotification('Manager updated successfully!');
                     } else {
-                        await apiRequest('/managers', {
+                        response = await apiRequest('/managers', {
                             method: 'POST',
-                            body: JSON.stringify(managerData)
+                            body: formData,
                         });
                         showNotification('Manager created successfully!');
                     }

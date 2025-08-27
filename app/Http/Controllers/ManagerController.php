@@ -35,20 +35,20 @@ class ManagerController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:255',
-
+            'phone' => 'nullable|string|max:20',
+            'notes' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make('123'),
-            'notes' =>request->notes,
-            'phone' =>request->phone,
+            'password' => Hash::make($request->password),
+            'phone' => $request->phone,
+            'notes' => $request->notes,
             'Role' => 'Manager',
         ]);
 
@@ -60,16 +60,21 @@ class ManagerController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $manager->id,
-            'phone' => 'required|string|max:255',
-
+            'password' => 'nullable|string|min:8',
+            'phone' => 'nullable|string|max:20',
+            'notes' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $manager->update($request->only(['name', 'email','notes','phone']));
+        $data = $request->only(['name', 'email', 'phone', 'notes']);
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
 
+        $manager->update($data);
 
         return response()->json($manager);
     }
