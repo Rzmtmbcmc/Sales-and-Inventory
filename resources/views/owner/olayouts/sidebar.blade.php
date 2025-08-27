@@ -141,13 +141,14 @@
 
 
             <li class="nav-item">
-              <a href="" class="nav-link">
-                <i class="nav-icon fa fa-list"></i>
+              <a href="{{route('owner.managers')}}" class="nav-link {{ request()->routeIs('owner.managers') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-clipboard-list"></i>
                 <p>
-                  for edit
+                   Manager Accounts
                 </p>
               </a>
             </li>
+            
             <li class="nav-item">
               <a href="" class="nav-link">
                 <i class="nav-icon fa fa-scroll"></i>

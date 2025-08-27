@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\InventoryController;
@@ -69,5 +70,6 @@ Route::get('api/brands', [BrandController::class, 'index']);
 Route::get('api/branches', [BranchController::class, 'allBranches']);
 Route::get('api/products', [ProductController::class, 'index']);
 
-
+//route Manager Accounts
+Route::get('owner/managers',[ManagerController::class,'showView'])->name('owner.managers');
 
