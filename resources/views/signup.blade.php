@@ -45,7 +45,7 @@
 
                 <a class="navbar-brand" href="#brand">
 
-                    <img src="logo"  class="logo" alt="logo" style="border-radius: 50%">
+                    <img src="logo"  class="logo" alt="logo" style="border-radius: 70%">
 
                 </a>
 

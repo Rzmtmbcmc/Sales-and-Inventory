@@ -11,7 +11,7 @@
 
                     <hr>
 
-                    <h5 class="pull-left"> &copy;2024 All rights reserved</h5>
+                    <h5 class="pull-left"> &copy;Isaac Fruits N' Vegetable Dealer</h5>
 
                     <ul class="liste-unstyled pull-right">
 
