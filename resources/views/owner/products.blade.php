@@ -250,7 +250,7 @@
                                     <div class="form-group">
                                         <label>&nbsp;</label>
                                         <div class="d-flex">
-                                            <button type="button" class="btn btn-primary btn-block"
+                                            <button type="button" class="btn btn-primary btn-block mr-2"
                                                 id="addProductBtn">
                                                 <i class="fas fa-plus mr-1"></i> Add Product
                                             </button>
