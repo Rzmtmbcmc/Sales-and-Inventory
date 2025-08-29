@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\DashboardController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::apiResource('managers', App\Http\Controllers\ManagerController::class);
 Route::apiResource('brands', BrandController::class);
 Route::apiResource('brands.branches', BranchController::class);
 Route::apiResource('products', App\Http\Controllers\Api\ProductController::class);
