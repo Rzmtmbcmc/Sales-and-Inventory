@@ -80,9 +80,13 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="" class="brand-link">
-        <span class="brand-text font-weight-light"><center>Isaac Fruit N' Vegetable Dealer</center></span>
-      </a>
+        <a class="navbar-brand" href="#brand">
+          <img src="{{asset('/storage/icons/logo.jpg')}}"  class="logo" alt="logo" style="width:50px; height:50px;">
+          <span class="brand-text font-weight-light">Isaac Fruit N' Vegetable</span>
+        </a>
+      <!--a href="" class="brand-link">
+        <span class="brand-text font-weight-light">Isaac Fruit N' Vegetable</span>
+      </a-->
 
       <!-- Sidebar -->
       <div class="sidebar">
