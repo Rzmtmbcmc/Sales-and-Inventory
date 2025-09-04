@@ -7,6 +7,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\UserHeartbeatController;
 
 
 
@@ -44,6 +45,12 @@ Route::get('productss', function() {
     return response()->json([
         'data' => \App\Models\Product::all(['id', 'name', 'price'])
     ]);
+});
+
+// Heartbeat routes
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::post('/heartbeat', [UserHeartbeatController::class, 'update']);
+    Route::get('/online-users', [UserHeartbeatController::class, 'getOnlineUsers']);
 });
 
 

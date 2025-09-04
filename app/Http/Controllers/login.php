@@ -34,6 +34,14 @@ class login extends Controller
          return back()->withInput()->with('status', 'Invalid Credentials or User not Found');
     }
     public function logout():RedirectResponse{
+        // Mark user as offline before logging out
+        if (Auth::check()) {
+            Auth::user()->update([
+                'is_online' => false,
+                'last_activity' => null
+            ]);
+        }
+        
         Session::flush();
         Auth::logout();
         return redirect(route('Login'));

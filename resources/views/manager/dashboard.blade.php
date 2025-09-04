@@ -24,6 +24,7 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/user-heartbeat.js') }}"></script>
 </header>
     
     
@@ -161,4 +162,34 @@
     </section>
 
   </div>
+  <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const heartbeat = new UserHeartbeat();
+            heartbeat.start();
+            fetch('/api/user', {
+    headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    },
+    credentials: 'include'
+})
+.then(response => {
+    if (!response.ok) {
+        console.error('Authentication test failed:', response.status);
+        // Redirect to login if needed
+        if (response.status === 401) {
+            window.location.href = '/login';
+        }
+    }
+    return response.json();
+})
+.then(user => {
+    console.log('Authenticated as:', user);
+})
+.catch(error => {
+    console.error('Authentication test error:', error);
+});
+        });
+    </script>
   @endsection

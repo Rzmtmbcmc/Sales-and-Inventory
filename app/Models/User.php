@@ -18,6 +18,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'last_activity',
+        'is_online',
         'name',
         'email',
         'password',
@@ -25,6 +27,21 @@ class User extends Authenticatable
         'phone',
         'notes',
     ];
+
+    protected $casts = [
+        'is_online' => 'boolean',
+        'last_activity' => 'datetime',
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    public function isOnline()
+    {
+        if (!$this->last_activity) {
+            return false;
+        }
+        return $this->last_activity->gt(now()->subMinutes(5));
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -36,13 +53,4 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
 }

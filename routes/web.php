@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\UserHeartbeatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,4 +78,10 @@ Route::get('api/products', [ProductController::class, 'index']);
 
 //route Manager Accounts
 Route::get('owner/managers',[ManagerController::class,'showView'])->name('owner.managers');
+
+// Heartbeat routes
+Route::middleware(['auth'])->group(function () {
+    Route::post('/heartbeat', [UserHeartbeatController::class, 'update'])->name('heartbeat');
+    Route::get('/online-users', [UserHeartbeatController::class, 'getOnlineUsers'])->name('online-users');
+});
 

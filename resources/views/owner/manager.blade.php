@@ -1,4 +1,3 @@
-@ -0,0 +1,546 @@
 @extends('owner.olayouts.main')
 @section('content')
 
@@ -7,8 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">   
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <!-- Heartbeat System -->
+        <script src="{{ asset('js/heartbeat.js') }}"></script>
 
         <style>
             .content-wrapper {
@@ -185,7 +186,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="managerEmail">Email <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" id="managerEmail" name="email" required>
+                                        <input type="email" class="form-control" id="managerEmail" name="email" required autocomplete>
                                     </div>
                                 </div>
                             </div>
@@ -224,27 +225,34 @@
                 </div>
             </div>
         </div>
-
         <script>
-            // 🔧 API Configuration
+// 🔧 API Configuration
             const API_BASE_URL = '/api';
 
             // 📊 Application State
+
+            // 🔧 Application State
             let managers = [];
             let pagination = {};
             let editingManagerId = null;
+            let heartbeat = null;
 
             // 🌐 API Helper Functions
             async function apiRequest(endpoint, options = {}) {
                 try {
                     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                    
+                    if (!csrfToken) {
+                        throw new Error('CSRF token not found');
+                    }
 
                     const fetchOptions = {
                         ...options,
                         headers: {
                             'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
                             'X-Requested-With': 'XMLHttpRequest',
-                            ...(csrfToken && { 'X-CSRF-TOKEN': csrfToken }),
                             ...options.headers
                         },
                         credentials: 'same-origin',
@@ -318,10 +326,54 @@
                 }
             }
 
-            // 🚀 Initialize Application
+            // � Heartbeat Functions
+            async function startHeartbeat() {
+                // Send initial heartbeat
+                await sendHeartbeat();
+                
+                // Set up interval for periodic heartbeats
+                heartbeatInterval = setInterval(sendHeartbeat, 3000);
+            }
+
+            async function sendHeartbeat() {
+                try {
+                    await apiRequest('/heartbeat', { method: 'POST' });
+                } catch (error) {
+                    console.error('Heartbeat failed:', error);
+                }
+            }
+
+            async function updateOnlineStatus() {
+                if (heartbeat) {
+                    await heartbeat.checkOnlineUsers();
+                }
+            }
+
+            // �🚀 Initialize Application
             $(document).ready(function() {
                 setupEventListeners();
                 loadInitialData();
+                startHeartbeat();
+                // Update online status every minute
+                setInterval(updateOnlineStatus, 5000);
+                // Initialize heartbeat system for manager page
+                heartbeat = new UserHeartbeat({
+                    debug: true, // Enable debugging
+                    onStatusUpdate: function(users) {
+                        users.forEach(user => {
+                            const statusBadge = $(`.online-status-badge[data-user-id="${user.id}"]`);
+                            if (statusBadge.length) {
+                                const isOnline = user.is_online;
+                                statusBadge
+                                    .removeClass('badge-success badge-secondary')
+                                    .addClass(isOnline ? 'badge-success' : 'badge-secondary')
+                                    .text(isOnline ? 'Online' : 'Offline');
+                            }
+                        });
+                    }
+                });
+                
+                heartbeat.start();
             });
 
             function setupEventListeners() {
@@ -360,14 +412,38 @@
                 const queryString = params.toString();
                 const endpoint = `/managers${queryString ? '?' + queryString : ''}`;
 
-                const response = await apiRequest(endpoint);
-                managers = response.data;
-                pagination = {
-                    currentPage: response.current_page,
-                    lastPage: response.last_page,
-                    total: response.total,
-                };
-                return managers;
+                try {
+                    const response = await apiRequest(endpoint);
+                    
+                    // Get online status for all managers
+                    const onlineStatus = await apiRequest('/online-users');
+                    
+                    // Create a map of online status
+                    const onlineStatusMap = onlineStatus.reduce((acc, user) => {
+                        acc[user.id] = user.is_online;
+                        return acc;
+                    }, {});
+
+                    // Merge online status with manager data
+                    if (response.data) {
+                        response.data = response.data.map(manager => ({
+                            ...manager,
+                            is_online: onlineStatusMap[manager.id] || false
+                        }));
+                    }
+
+                    managers = response.data;
+                    pagination = {
+                        currentPage: response.current_page,
+                        lastPage: response.last_page,
+                        total: response.total,
+                    };
+                    return managers;
+                } catch (error) {
+                    console.error('Error fetching managers:', error);
+                    showNotification('Failed to fetch managers', 'error');
+                    return [];
+                }
             }
 
             function updateStatistics() {
@@ -381,6 +457,7 @@
 
                 updateStatistics();
 
+                // Handle both array and paginated response
                 const managerList = Array.isArray(filteredManagers) ? filteredManagers : (filteredManagers ? filteredManagers.data : []);
 
                 if (!managerList || managerList.length === 0) {
@@ -403,17 +480,28 @@
                     const managerCard = createManagerCard(manager);
                     container.append(managerCard);
                 });
+                
+                // After rendering, update online status
+                updateOnlineStatus();
             }
 
             function createManagerCard(manager) {
+                const onlineStatusHtml = `
+                    <span class="badge ${manager.is_online ? 'badge-success' : 'badge-secondary'} ml-2 online-status-badge" 
+                          data-user-id="${manager.id}">
+                        ${manager.is_online ? 'Online' : 'Offline'}
+                    </span>
+                `;
+
                 return $(`
-                    <div class="card manager-card">
+                    <div class="card manager-card" data-manager-id="${manager.id}">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h5 class="card-title mb-0">
                                         <i class="fas fa-user-tie text-primary mr-2"></i>
                                         ${manager.name}
+                                        ${onlineStatusHtml}
                                     </h5>
                                     <small class="text-muted">
                                         <i class="fas fa-envelope mr-1"></i>
@@ -477,6 +565,12 @@
 
                 const form = document.getElementById('managerForm');
                 const formData = new FormData(form);
+                
+                // Add default online status for new managers
+                if (!editingManagerId) {
+                    formData.append('is_online', false);
+                    formData.append('last_activity', new Date().toISOString());
+                }
 
                 try {
                     showLoading(true);

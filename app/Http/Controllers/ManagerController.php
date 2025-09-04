@@ -50,6 +50,8 @@ class ManagerController extends Controller
             'phone' => $request->phone,
             'notes' => $request->notes,
             'Role' => 'Manager',
+            'is_online' => false,
+            'last_activity' => now(),
         ]);
 
         return response()->json($user, 201);
