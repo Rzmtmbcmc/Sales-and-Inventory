@@ -24,8 +24,6 @@ class UpdateProductRequest extends FormRequest
             ],
             'price' => 'required|numeric|min:0|max:999999.99',
             'quantity' => 'required|integer|min:0',
-            'perishable' => 'required|in:yes,no',
-            'expiration_date' => 'nullable|date'
         ];
     }
 

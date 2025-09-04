@@ -17,7 +17,7 @@ class ProductController extends Controller
     public function index(Request $request): JsonResponse
     {
         // Automatically delete expired products when accessing the product list
-        $this->deleteExpiredProducts();
+        //$this->deleteExpiredProducts();
         
         $query = Product::query();
 
@@ -63,9 +63,9 @@ class ProductController extends Controller
        $validatedData = $request->validated();
        
        // Ensure expiration_date is properly handled
-       if (isset($validatedData['expiration_date'])) {
+       /*if (isset($validatedData['expiration_date'])) {
            $validatedData['expiration_date'] = $validatedData['expiration_date'] ?: null;
-       }
+       }*/
 
        $product = Product::create($validatedData);
 
@@ -81,13 +81,13 @@ class ProductController extends Controller
     public function show(Product $product): JsonResponse
     {
         // Check if the product has expired and delete it if so
-        if ($product->hasExpired()) {
+        /*if ($product->hasExpired()) {
             $product->delete();
             return response()->json([
                 'error' => 'Product not found or has expired',
                 'message' => 'The requested product has expired and has been deleted'
             ], 404);
-        }
+        }*/
         
         return response()->json([
             'data' => $product
@@ -99,9 +99,9 @@ class ProductController extends Controller
         $validatedData = $request->validated();
         
         // Ensure expiration_date is properly handled
-        if (isset($validatedData['expiration_date'])) {
+        /*if (isset($validatedData['expiration_date'])) {
             $validatedData['expiration_date'] = $validatedData['expiration_date'] ?: null;
-        }
+        }*/
 
         $product->update($validatedData);
 
@@ -132,7 +132,7 @@ class ProductController extends Controller
     public function stats(): JsonResponse
     {
         // Automatically delete expired products when getting stats
-        $this->deleteExpiredProducts();
+        //$this->deleteExpiredProducts();
         
         $stats = [
             'total_products' => Product::count(),
@@ -149,7 +149,7 @@ class ProductController extends Controller
     /**
      * Delete all expired products
      */
-    public function deleteExpiredProducts(): JsonResponse
+    /*{{--public function deleteExpiredProducts(): JsonResponse
     {
         try {
             $expiredProducts = Product::expired()->get();
@@ -172,5 +172,5 @@ class ProductController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
-    }
+    }--}}*/
 }

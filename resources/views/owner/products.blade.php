@@ -172,8 +172,8 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-6">
-                            <div class="small-box bg-warning">
+                        <div class="col-lg-3 col-6" hidden>
+                            <div class="small-box bg-warning" >
                                 <div class="inner">
                                     <h3 id="perishableProducts">0</h3>
                                     <p>Perishable Items</p>
@@ -227,7 +227,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="form-group">
+                                    <div class="form-group" hidden>
                                         <label>Filter by Status</label>
                                         <select class="form-control" id="perishableFilter">
                                             <option value="">All Products</option>
@@ -254,7 +254,7 @@
                                                 id="addProductBtn">
                                                 <i class="fas fa-plus mr-1"></i> Add Product
                                             </button>
-                                            <button type="button" class="btn btn-danger btn-block"
+                                            <button hidden type="button" class="btn btn-danger btn-block"
                                                 onclick="deleteExpiredProducts()" title="Delete all expired products">
                                                 <i class="fas fa-trash-alt mr-1"></i> Delete Expired
                                             </button>
@@ -286,8 +286,8 @@
                                         <th>Product Name</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Perishable</th>
-                                        <th>Expiration Date</th>
+                                        <th hidden>Perishable</th>
+                                        <th hidden>Expiration Date</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -345,19 +345,19 @@
                                 <input type="number" class="form-control" id="productQuantity" min="0" required>
                                 <div class="invalid-feedback">Please provide a valid quantity.</div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" hidden>
                                 <label for="productPerishable">Perishable Status <span
                                         class="text-danger">*</span></label>
-                                <select class="form-control" id="productPerishable" required>
-                                    <option value="">Select Status</option>
+                                <select class="form-control" id="productPerishable" >
+                                    <option value="no">Select Status</option>
                                     <option value="yes">Yes - Perishable</option>
                                     <option value="no">No - Non-Perishable</option>
                                 </select>
                                 <div class="invalid-feedback">Please select perishable status.</div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" hidden>
                                 <label for="productExpirationDate">Expiration Date</label>
-                                <input type="date" class="form-control" id="productExpirationDate">
+                                <input type="date" class="form-control" value="2013-01-08" id="productExpirationDate">
                             </div>
                         </div>
                         <div class="modal-footer justify-content-between">
@@ -599,7 +599,7 @@
                 });
 
                 if (response) {
-                    showToast('Product created successfully!', 'success');
+                    showToast(response.message, 'success');
                     loadProducts(currentPage, getCurrentSearch(), getCurrentPerishableFilter(), getCurrentStockFilter());
                     return true;
                 } else {
@@ -635,7 +635,7 @@
                 });
 
                 if (response) {
-                    showToast('Product updated successfully!', 'success');
+                    showToast(response.message, 'success');
                     loadProducts(currentPage, getCurrentSearch(), getCurrentPerishableFilter(), getCurrentStockFilter());
                     return true;
                 } else {
@@ -669,7 +669,7 @@
                 });
 
                 if (response) {
-                    showToast('Product deleted successfully!', 'success');
+                    showToast(response.message, 'success');
                     loadProducts(currentPage, getCurrentSearch(), getCurrentPerishableFilter(), getCurrentStockFilter());
                     return true;
                 } else {
@@ -712,12 +712,12 @@
                                ${product.quantity} ${product.quantity === 1 ? 'unit' : 'units'}
                            </span>
                        </td>
-                       <td>
+                       <td hidden>
                            <span class="badge perishable-badge perishable-${product.perishable}">
                                ${product.perishable === 'yes' ? 'Yes' : 'No'}
                            </span>
                        </td>
-                       <td>
+                       <td hidden>
                            ${getExpirationDisplay(product.expiration_date)}
                        </td>
                        <td>
@@ -941,7 +941,7 @@
                     perishable: document.getElementById('productPerishable').value,
                     expiration_date: document.getElementById('productExpirationDate').value || null
                 };
-
+                
                 let success = false;
                 if (editingId) {
                     success = await updateProduct(editingId, productData);

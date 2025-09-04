@@ -129,7 +129,7 @@
                                 <div class="small-box bg-info">
                                     <div class="inner">
                                         <h3 id="totalManagers">0</h3>
-                                        <p>Total Managers</p>
+                                        <p>Total Accounts</p>
                                     </div>
                                     <div class="icon">
                                         <i class="fas fa-user-tie"></i>

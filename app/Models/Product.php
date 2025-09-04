@@ -42,19 +42,20 @@ class Product extends Model
     }
 
     // Check if product has expired
-    public function hasExpired()
+    /*public function hasExpired()
     {
         if (!$this->expiration_date) {
             return false;
         }
 
         return $this->expiration_date->isPast();
-    }
+    }*/
 
     // Scope for expired products
+    /*
     public function scopeExpired($query)
     {
         return $query->whereNotNull('expiration_date')
                      ->where('expiration_date', '<', now());
-    }
+    }*/
 }

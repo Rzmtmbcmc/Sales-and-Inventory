@@ -77,3 +77,4 @@ Route::get('api/products', [ProductController::class, 'index']);
 
 //route Manager Accounts
 Route::get('owner/managers',[ManagerController::class,'showView'])->name('owner.managers');
+
