@@ -66,6 +66,6 @@ Route::get('/dashboard/analytics', [DashboardController::class, 'analytics']);
 Route::get('/brands', [DashboardController::class, 'brands']);
 Route::get('/branches', [DashboardController::class, 'getBranches']);
 Route::get('/products', [DashboardController::class, 'getProducts']);
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware(['web', 'auth'])->get('/user', function (Request $request) {
     return $request->user();
 });

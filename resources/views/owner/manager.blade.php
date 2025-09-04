@@ -228,9 +228,6 @@
         <script>
 // 🔧 API Configuration
             const API_BASE_URL = '/api';
-
-            // 📊 Application State
-
             // 🔧 Application State
             let managers = [];
             let pagination = {};
@@ -564,22 +561,36 @@
                 e.preventDefault();
 
                 const form = document.getElementById('managerForm');
-                const formData = new FormData(form);
                 
-                // Add default online status for new managers
-                if (!editingManagerId) {
-                    formData.append('is_online', false);
-                    formData.append('last_activity', new Date().toISOString());
+                // Validate required fields
+                const name = form.querySelector('#managerName').value.trim();
+                const email = form.querySelector('#managerEmail').value.trim();
+                
+                if (!name || !email) {
+                    const errors = [];
+                    if (!name) errors.push('The name field is required');
+                    if (!email) errors.push('The email field is required');
+                    showNotification(errors.join('. '), 'error');
+                    return;
                 }
+
+                // Create form data object with all fields
+                const formData = {
+                    name: name,
+                    email: email,
+                    phone: form.querySelector('#managerPhone').value.trim(),
+                    notes: form.querySelector('#managerNotes').value.trim(),
+                    password: form.querySelector('#managerPassword').value,
+                    is_online: false,
+                    last_activity: new Date().toISOString()
+                };
 
                 try {
                     showLoading(true);
-
                     let response;
                     if (editingManagerId) {
-                        formData.append('_method', 'PUT');
                         response = await apiRequest(`/managers/${editingManagerId}`, {
-                            method: 'POST',
+                            method: 'PUT',
                             body: formData,
                         });
                         showNotification('Manager updated successfully!');

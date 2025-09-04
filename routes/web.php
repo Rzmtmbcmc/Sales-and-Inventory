@@ -34,6 +34,13 @@ Route::get('/', function () {
         'email' => 'Owner@example.com',
         'password' => bcrypt('12345678'),
         'Role' => 'Owner',
+        'is_online' => false,
+        'last_activity' => now(),
+        'phone' => '1234567890',
+        'notes' => 'Owner',
+        'email_verified_at' => now(),
+        'created_at' => now(),
+        'updated_at' => now(),
     ]);
     }
     return view('index');

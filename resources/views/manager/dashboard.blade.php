@@ -163,7 +163,7 @@
 
   </div>
   <script>
-        document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
             const heartbeat = new UserHeartbeat();
             heartbeat.start();
             fetch('/api/user', {

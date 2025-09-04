@@ -5,23 +5,69 @@ class UserHeartbeat {
             onlineCheckInterval: options.onlineCheckInterval || 60000, // 1 minute
             heartbeatEndpoint: options.heartbeatEndpoint || '/api/heartbeat',
             onlineUsersEndpoint: options.onlineUsersEndpoint || '/api/online-users',
+            userEndpoint: options.userEndpoint || '/api/user',
             onStatusUpdate: options.onStatusUpdate || null // Callback for status updates
         };
 
         this.heartbeatIntervalId = null;
         this.onlineCheckIntervalId = null;
+        this.currentUser = null;
+    }
+
+    async validateSession() {
+        try {
+            const response = await this.makeAuthenticatedRequest(this.options.userEndpoint);
+            if (response.status === 419) { // CSRF token mismatch
+                // Refresh the page to get a new CSRF token
+                window.location.reload();
+                return false;
+            }
+            if (!response.ok) {
+                if (response.status === 401) {
+                    // Redirect to login if unauthorized
+                    window.location.href = '/login';
+                }
+                throw new Error('Session invalid');
+            }
+            this.currentUser = await response.json();
+            return true;
+        } catch (error) {
+            console.error('Session validation error:', error);
+            if (error.message === 'Session invalid') {
+                // Redirect to login
+                window.location.href = '/login';
+            }
+            return false;
+        }
+    }
+
+    makeAuthenticatedRequest(url, options = {}) {
+        const headers = {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        };
+
+        return fetch(url, {
+            ...options,
+            headers: { ...headers, ...options.headers },
+            credentials: 'same-origin'
+        });
     }
 
     async sendHeartbeat() {
         try {
-            const response = await fetch(this.options.heartbeatEndpoint, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                credentials: 'same-origin'
+            // Validate CSRF token before sending heartbeat
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (!csrfToken || !csrfToken.getAttribute('content')) {
+                // If no CSRF token, refresh the page
+                window.location.reload();
+                return;
+            }
+
+            const response = await this.makeAuthenticatedRequest(this.options.heartbeatEndpoint, {
+                method: 'POST'
             });
 
             if (!response.ok) {
@@ -34,13 +80,7 @@ class UserHeartbeat {
 
     async checkOnlineUsers() {
         try {
-            const response = await fetch(this.options.onlineUsersEndpoint, {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                credentials: 'same-origin'
-            });
+            const response = await this.makeAuthenticatedRequest(this.options.onlineUsersEndpoint);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch online users: ${response.status}`);
@@ -60,13 +100,20 @@ class UserHeartbeat {
         }
     }
 
-    start() {
+    async start() {
+        // Validate session first
+        const isValid = await this.validateSession();
+        if (!isValid) {
+            console.error('Failed to validate session');
+            return false;
+        }
+
         // Send initial heartbeat
-        this.sendHeartbeat();
+        await this.sendHeartbeat();
 
         // Set up regular heartbeat
         this.heartbeatIntervalId = setInterval(() => {
-            this.sendHeartbeat();
+            this.validateSession();
         }, this.options.heartbeatInterval);
 
         // Set up regular online status check if callback is provided
@@ -79,7 +126,7 @@ class UserHeartbeat {
         // Handle page visibility changes
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
-                this.sendHeartbeat(); // Send heartbeat immediately when page becomes visible
+                this.validateSession(); // Send heartbeat immediately when page becomes visible
             }
         });
 
