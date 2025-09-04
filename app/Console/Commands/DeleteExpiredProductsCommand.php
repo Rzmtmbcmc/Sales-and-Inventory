@@ -25,7 +25,7 @@ class DeleteExpiredProductsCommand extends Command
     /**
      * Execute the console command.
      */
-    /*
+    
     public function handle()
     {
         try {
@@ -61,4 +61,4 @@ class DeleteExpiredProductsCommand extends Command
         
         return 0;
     }
-}*/
+}
