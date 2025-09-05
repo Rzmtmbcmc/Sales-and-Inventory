@@ -34,15 +34,27 @@ class UserHeartbeatController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
 
-            Log::info('Heartbeat received from manager:', [
+            // Get activity status from request
+            $isActive = $request->input('is_active', false);
+            $lastActivity = $request->input('last_activity') 
+                ? Carbon::parse($request->input('last_activity'))
+                : now();
+
+            // If user is inactive or last activity is too old, mark them as offline
+            $isOnline = $isActive && $lastActivity->gt(now()->subMinutes(5));
+
+            Log::info('Heartbeat received:', [
                 'user_id' => $user->id,
                 'email' => $user->email,
+                'is_active' => $isActive,
+                'is_online' => $isOnline,
+                'last_activity' => $lastActivity,
                 'timestamp' => now()
             ]);
 
             $user->update([
-                'last_activity' => now(),
-                'is_online' => true
+                'last_activity' => $lastActivity,
+                'is_online' => $isOnline
             ]);
 
             return response()->json([

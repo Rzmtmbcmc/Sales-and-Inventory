@@ -22,11 +22,40 @@
             font-size: 2rem;
             margin-bottom: 2rem;
         }
+        
+        /* Activity Status Styles */
+        #activityStatus {
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        #activityStatus i {
+            display: inline-block;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .alert-success #statusText { color: #155724; }
+        .alert-warning #statusText { color: #856404; }
+        .alert-danger #statusText { color: #721c24; }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/user-heartbeat.js') }}"></script>
-</header>
+    <!-- CSRF Token for Heartbeat -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/heartbeat.js') }}"></script>
+</header>
+
+<!-- Activity Status Indicator -->
+<div id="activityStatus" style="position: fixed; top: 10px; right: 10px; z-index: 1050; display: none;" class="alert" role="alert">
+    <i class="fas fa-circle"></i> <span id="statusText">Online</span>
+</div>
     
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -164,32 +193,79 @@
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-            const heartbeat = new UserHeartbeat();
-            heartbeat.start();
-            fetch('/api/user', {
-    headers: {
-        'Accept': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    },
-    credentials: 'include'
-})
-.then(response => {
-    if (!response.ok) {
-        console.error('Authentication test failed:', response.status);
-        // Redirect to login if needed
-        if (response.status === 401) {
-            window.location.href = '/login';
+        // Initialize the heartbeat system
+        const heartbeat = new UserHeartbeat({
+            heartbeatInterval: 30000, // 30 seconds
+            inactivityTimeout: 300000, // 5 minutes
+            onStatusUpdate: updateActivityStatus
+        });
+
+        // Function to update the status indicator
+        function updateActivityStatus(status) {
+            const statusIndicator = document.getElementById('activityStatus');
+            const statusText = document.getElementById('statusText');
+            const icon = statusIndicator.querySelector('i');
+
+            if (status.is_active) {
+                statusIndicator.className = 'alert alert-success';
+                statusText.textContent = 'Online';
+                icon.style.color = '#28a745';
+            } else {
+                statusIndicator.className = 'alert alert-warning';
+                statusText.textContent = 'Inactive';
+                icon.style.color = '#ffc107';
+            }
+
+            // Show the status indicator
+            statusIndicator.style.display = 'block';
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+                statusIndicator.style.display = 'none';
+            }, 3000);
         }
-    }
-    return response.json();
-})
-.then(user => {
-    console.log('Authenticated as:', user);
+
+        // Start the heartbeat
+        heartbeat.start().catch(error => {
+            console.error('Failed to start heartbeat:', error);
+            // Show error notification
+            const statusIndicator = document.getElementById('activityStatus');
+            statusIndicator.className = 'alert alert-danger';
+            document.getElementById('statusText').textContent = 'Connection Error';
+            statusIndicator.style.display = 'block';
+        });
+
+        // Add idle detection warning
+        let idleWarningShown = false;
+        document.addEventListener('mousemove', resetIdleWarning);
+        document.addEventListener('keydown', resetIdleWarning);
+        document.addEventListener('click', resetIdleWarning);
+
+        function resetIdleWarning() {
+            if (idleWarningShown) {
+                const statusIndicator = document.getElementById('activityStatus');
+                statusIndicator.style.display = 'none';
+                idleWarningShown = false;
+            }
+        }
+
+        // Check for inactivity
+        setInterval(() => {
+            const lastActivity = heartbeat.lastActivityTime;
+            const inactiveTime = Date.now() - lastActivity;
+            
+            // Show warning when 4 minutes inactive (1 minute before being marked as inactive)
+            if (inactiveTime > 240000 && !idleWarningShown) {
+                const statusIndicator = document.getElementById('activityStatus');
+                statusIndicator.className = 'alert alert-warning';
+                document.getElementById('statusText').textContent = 'You will be marked as inactive soon';
+                statusIndicator.style.display = 'block';
+                idleWarningShown = true;
+            }
+        }, 30000); // Check every 30 seconds
 })
 .catch(error => {
     console.error('Authentication test error:', error);
 });
-        });
     </script>
   @endsection

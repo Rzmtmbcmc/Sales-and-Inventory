@@ -3,6 +3,7 @@ class UserHeartbeat {
         this.options = {
             heartbeatInterval: options.heartbeatInterval || 30000, // 30 seconds
             onlineCheckInterval: options.onlineCheckInterval || 60000, // 1 minute
+            inactivityTimeout: options.inactivityTimeout || 300000, // 5 minutes
             heartbeatEndpoint: options.heartbeatEndpoint || '/api/heartbeat',
             onlineUsersEndpoint: options.onlineUsersEndpoint || '/api/online-users',
             userEndpoint: options.userEndpoint || '/api/user',
@@ -11,7 +12,10 @@ class UserHeartbeat {
 
         this.heartbeatIntervalId = null;
         this.onlineCheckIntervalId = null;
+        this.activityCheckIntervalId = null;
         this.currentUser = null;
+        this.lastActivityTime = Date.now();
+        this.isActive = true;
     }
 
     async validateSession() {
@@ -56,8 +60,25 @@ class UserHeartbeat {
         });
     }
 
+    updateActivityTimestamp() {
+        this.lastActivityTime = Date.now();
+        this.isActive = true;
+    }
+
+    checkActivity() {
+        const now = Date.now();
+        const timeSinceLastActivity = now - this.lastActivityTime;
+
+        if (timeSinceLastActivity > this.options.inactivityTimeout) {
+            this.isActive = false;
+        }
+    }
+
     async sendHeartbeat() {
         try {
+            // Check if user is active
+            this.checkActivity();
+
             // Validate CSRF token before sending heartbeat
             const csrfToken = document.querySelector('meta[name="csrf-token"]');
             if (!csrfToken || !csrfToken.getAttribute('content')) {
@@ -67,7 +88,11 @@ class UserHeartbeat {
             }
 
             const response = await this.makeAuthenticatedRequest(this.options.heartbeatEndpoint, {
-                method: 'POST'
+                method: 'POST',
+                body: JSON.stringify({
+                    is_active: this.isActive,
+                    last_activity: new Date(this.lastActivityTime).toISOString()
+                })
             });
 
             if (!response.ok) {
@@ -100,6 +125,40 @@ class UserHeartbeat {
         }
     }
 
+    setupActivityListeners() {
+        // Track user activity
+        const activityEvents = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart'];
+        activityEvents.forEach(event => {
+            document.addEventListener(event, () => this.updateActivityTimestamp());
+        });
+
+        // Handle tab visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                this.updateActivityTimestamp();
+                this.isActive = true;
+                this.sendHeartbeat();
+            } else {
+                this.isActive = false;
+                this.sendHeartbeat();
+            }
+        });
+
+        // Handle before page unload
+        window.addEventListener('beforeunload', async () => {
+            this.isActive = false;
+            // Attempt to send one last heartbeat synchronously
+            try {
+                const formData = new FormData();
+                formData.append('is_active', 'false');
+                navigator.sendBeacon(this.options.heartbeatEndpoint, formData);
+            } catch (error) {
+                console.error('Failed to send final heartbeat:', error);
+            }
+            this.stop();
+        });
+    }
+
     async start() {
         // Validate session first
         const isValid = await this.validateSession();
@@ -108,12 +167,15 @@ class UserHeartbeat {
             return false;
         }
 
+        // Set up activity tracking
+        this.setupActivityListeners();
+
         // Send initial heartbeat
         await this.sendHeartbeat();
 
         // Set up regular heartbeat
         this.heartbeatIntervalId = setInterval(() => {
-            this.validateSession();
+            this.sendHeartbeat();
         }, this.options.heartbeatInterval);
 
         // Set up regular online status check if callback is provided
@@ -123,17 +185,10 @@ class UserHeartbeat {
             }, this.options.onlineCheckInterval);
         }
 
-        // Handle page visibility changes
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                this.validateSession(); // Send heartbeat immediately when page becomes visible
-            }
-        });
-
-        // Handle before unload
-        window.addEventListener('beforeunload', () => {
-            this.stop();
-        });
+        // Set up activity checking
+        this.activityCheckIntervalId = setInterval(() => {
+            this.checkActivity();
+        }, 30000); // Check every 30 seconds
     }
 
     stop() {
@@ -144,6 +199,10 @@ class UserHeartbeat {
         if (this.onlineCheckIntervalId) {
             clearInterval(this.onlineCheckIntervalId);
             this.onlineCheckIntervalId = null;
+        }
+        if (this.activityCheckIntervalId) {
+            clearInterval(this.activityCheckIntervalId);
+            this.activityCheckIntervalId = null;
         }
     }
 }
