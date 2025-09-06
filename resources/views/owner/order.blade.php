@@ -616,15 +616,30 @@
                 const branchSelect = $('#orderBranch');
 
                 branchSelect.find('option:not(:first)').remove();
+                
+                // Clear existing items when brand changes
+                $('#orderItemsContainer').empty();
+                addOrderItem(); // Add one empty row by default
 
                 if (brandId) {
                     try {
-                        const brandBranches = await fetchBranches(brandId);
+                        const [brandBranches, brandData] = await Promise.all([
+                            fetchBranches(brandId),
+                            apiRequest(`/brands/${brandId}`)
+                        ]);
+
+                        // Populate branches
                         brandBranches.forEach(branch => {
                             branchSelect.append(`<option value="${branch.id}">${branch.name}</option>`);
                         });
+
+                        // Add standard items if they exist
+                        if (brandData.standard_items && brandData.standard_items.length > 0) {
+                            await addStandardItems(brandData.standard_items);
+                        }
                     } catch (error) {
-                        console.error('Failed to load branches:', error);
+                        console.error('Failed to load brand data:', error);
+                        showNotification('Failed to load brand data', 'error');
                     }
                 }
             }
@@ -891,6 +906,7 @@
                 });
 
                 updateRemoveButtons();
+                return newItem; // Return the new row for chaining
             }
 
             function removeOrderItem(e) {
@@ -919,6 +935,25 @@
                 } else {
                     $('.remove-item').hide();
                 }
+            }
+
+            async function addStandardItems(standardItems) {
+                // Remove the default empty row first
+                $('#orderItemsContainer').empty();
+
+                for (const itemId of standardItems) {
+                    const product = products.find(p => p.id == itemId);
+                    if (product) {
+                        const newItemRow = $(await addOrderItem());
+                        const productSelect = newItemRow.find('.item-product');
+                        productSelect.val(product.id).trigger('change');
+                        newItemRow.find('.item-quantity').val(1).trigger('input');
+                    }
+                }
+
+                // Add one empty row at the end for additional items
+                addOrderItem();
+                updateRemoveButtons();
             }
 
             function calculateOrderTotal() {

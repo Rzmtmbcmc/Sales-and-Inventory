@@ -10,7 +10,12 @@ class Brand extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'standard_items'
+    ];
+
+    protected $casts = [
+        'standard_items' => 'array'
     ];
      /**
      * Get all branches for this brand

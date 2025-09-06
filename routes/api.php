@@ -23,9 +23,15 @@ use App\Http\Controllers\UserHeartbeatController;
 */
 Route::apiResource('managers', App\Http\Controllers\ManagerController::class);
 Route::apiResource('brands', BrandController::class);
+Route::get('brands/{brand}/standard-items', [BrandController::class, 'getStandardItems']);
+Route::put('brands/{brand}/standard-items', [BrandController::class, 'updateStandardItems']);
 Route::apiResource('brands.branches', BranchController::class);
 Route::apiResource('products', App\Http\Controllers\Api\ProductController::class);
 Route::post('products/delete-expired', [App\Http\Controllers\Api\ProductController::class, 'deleteExpiredProducts']);
+
+// Rejected goods routes
+Route::post('rejected-goods', [App\Http\Controllers\RejectedGoodController::class, 'store']);
+Route::get('rejected-goods', [App\Http\Controllers\RejectedGoodController::class, 'index']);
 
 Route::get('orders/final-summary', [OrderController::class, 'finalSummary']);
 Route::get('orders/statistics', [OrderController::class, 'statistics']);
@@ -63,9 +69,9 @@ Route::get('analytics/top-bottom-products', [App\Http\Controllers\Api\AnalyticsC
 
 
 Route::get('/dashboard/analytics', [DashboardController::class, 'analytics']);
-Route::get('/brands', [DashboardController::class, 'brands']);
-Route::get('/branches', [DashboardController::class, 'getBranches']);
-Route::get('/products', [DashboardController::class, 'getProducts']);
+Route::get('/dashboard/brands', [DashboardController::class, 'brands']);
+Route::get('/dashboard/branches', [DashboardController::class, 'getBranches']);
+Route::get('/dashboard/products', [DashboardController::class, 'getProducts']);
 Route::middleware(['web', 'auth'])->get('/user', function (Request $request) {
     return $request->user();
 });

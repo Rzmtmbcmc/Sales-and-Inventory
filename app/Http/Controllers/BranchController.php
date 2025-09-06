@@ -50,7 +50,9 @@ class BranchController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
-            'contact' => 'required|string|max:255'
+            'contact_person' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:255',
+            'status' => 'sometimes|string|in:active,inactive'
         ]);
 
         $branch = $brand->branches()->create($validated);
@@ -84,7 +86,9 @@ class BranchController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
-            'contact' => 'required|string|max:255'
+            'contact_person' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:255',
+            'status' => 'sometimes|string|in:active,inactive'
         ]);
 
         $branch->update($validated);

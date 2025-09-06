@@ -5,6 +5,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        
+        <!-- Select2 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <!-- Select2 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <style>
             .content-wrapper {
@@ -279,7 +284,9 @@
                                     <tr>
                                         <th>Branch Name</th>
                                         <th>Address</th>
+                                        <th>Contact Person</th>
                                         <th>Contact</th>
+                                        <th>Status</th>
                                         <th width="120">Actions</th>
                                     </tr>
                                 </thead>
@@ -310,6 +317,21 @@
                             <div class="form-group">
                                 <label for="brandDescription">Description</label>
                                 <textarea class="form-control" id="brandDescription" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="standardItems">Standard Items</label>
+                                <select class="form-control select2" id="standardItems" multiple>
+                                </select>
+                                <div class="mt-2">
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle"></i>
+                                        Select the products that should be automatically added when creating a new order for this brand.
+                                    </small>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-box"></i>
+                                        Selected items will be added with quantity 1 by default in new orders.
+                                    </small>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -343,8 +365,19 @@
                                 <textarea class="form-control" id="branchAddress" rows="3" required></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="branchContact">Contact Number <span class="text-danger">*</span></label>
-                                <input type="tel" class="form-control" id="branchContact" required>
+                                <label for="contactPerson">Contact Person <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="contactPerson" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactNumber">Contact Number <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" id="contact_number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="branchStatus">Status</label>
+                                <select class="form-control" id="branchStatus">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -716,7 +749,7 @@
                 if (branches.length === 0) {
                     tbody.html(`
                     <tr>
-                        <td colspan="4" class="text-center py-5">
+                        <td colspan="6" class="text-center py-5">
                             <i class="fas fa-building fa-2x text-muted mb-3"></i>
                             <p class="text-muted mb-3">No branches found</p>
                             <button class="btn btn-success btn-sm" onclick="openBranchForm()">
@@ -736,7 +769,13 @@
                             <strong>${branch.name}</strong>
                         </td>
                         <td class="text-muted">${branch.address}</td>
-                        <td class="text-muted">${branch.contact}</td>
+                        <td class="text-muted">${branch.contact_person || 'N/A'}</td>
+                        <td class="text-muted">${branch.contact_number || 'N/A'}</td>
+                        <td>
+                            <span class="badge badge-${branch.status === 'active' ? 'success' : 'danger'}">
+                                ${branch.status || 'N/A'}
+                            </span>
+                        </td>
                         <td>
                             <button class="btn btn-info btn-sm mr-1" onclick="editBranch(${branch.id})">
                                 <i class="fas fa-edit"></i>
@@ -751,18 +790,74 @@
                 });
             }
 
-            function openBrandForm(brandId = null) {
+            let availableProducts = [];
+
+            async function loadProducts() {
+                try {
+                    const response = await apiRequest('/products');
+                    availableProducts = response;
+
+                    // Initialize select2 for standard items
+                    $('#standardItems').empty();
+                    availableProducts.forEach(product => {
+                        const option = new Option(
+                            `${product.name} (₱${parseFloat(product.price).toLocaleString('en-US', {minimumFractionDigits: 2})})`, 
+                            product.id, 
+                            false, 
+                            false
+                        );
+                        $('#standardItems').append(option);
+                    });
+                    
+                    // Initialize Select2 with search and formatting
+                    $('#standardItems').select2({
+                        placeholder: 'Select standard items for this brand',
+                        width: '100%',
+                        theme: 'bootstrap',
+                        allowClear: true,
+                        templateResult: formatProduct,
+                        templateSelection: formatProduct
+                    });
+                } catch (error) {
+                    console.error('Failed to load products:', error);
+                    showNotification('Failed to load products', 'error');
+                }
+            }
+
+            // Format product display in Select2
+            function formatProduct(product) {
+                if (!product.id) return product.text;
+                const productData = availableProducts.find(p => p.id == product.id);
+                if (!productData) return product.text;
+
+                return $(`<div>
+                    <strong>${productData.name}</strong>
+                    <div class="text-muted small">
+                        Price: ₱${parseFloat(productData.price).toLocaleString('en-US', {minimumFractionDigits: 2})}
+                        ${productData.quantity ? ` | Stock: ${productData.quantity}` : ''}
+                    </div>
+                </div>`);
+            }
+
+            async function openBrandForm(brandId = null) {
                 editingBrandId = brandId;
+
+                // Load products if not loaded yet
+                if (availableProducts.length === 0) {
+                    await loadProducts();
+                }
 
                 if (brandId) {
                     const brand = brands.find(b => b.id === brandId);
                     $('#brandFormTitle').text('Edit Brand');
                     $('#brandName').val(brand.name);
                     $('#brandDescription').val(brand.description);
+                    $('#standardItems').val(brand.standard_items || []).trigger('change');
                 } else {
                     $('#brandFormTitle').text('Add New Brand');
                     $('#brandName').val('');
                     $('#brandDescription').val('');
+                    $('#standardItems').val([]).trigger('change');
                 }
 
                 $('#brandFormModal').modal('show');
@@ -777,12 +872,16 @@
                     $('#branchFormTitle').text('Edit Branch');
                     $('#branchName').val(branch.name);
                     $('#branchAddress').val(branch.address);
-                    $('#branchContact').val(branch.contact);
+                    $('#contactPerson').val(branch.contact_person);
+                    $('#contact_number').val(branch.contact_number);
+                    $('#branchStatus').val(branch.status || 'active');
                 } else {
                     $('#branchFormTitle').text('Add New Branch');
                     $('#branchName').val('');
                     $('#branchAddress').val('');
-                    $('#branchContact').val('');
+                    $('#contactPerson').val('');
+                    $('#contact_number').val('');
+                    $('#branchStatus').val('active');
                 }
 
                 $('#branchFormModal').modal('show');
@@ -794,6 +893,7 @@
 
                 const name = $('#brandName').val().trim();
                 const description = $('#brandDescription').val().trim();
+                const standard_items = $('#standardItems').val();
 
                 if (!name) {
                     showNotification('Brand name is required', 'error');
@@ -802,7 +902,8 @@
 
                 const brandData = {
                     name,
-                    description
+                    description,
+                    standard_items
                 };
 
                 try {
@@ -833,17 +934,20 @@
 
                 const name = $('#branchName').val().trim();
                 const address = $('#branchAddress').val().trim();
-                const contact = $('#branchContact').val().trim();
+                const contact_person = $('#contactPerson').val().trim();
+                const contact_number = $('#contact_number').val().trim();
 
-                if (!name || !address || !contact) {
-                    showNotification('All fields are required', 'error');
+                if (!name || !address || !contact_number) {
+                    showNotification('Branch name, address and contact number are required', 'error');
                     return;
                 }
 
                 const branchData = {
                     name,
                     address,
-                    contact
+                    contact_person,
+                    contact_number,
+                    status: $('#branchStatus').val() || 'active'
                 };
 
                 try {
