@@ -120,6 +120,14 @@
               </a>
             </li>
 
+            <li class="nav-item">
+              <a href="{{route('owner.rejected-goods.index')}}" class="nav-link{{ request()->routeIs('owner.rejected-goods.*') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-times-circle"></i>
+                <p>
+                  Rejected Goods
+                </p>
+              </a>
+            </li>
 
 
             <li class="nav-item">

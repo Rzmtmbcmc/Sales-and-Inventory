@@ -92,3 +92,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/online-users', [UserHeartbeatController::class, 'getOnlineUsers'])->name('online-users');
 });
 
+Route::middleware('auth')->prefix('owner')->name('owner.')->group(function () {
+    Route::resource('rejected-goods', \App\Http\Controllers\RejectedGoodsController::class);
+});
