@@ -55,7 +55,8 @@ class BrandController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:brands',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'standard_items' => 'nullable|array'
         ]);
 
         $brand = Brand::create($validated);
@@ -80,7 +81,8 @@ class BrandController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:brands,name,' . $brand->id,
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'standard_items' => 'nullable|array'
         ]);
 
         $brand->update($validated);

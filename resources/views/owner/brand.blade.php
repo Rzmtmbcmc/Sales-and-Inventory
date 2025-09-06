@@ -6,11 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         
-        <!-- Select2 CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        <!-- Select2 JS -->
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
         <style>
             .content-wrapper {
                 background-color: #f4f4f4;
@@ -320,7 +315,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="standardItems">Standard Items</label>
-                                <select class="form-control select2" id="standardItems" multiple>
+                                <select class="form-control" id="standardItems" multiple size="5">
                                 </select>
                                 <div class="mt-2">
                                     <small class="form-text text-muted">
@@ -809,15 +804,6 @@
                         $('#standardItems').append(option);
                     });
                     
-                    // Initialize Select2 with search and formatting
-                    $('#standardItems').select2({
-                        placeholder: 'Select standard items for this brand',
-                        width: '100%',
-                        theme: 'bootstrap',
-                        allowClear: true,
-                        templateResult: formatProduct,
-                        templateSelection: formatProduct
-                    });
                 } catch (error) {
                     console.error('Failed to load products:', error);
                     showNotification('Failed to load products', 'error');
@@ -905,6 +891,8 @@
                     description,
                     standard_items
                 };
+
+                console.log('Sending brand data:', brandData);
 
                 try {
                     showLoading(true);
