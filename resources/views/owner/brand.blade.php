@@ -789,7 +789,7 @@
 
             async function loadProducts() {
                 try {
-                    const response = await apiRequest('/products');
+                    const response = await apiRequest('/productss');
                     availableProducts = response;
 
                     // Initialize select2 for standard items

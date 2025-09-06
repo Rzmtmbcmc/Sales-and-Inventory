@@ -491,7 +491,7 @@
             }
 
             async function fetchProducts() {
-                products = await apiRequest('/productss'); //must be edited
+                products = await apiRequest('/productss ');
                 return products;
             }
 
@@ -648,17 +648,61 @@
                 const productSelect = $(e.target);
                 const productId = productSelect.val();
                 const itemRow = productSelect.closest('.order-item-row');
-
+                const quantityInput = itemRow.find('.item-quantity');
+                const priceInput = itemRow.find('.item-price');
+                const subtotalDisplay = itemRow.find('.item-subtotal');
+     
+                // Clear stock info display
+                itemRow.find('.stock-info').remove();
+     
                 if (productId) {
                     const product = products.find(p => p.id == productId);
                     if (product) {
-                        itemRow.find('.item-price').val(product.price);
+                        priceInput.val(product.price);
+                        
+                        // Show stock information
+                        const stockInfo = product.quantity > 0 ?
+                            `<small class="text-muted stock-info d-block mt-1">
+                                <i class="fas fa-box mr-1"></i>Available: ${product.quantity} units
+                            </small>` :
+                            `<small class="text-danger stock-info d-block mt-1">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>OUT OF STOCK
+                            </small>`;
+                        
+                        // Insert stock info after quantity input
+                        quantityInput.after(stockInfo);
+                        
+                        // Set max quantity based on stock
+                        if (product.quantity > 0) {
+                            quantityInput.attr('max', product.quantity);
+                            quantityInput.attr('placeholder', `Max: ${product.quantity}`);
+                            
+                            // Add warning if stock is low
+                            if (product.quantity <= 5) {
+                                quantityInput.addClass('border-warning');
+                                quantityInput.after(`<small class="text-warning low-stock-warning">Low stock warning!</small>`);
+                            } else {
+                                quantityInput.removeClass('border-warning');
+                                itemRow.find('.low-stock-warning').remove();
+                            }
+                        } else {
+                            // Disable quantity input if out of stock
+                            quantityInput.attr('disabled', true);
+                            quantityInput.attr('max', 0);
+                            quantityInput.val('');
+                            quantityInput.addClass('bg-light');
+                        }
+                        
                         calculateItemSubtotal(itemRow);
                         calculateOrderTotal();
                     }
                 } else {
-                    itemRow.find('.item-price').val('');
-                    itemRow.find('.item-subtotal').text('₱0.00');
+                    priceInput.val('');
+                    quantityInput.removeAttr('max disabled');
+                    quantityInput.removeClass('border-warning bg-light');
+                    quantityInput.attr('placeholder', 'Qty');
+                    subtotalDisplay.text('₱0.00');
+                    itemRow.find('.stock-info, .low-stock-warning').remove();
                     calculateOrderTotal();
                 }
             }
@@ -894,20 +938,24 @@
                     </div>
                 </div>
             `);
-
-                $('#orderItemsContainer').append(newItem);
-
-                // Populate products in the new row
-                const productSelect = newItem.find('.item-product');
-                products.forEach(product => {
-                    productSelect.append(
-                        `<option value="${product.id}">${product.name} - ₱${parseFloat(product.price).toLocaleString('en-US', {minimumFractionDigits: 2})}</option>`
-                    );
-                });
-
-                updateRemoveButtons();
-                return newItem; // Return the new row for chaining
-            }
+ 
+            $('#orderItemsContainer').append(newItem);
+ 
+            // Populate products in the new row with stock info
+            const productSelect = newItem.find('.item-product');
+            products.forEach(product => {
+                const stockInfo = product.quantity > 0 ? ` (Stock: ${product.quantity})` : ' (OUT OF STOCK)';
+                const optionText = product.quantity === 0 ?
+                    `${product.name} - ₱${parseFloat(product.price).toLocaleString('en-US', {minimumFractionDigits: 2})}${stockInfo}` :
+                    `${product.name} - ₱${parseFloat(product.price).toLocaleString('en-US', {minimumFractionDigits: 2})}${stockInfo}`;
+                productSelect.append(
+                    `<option value="${product.id}" data-stock="${product.quantity}" data-price="${product.price}">${optionText}</option>`
+                );
+            });
+ 
+            updateRemoveButtons();
+            return newItem; // Return the new row for chaining
+        }
 
             function removeOrderItem(e) {
                 $(e.target).closest('.order-item-row').remove();
@@ -919,10 +967,14 @@
                 $('.item-product').each(function() {
                     const select = $(this);
                     select.find('option:not(:first)').remove();
-
+     
                     products.forEach(product => {
+                        const stockInfo = product.quantity > 0 ? ` (Stock: ${product.quantity})` : ' (OUT OF STOCK)';
+                        const optionText = product.quantity === 0 ?
+                            `${product.name} - ₱${parseFloat(product.price).toLocaleString('en-US', {minimumFractionDigits: 2})}${stockInfo}` :
+                            `${product.name} - ₱${parseFloat(product.price).toLocaleString('en-US', {minimumFractionDigits: 2})}${stockInfo}`;
                         select.append(
-                            `<option value="${product.id}">${product.name} - ₱${parseFloat(product.price).toLocaleString('en-US', {minimumFractionDigits: 2})}</option>`
+                            `<option value="${product.id}" data-stock="${product.quantity}" data-price="${product.price}">${optionText}</option>`
                         );
                     });
                 });
@@ -960,11 +1012,26 @@
                 let total = 0;
 
                 $('.order-item-row').each(function() {
-                    const quantity = parseFloat($(this).find('.item-quantity').val()) || 0;
+                    const quantityInput = $(this).find('.item-quantity');
                     const price = parseFloat($(this).find('.item-price').val()) || 0;
+                    const quantity = parseFloat(quantityInput.val()) || 0;
+                    const productId = $(this).find('.item-product').val();
+                    
+                    // Validate stock limit
+                    if (productId) {
+                        const product = products.find(p => p.id == productId);
+                        if (product && product.quantity > 0) {
+                            if (quantity > product.quantity) {
+                                showNotification(`Cannot order more than ${product.quantity} units of ${product.name}`, 'error');
+                                quantityInput.val(product.quantity);
+                                quantity = product.quantity;
+                            }
+                        }
+                    }
+                    
                     const subtotal = quantity * price;
                     total += subtotal;
-
+     
                     // Update individual item subtotal
                     $(this).find('.item-subtotal').text(
                         `₱${subtotal.toLocaleString('en-US', {minimumFractionDigits: 2})}`);
@@ -979,32 +1046,52 @@
                 const brandId = $('#orderBrand').val();
                 const branchId = $('#orderBranch').val();
                 const notes = $('#orderNotes').val().trim();
-
+     
                 if (!brandId || !branchId) {
                     showNotification('Please select both brand and branch', 'error');
                     return;
                 }
-
-                // Collect order items
+     
+                // Collect order items with inventory validation
                 const items = [];
                 let isValid = true;
-
+     
                 $('.order-item-row').each(function() {
                     const productId = $(this).find('.item-product').val();
-                    const quantity = parseFloat($(this).find('.item-quantity').val());
+                    const quantityInput = $(this).find('.item-quantity');
+                    const quantity = parseFloat(quantityInput.val());
                     const price = parseFloat($(this).find('.item-price').val());
-
-                    if (!productId || !quantity || !price) {
+     
+                    if (!productId || !quantity || !price || quantity <= 0) {
+                        isValid = false;
+                        showNotification('Please fill in all product details correctly', 'error');
+                        return false;
+                    }
+     
+                    // Validate against inventory
+                    const product = products.find(p => p.id == productId);
+                    if (!product) {
+                        showNotification('Selected product not found in inventory', 'error');
                         isValid = false;
                         return false;
                     }
-
-                    // Get product name from products array
-                    const product = products.find(p => p.id == productId);
-                    const productName = product ? product.name : 'Unknown Product';
-
+     
+                    if (product.quantity === 0) {
+                        showNotification(`${product.name} is out of stock. Please select another product.`, 'error');
+                        quantityInput.val('');
+                        isValid = false;
+                        return false;
+                    }
+     
+                    if (quantity > product.quantity) {
+                        showNotification(`Cannot order ${quantity} units of ${product.name}. Only ${product.quantity} units available.`, 'error');
+                        quantityInput.val(product.quantity);
+                        isValid = false;
+                        return false;
+                    }
+     
                     items.push({
-                        name: productName,
+                        name: product.name,
                         quantity,
                         price,
                         product_id: productId

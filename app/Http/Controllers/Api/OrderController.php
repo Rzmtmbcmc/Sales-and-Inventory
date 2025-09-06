@@ -531,9 +531,10 @@ class OrderController extends Controller
                             $product = Product::findOrFail($item->product_id);
                             $product->decrement('quantity', $item->quantity);
                             
-                            // Delete product if quantity is zero
+                            // Set quantity to zero instead of deleting product
                             if ($product->quantity <= 0) {
-                                $product->delete();
+                                $product->quantity = 0;
+                                $product->save();
                             }
                         }
                         

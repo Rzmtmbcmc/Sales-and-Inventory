@@ -25,9 +25,10 @@ class ProductController extends Controller
      */
     public function checkstock($id){
         $product = Product::find($id);
-        if($product && $product->quantity == 0){
-            $product->delete();
-            return response()->json(['message' => 'Product deleted due to zero quantity']);
+        if($product && $product->quantity <= 0){
+            $product->quantity = 0;
+            $product->save();
+            return response()->json(['message' => 'Product quantity set to zero']);
         }
         return response()->json(['message' => 'Product quantity is not zero']);
     }
