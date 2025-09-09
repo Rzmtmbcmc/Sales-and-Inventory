@@ -148,6 +148,15 @@
               </a>
             </li>
 
+             <li class="nav-item">
+              <a href="{{ route('owner.past-orders.index') }}" class="nav-link {{ request()->routeIs('owner.past-orders.index') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-history"></i>
+                <p>
+                   Past Orders
+                </p>
+              </a>
+            </li>
+
 
             <li class="nav-header">Maintenance</li>
 

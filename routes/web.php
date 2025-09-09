@@ -94,4 +94,5 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware('auth')->prefix('owner')->name('owner.')->group(function () {
     Route::resource('rejected-goods', \App\Http\Controllers\RejectedGoodsController::class);
+    Route::resource('past-orders', \App\Http\Controllers\Owner\PastOrderController::class);
 });

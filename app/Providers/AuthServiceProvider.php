@@ -14,6 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         \App\Models\RejectedGood::class => \App\Policies\RejectedGoodPolicy::class,
+        \App\Models\PastOrder::class => \App\Policies\PastOrderPolicy::class,
     ];
 
     /**
