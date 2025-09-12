@@ -7,6 +7,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -15,6 +16,9 @@ class ProductController extends Controller
 {
     //
     public function showView():View|RedirectResponse{
+        if (!Auth::check()) {
+            return redirect()->route('Login');
+        }
         return view('owner.products');
     }
     /**

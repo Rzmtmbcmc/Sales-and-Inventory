@@ -1,21 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('owner.olayouts.main')
+@section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Past Order Details - Owner Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">   
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="{{ asset('js/heartbeat.js') }}"></script>
     <style>
         .content-wrapper {
             background-color: #f4f4f4;
-        }
-    </style>
-    @push('styles')
-    <style>
-        .content-wrapper {
             margin-left: 260px !important;
             position: relative !important;
             z-index: 1 !important;
@@ -23,14 +11,20 @@
         .main-sidebar {
             z-index: 1000 !important;
         }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        @media (max-width: 767.98px) {
+            .content-wrapper {
+                margin-left: 0 !important;
+            }
+            .table-responsive {
+                margin: 0 -15px;
+            }
+        }
     </style>
-    @endpush
-</head>
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-        @include('owner.olayouts.header')
-        @include('owner.olayouts.sidebar')
-        <div class="content-wrapper" style="margin-left: 260px; position: relative; z-index: 1;">
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
@@ -114,7 +108,7 @@
                                                 <div class="card-body">
                                                     @if($pastOrder->items && $pastOrder->items->count() > 0)
                                                     <div class="table-responsive">
-                                                        <table class="table table-bordered table-striped">
+                                                        <table class="table table-hover text-nowrap">
                                                             <thead class="bg-light">
                                                                 <tr>
                                                                     <th>Product</th>
@@ -161,9 +155,8 @@
                 </div>
             </section>
         </div>
-        @include('owner.olayouts.footer')
     </div>
-    @stack('scripts')
+
     <script>
         function printOrder(orderId) {
             // Open new window with printable order details
@@ -189,5 +182,4 @@
             printWindow.document.close();
         }
     </script>
-</body>
-</html>
+@endsection

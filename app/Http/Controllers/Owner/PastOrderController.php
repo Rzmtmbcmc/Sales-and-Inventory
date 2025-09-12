@@ -10,6 +10,10 @@ class PastOrderController extends Controller
 {
     public function index()
     {
+        if (!Auth::check()) {
+            return redirect()->route('homepage');
+        }
+
         $this->authorize('viewAny', PastOrder::class);
 
         $query = PastOrder::with(['items.product', 'brand', 'branch']);
@@ -40,6 +44,10 @@ class PastOrderController extends Controller
 
     public function show(PastOrder $pastOrder)
     {
+        if (!Auth::check()) {
+            return redirect()->route('homepage');
+        }
+
         $this->authorize('view', $pastOrder);
 
         $pastOrder = PastOrder::with(['items.product', 'brand', 'branch'])->findOrFail($pastOrder->id);

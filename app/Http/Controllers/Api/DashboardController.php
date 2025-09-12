@@ -7,12 +7,13 @@ use App\Models\Brand;
 use App\Models\Branch;
 use App\Models\Product;
 use App\Models\PastOrder;
-use App\Models\PastOrderItem;
 use Illuminate\Http\Request;
+use App\Models\PastOrderItem;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -125,6 +126,9 @@ class DashboardController extends Controller
 
     public function showView()
     {
+        if (!Auth::check()) {
+            return redirect()->route('Login');
+        }
         return view('owner.dashboard');
     }
 }

@@ -6,10 +6,14 @@ use App\Models\Brand;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class BrandController extends Controller
 {
     public function showView():View{
+        if (!Auth::check()) {
+            return redirect()->route('Login');
+        }
         return view('owner.brand');
     }
     /**

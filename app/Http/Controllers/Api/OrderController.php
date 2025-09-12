@@ -16,11 +16,15 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
     public function showView():View{
+        if (!Auth::check()) {
+            return redirect()->route('Login');
+        }
         return view('owner.order');
     }
     /**

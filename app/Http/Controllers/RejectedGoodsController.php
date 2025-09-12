@@ -2,22 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RejectedGood;
 use App\Models\Brand;
 use App\Models\Branch;
 use App\Models\Product;
+use App\Models\RejectedGood;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RejectedGoodsController extends Controller
 {
     public function index()
     {
+        if (!Auth::check()) {
+            return redirect()->route('Login');
+        }
         $rejectedGoods = RejectedGood::with(['brand', 'branch', 'items.product'])->paginate(10);
         return view('owner.rejected-goods.index', compact('rejectedGoods'));
     }
 
     public function create()
     {
+        if (!Auth::check()) {
+            return redirect()->route('Login');
+        }
         $brands = Brand::all();
         $branches = Branch::all();
         $products = Product::select('id', 'name', 'price')->get();
@@ -48,6 +55,9 @@ class RejectedGoodsController extends Controller
 
     public function show(RejectedGood $rejectedGood)
     {
+        if (!Auth::check()) {
+            return redirect()->route('Login');
+        }
         $this->authorize('view', $rejectedGood);
         $rejectedGood->load(['brand', 'branch', 'items.product']);
         return view('owner.rejected-goods.show', compact('rejectedGood'));
@@ -55,6 +65,9 @@ class RejectedGoodsController extends Controller
 
     public function edit(RejectedGood $rejectedGood)
     {
+        if (!Auth::check()) {
+            return redirect()->route('Login');
+        }
         $this->authorize('update', $rejectedGood);
         $brands = Brand::all();
         $branches = Branch::all();

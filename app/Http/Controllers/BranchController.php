@@ -65,6 +65,9 @@ class BranchController extends Controller
      */
     public function show(Brand $brand, Branch $branch): JsonResponse
     {
+        if (!Auth::check()) {
+            return redirect()->route('Login');
+        }
         // Ensure the branch belongs to the brand
         if ($branch->brand_id !== $brand->id) {
             return response()->json(['error' => 'Branch not found for this brand'], 404);
