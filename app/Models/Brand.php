@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Brand extends Model
 {
     use HasFactory;
+
+    // Relationship for past orders
+    public function pastOrders()
+    {
+        return $this->hasMany(\App\Models\PastOrder::class);
+    }
+    use HasFactory;
     protected $fillable = [
         'name',
         'description',

@@ -9,28 +9,39 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="{{ asset('js/heartbeat.js') }}"></script>
     <style>
-        .content-wrapper {
-            background-color: #f4f4f4;
+        .order-amount {
+            font-weight: 600;
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        @media (max-width: 767.98px) {
+            .info-box, .small-box, .card {
+                margin-bottom: 1rem;
+            }
+            .table-responsive {
+                overflow-x: auto;
+            }
+            .card-header .card-title {
+                font-size: 1rem;
+            }
+            .input-group-text, .form-control {
+                font-size: 0.95rem;
+            }
+            .btn {
+                font-size: 0.95rem;
+                padding: 0.4rem 0.7rem;
+            }
         }
     </style>
-    @push('styles')
-    <style>
-        .content-wrapper {
-            margin-left: 260px !important;
-            position: relative !important;
-            z-index: 1 !important;
-        }
-        .main-sidebar {
-            z-index: 1000 !important;
-        }
-    </style>
-    @endpush
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         @include('owner.olayouts.header')
         @include('owner.olayouts.sidebar')
-        <div class="content-wrapper" style="margin-left: 260px; position: relative; z-index: 1;">
+        <div class="content-wrapper">
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
@@ -98,7 +109,7 @@
                                                     <h6 class="mb-0">Amount:</h6>
                                                 </div>
                                                 <div class="col-sm-9 text-secondary">
-                                                    ${{ number_format($rejectedGood->amount, 2) }}
+                                                    ₱{{ number_format($rejectedGood->amount, 2) }}
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
@@ -122,7 +133,7 @@
                                                 <div class="card-body">
                                                     @if($rejectedGood->items->count() > 0)
                                                     <div class="table-responsive">
-                                                        <table class="table table-bordered table-striped">
+                                                        <table class="table table-hover text-nowrap">
                                                             <thead class="bg-light">
                                                                 <tr>
                                                                     <th>Product</th>

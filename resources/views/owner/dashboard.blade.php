@@ -20,206 +20,227 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-3 col-6">
-                        <div class="small-box bg-info">
-                            <div class="inner">
-                                <h3 id="totalOrdersYear">0</h3>
-                                <p>Total Orders per Annum</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-shopping-basket"></i>
-                            </div>
-                            <a href="{{ route('owner.orders') }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-6">
+                    <div class="col-lg-2 col-6">
                         <div class="small-box bg-success">
                             <div class="inner">
                                 <h3 id="totalSalesYear">₱0</h3>
-                                <p>Total Sales per Annum</p>
+                                <p>Total Sales (Year)</p>
                             </div>
-                            <div class="icon">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
-                            <a href="#" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
+                            <div class="icon"><i class="fas fa-dollar-sign"></i></div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-6">
+                    <div class="col-lg-2 col-6">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3 id="totalOrdersYear">0</h3>
+                                <p>Total Orders (Year)</p>
+                            </div>
+                            <div class="icon"><i class="fas fa-shopping-basket"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-6">
                         <div class="small-box bg-warning">
                             <div class="inner">
-                                <h3 id="totalOrdersMonth">0</h3>
-                                <p>Total Orders per Month</p>
+                                <h3 id="totalSalesMonth">₱0</h3>
+                                <p>Total Sales (Month)</p>
                             </div>
-                            <div class="icon">
-                                <i class="fas fa-shopping-basket"></i>
-                            </div>
-                            <a href="{{ route('owner.orders') }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
+                            <div class="icon"><i class="fas fa-dollar-sign"></i></div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-6">
+                    <div class="col-lg-2 col-6">
+                        <div class="small-box bg-primary">
+                            <div class="inner">
+                                <h3 id="totalOrdersMonth">0</h3>
+                                <p>Total Orders (Month)</p>
+                            </div>
+                            <div class="icon"><i class="fas fa-shopping-basket"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-6">
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3 id="totalSalesMonth">₱0</h3>
-                                <p>Total Sales per Month</p>
+                                <h3 id="revenueLoss">₱0</h3>
+                                <p>Revenue Loss (Rejected)</p>
                             </div>
-                            <div class="icon">
-                                <i class="fas fa-dollar-sign"></i>
+                            <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-6">
+                        <div class="small-box bg-secondary">
+                            <div class="inner">
+                                <h3 id="averageOrderValue">₱0</h3>
+                                <p>Avg Order Value</p>
                             </div>
-                            <a href="#" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
+                            <div class="icon"><i class="fas fa-chart-bar"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-filter mr-2"></i>Analytics Filters</h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-store mr-2"></i>Sales per Store</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesPerStoreChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="yearFilter">Year</label>
-                                    <select id="yearFilter" class="form-control select2bs4"></select>
-                                </div>
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-tags mr-2"></i>Sales per Brand</h3>
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="brandFilter">Brand</label>
-                                    <select id="brandFilter" class="form-control select2bs4"></select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="branchFilter">Branch</label>
-                                    <select id="branchFilter" class="form-control select2bs4"></select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="productFilter">Product</label>
-                                    <select id="productFilter" class="form-control select2bs4"></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 text-right">
-                                <button class="btn btn-primary" id="applyFiltersBtn">
-                                    <i class="fas fa-filter mr-1"></i> Apply Filters
-                                </button>
+                            <div class="card-body">
+                                <canvas id="salesPerBrandChart" style="height: 300px; width: 100%;"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-lg-6">
                         <div class="card card-info card-outline">
                             <div class="card-header">
-                                <h3 class="card-title"><i class="fas fa-boxes mr-2"></i>Product Sales This Year</h3>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
-                                        <i class="fas fa-expand"></i>
-                                    </button>
-                                </div>
+                                <h3 class="card-title"><i class="fas fa-boxes mr-2"></i>Sales per Product</h3>
                             </div>
                             <div class="card-body">
-                                <div class="chart">
-                                    <canvas id="productSalesChart" style="height: 300px; width: 100%;"></canvas>
-                                </div>
+                                <canvas id="productSalesChart" style="height: 300px; width: 100%;"></canvas>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="card card-info card-outline">
-                            <div class="card-header">
-                                <h3 class="card-title"><i class="fas fa-chart-line mr-2"></i>Sales Overview</h3>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
-                                        <i class="fas fa-expand"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart">
-                                    <canvas id="salesChart" style="height: 300px; width: 100%;"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="card card-primary card-outline">
-                            <div class="card-header">
-                                <h3 class="card-title"><i class="fas fa-star mr-2"></i>Top 10 Products</h3>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Product</th>
-                                                <th class="text-right">Quantity Sold</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="top10List">
-                                            <tr>
-                                                <td colspan="2" class="text-center">No data available.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-lg-6">
                         <div class="card card-danger card-outline">
                             <div class="card-header">
-                                <h3 class="card-title"><i class="fas fa-arrow-down mr-2"></i>Bottom 10 Products</h3>
+                                <h3 class="card-title"><i class="fas fa-ban mr-2"></i>Revenue Loss per Product</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="revenueLossPerProductChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-store mr-2"></i>Orders per Store</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="ordersPerStoreChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-tags mr-2"></i>Orders per Brand</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="ordersPerBrandChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-warning card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-box-open mr-2"></i>Inventory Status</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="inventoryStatusChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-calendar-alt mr-2"></i>Monthly Sales Trend</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="monthlySalesTrendChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-filter mr-2"></i>Analytics Filters</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Product</th>
-                                                <th class="text-right">Quantity Sold</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="bottom10List">
-                                            <tr>
-                                                <td colspan="2" class="text-center">No data available.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="yearFilter">Year</label>
+                                            <select id="yearFilter" class="form-control select2bs4"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="monthFilter">Month</label>
+                                            <select id="monthFilter" class="form-control select2bs4">
+                                                <option value="">All Months</option>
+                                                <option value="1">January</option>
+                                                <option value="2">February</option>
+                                                <option value="3">March</option>
+                                                <option value="4">April</option>
+                                                <option value="5">May</option>
+                                                <option value="6">June</option>
+                                                <option value="7">July</option>
+                                                <option value="8">August</option>
+                                                <option value="9">September</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="dayFilter">Day</label>
+                                            <select id="dayFilter" class="form-control select2bs4">
+                                                <option value="">All Days</option>
+                                                <!-- Days 1-31 -->
+                                                @for ($d = 1; $d <= 31; $d++)
+                                                    <option value="{{ $d }}">{{ $d }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="brandFilter">Brand</label>
+                                            <select id="brandFilter" class="form-control select2bs4"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="branchFilter">Branch</label>
+                                            <select id="branchFilter" class="form-control select2bs4"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="productFilter">Product</label>
+                                            <select id="productFilter" class="form-control select2bs4"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 text-right">
+                                        <button class="btn btn-primary" id="applyFiltersBtn">
+                                            <i class="fas fa-filter mr-1"></i> Apply Filters
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -234,8 +255,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         $(document).ready(function() {
-            let salesChart;
-            let productSalesChart;
+            let salesPerStoreChart, salesPerBrandChart, productSalesChart, revenueLossPerProductChart, ordersPerStoreChart, ordersPerBrandChart, inventoryStatusChart, monthlySalesTrendChart;
 
             // Fetch brands, branches, and products for filters
             async function fetchFilters() {
@@ -285,108 +305,88 @@
             // Fetch and display dashboard data
             async function fetchDashboardData() {
                 const selectedYear = $('#yearFilter').val();
+                const selectedMonth = $('#monthFilter').val();
+                const selectedDay = $('#dayFilter').val();
                 const selectedBrand = $('#brandFilter').val();
                 const selectedBranch = $('#branchFilter').val();
                 const selectedProduct = $('#productFilter').val();
 
                 try {
                     const response = await $.get('/api/analytics', {
-                        year: selectedYear,
-                        brand_id: selectedBrand,
-                        branch_id: selectedBranch,
-                        product_id: selectedProduct
+                        year: $('#yearFilter').val(),
+                        month: $('#monthFilter').val(),
+                        day: $('#dayFilter').val(),
+                        brand_id: $('#brandFilter').val(),
+                        branch_id: $('#branchFilter').val(),
+                        product_id: $('#productFilter').val()
                     });
-
                     if (response.success) {
                         const data = response.rankings;
-                        initProductSalesChart(response.product_sales);
-                        $('#totalOrdersYear').text(data.total_orders_this_year);
+                        // Update KPI cards with filtered data
                         $('#totalSalesYear').text(`₱${data.total_sales_this_year.toLocaleString()}`);
-                        $('#totalOrdersMonth').text(data.most_orders_this_month);
+                        $('#totalOrdersYear').text(data.total_orders_this_year);
                         $('#totalSalesMonth').text(`₱${data.total_sales_this_month.toLocaleString()}`);
-                        // Update rankings
-                        updateRankingTable('top10List', data.top_10_products, 'total_quantity_sold');
-                        updateRankingTable('bottom10List', data.bottom_10_products, 'total_quantity_sold');
-
-                        // Update chart
-                        updateSalesChart(response.graph_data);
+                        $('#totalOrdersMonth').text(data.most_orders_this_month);
+                        $('#revenueLoss').text(`₱${response.revenue_loss?.toLocaleString() || '0'}`);
+                        $('#averageOrderValue').text(`₱${response.average_order_value?.toLocaleString() || '0'}`);
+                        updateBarChart('salesPerStoreChart', response.sales_per_store, 'Sales per Store', salesPerStoreChart);
+                        updateBarChart('salesPerBrandChart', response.sales_per_brand, 'Sales per Brand', salesPerBrandChart);
+                        updateBarChart('productSalesChart', response.product_sales, 'Sales per Product', productSalesChart);
+                        updateBarChart('revenueLossPerProductChart', response.revenue_loss_per_product, 'Revenue Loss per Product', revenueLossPerProductChart);
+                        updateBarChart('ordersPerStoreChart', response.orders_per_store, 'Orders per Store', ordersPerStoreChart);
+                        updateBarChart('ordersPerBrandChart', response.orders_per_brand, 'Orders per Brand', ordersPerBrandChart);
+                        updateBarChart('inventoryStatusChart', response.inventory_status, 'Inventory Status', inventoryStatusChart);
+                        updateBarChart('monthlySalesTrendChart', response.monthly_sales_trend, 'Monthly Sales Trend', monthlySalesTrendChart);
                     }
                 } catch (error) {
                     console.error("Error fetching dashboard data:", error);
                 }
             }
 
-            function updateRankingTable(tableId, items, valueKey) {
-                const table = $(`#${tableId}`);
-                table.empty();
-                if (items.length > 0) {
-                    items.forEach(item => {
-                        table.append(`<tr>
-                        <td>${item.name}</td>
-                        <td class="text-right"><span class="badge bg-primary">${item[valueKey]}</span></td>
-                    </tr>`);
-                    });
-                } else {
-                    table.append('<tr><td colspan="2" class="text-center">No data available.</td></tr>');
+            function updateBarChart(canvasId, data, label, chartInstance) {
+                if (!data || Object.keys(data).length === 0) {
+                    data = { 'No Data': 0 };
                 }
-            }
-
-            function updateSalesChart(data) {
-                const labels = Object.keys(data);
-                const salesData = Object.values(data);
-
-                const chartData = {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Total Sales',
-                        backgroundColor: 'rgba(60,141,188,0.9)',
-                        borderColor: 'rgba(60,141,188,0.8)',
-                        pointRadius: false,
-                        pointColor: '#3b8bba',
-                        pointStrokeColor: 'rgba(60,141,188,1)',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(60,141,188,1)',
-                        data: salesData
-                    }]
-                };
-
-                const chartOptions = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '₱' + value;
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                };
-
-                const ctx = document.getElementById('salesChart').getContext('2d');
-                if (salesChart) {
-                    salesChart.destroy();
-                }
-                salesChart = new Chart(ctx, {
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(ctx, {
                     type: 'bar',
-                    data: chartData,
-                    options: chartOptions
+                    data: {
+                        labels: Object.keys(data),
+                        datasets: [{
+                            label: label,
+                            data: Object.values(data),
+                            backgroundColor: 'rgba(60,141,188,0.9)',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { callback: function(value) { return '₱' + value; } }
+                            },
+                            y: { beginAtZero: true }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
                 });
+                switch(canvasId) {
+                    case 'salesPerStoreChart': salesPerStoreChart = chartInstance; break;
+                    case 'salesPerBrandChart': salesPerBrandChart = chartInstance; break;
+                    case 'productSalesChart': productSalesChart = chartInstance; break;
+                    case 'revenueLossPerProductChart': revenueLossPerProductChart = chartInstance; break;
+                    case 'ordersPerStoreChart': ordersPerStoreChart = chartInstance; break;
+                    case 'ordersPerBrandChart': ordersPerBrandChart = chartInstance; break;
+                    case 'inventoryStatusChart': inventoryStatusChart = chartInstance; break;
+                    case 'monthlySalesTrendChart': monthlySalesTrendChart = chartInstance; break;
+                }
             }
 
-            // Initialize year filter with current year and some past years
+            // Year dropdown always shows 5 years
+            $('#yearFilter').empty();
             const currentYear = new Date().getFullYear();
             for (let i = currentYear; i >= currentYear - 5; i--) {
                 $('#yearFilter').append(`<option value="${i}">${i}</option>`);

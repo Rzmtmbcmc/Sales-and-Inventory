@@ -9,6 +9,13 @@ class Product extends Model
 {
     use HasFactory;
 
+    // Relationship for rejected good items
+    public function rejectedGoodItems()
+    {
+        return $this->hasMany(\App\Models\RejectedGoodItem::class);
+    }
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'price',
