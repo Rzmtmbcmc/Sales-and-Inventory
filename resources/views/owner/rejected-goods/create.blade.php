@@ -12,6 +12,17 @@
         .content-wrapper {
             background-color: #f4f4f4;
         }
+        #dr-info-section .form-control {
+            border: 2px solid #28a745;
+            background-color: #f8f9fa !important;
+            color: #495057;
+            font-weight: 500;
+        }
+        .dr-selection-highlight {
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
     </style>
     @push('styles')
     <style>
@@ -61,51 +72,60 @@
                                 <form method="POST" action="{{ route('owner.rejected-goods.store') }}" id="rejected-goods-form">
                                     @csrf
                                     <div class="card-body">
+                                        <!-- DR Number Selection - Top Priority -->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group dr-selection-highlight p-3">
+                                                    <label for="dr_no"><i class="fas fa-receipt mr-2 text-primary"></i>DR No <span class="text-danger">*</span></label>
+                                                    <select class="form-control @error('dr_no') is-invalid @enderror" id="dr_no" name="dr_no" required>
+                                                        <option value="">-- Select DR Number --</option>
+                                                        @foreach($drNumbers as $drNumber)
+                                                            <option value="{{ $drNumber }}" {{ old('dr_no') == $drNumber ? 'selected' : '' }}>
+                                                                {{ $drNumber }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('dr_no')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                    @if(count($drNumbers) == 0)
+                                                        <small class="text-muted">No DR numbers available. Please create some past orders first.</small>
+                                                    @else
+                                                        <small class="text-muted">Select a DR number to automatically populate brand and branch information.</small>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Auto-populated Brand and Branch Display -->
+                                        <div class="row" id="dr-info-section" style="display: none;">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Brand</label>
+                                                    <div class="form-control bg-light" id="brand_display">-</div>
+                                                    <small class="text-success">Auto-populated from DR</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Branch</label>
+                                                    <div class="form-control bg-light" id="branch_display">-</div>
+                                                    <small class="text-success">Auto-populated from DR</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden inputs for brand_id and branch_id -->
+                                        <input type="hidden" id="brand_id" name="brand_id" value="{{ old('brand_id') }}">
+                                        <input type="hidden" id="branch_id" name="branch_id" value="{{ old('branch_id') }}">
+                                        
+                                        <!-- Date and other fields -->
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="date">Date <span class="text-danger">*</span></label>
                                                     <input type="date" class="form-control @error('date') is-invalid @enderror" id="date" name="date" value="{{ old('date') }}" required>
                                                     @error('date')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="brand_id">Brand <span class="text-danger">*</span></label>
-                                                    <select class="form-control @error('brand_id') is-invalid @enderror" id="brand_id" name="brand_id" required>
-                                                        <option value="">Select Brand</option>
-                                                        @foreach($brands as $brand)
-                                                        <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('brand_id')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="branch_id">Branch <span class="text-danger">*</span></label>
-                                                    <select class="form-control @error('branch_id') is-invalid @enderror" id="branch_id" name="branch_id" required>
-                                                        <option value="">Select Branch</option>
-                                                        @foreach($branches as $branch)
-                                                        <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('branch_id')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="dr_no">DR No <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control @error('dr_no') is-invalid @enderror" id="dr_no" name="dr_no" value="{{ old('dr_no') }}" required>
-                                                    @error('dr_no')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                 </div>
@@ -165,14 +185,78 @@
     let itemIndex = 0;
     let selectedProducts = new Set();
 
+    // Handle DR number selection change to auto-populate brand and branch
+    document.addEventListener('DOMContentLoaded', function() {
+        const drSelect = document.getElementById('dr_no');
+        const brandHiddenInput = document.getElementById('brand_id');
+        const branchHiddenInput = document.getElementById('branch_id');
+        const brandDisplay = document.getElementById('brand_display');
+        const branchDisplay = document.getElementById('branch_display');
+        const drInfoSection = document.getElementById('dr-info-section');
+        
+        drSelect.addEventListener('change', function() {
+            const drNumber = this.value;
+            
+            if (drNumber) {
+                // Show loading state
+                brandDisplay.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                branchDisplay.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                drInfoSection.style.display = 'flex';
+                
+                // Fetch DR details
+                fetch(`{{ url('owner/rejected-goods/dr-details') }}/${drNumber}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert('Error: ' + data.error);
+                            drInfoSection.style.display = 'none';
+                            return;
+                        }
+                        
+                        // Set hidden input values
+                        brandHiddenInput.value = data.brand_id;
+                        branchHiddenInput.value = data.branch_id;
+                        
+                        // Update display elements
+                        brandDisplay.innerHTML = `<i class="fas fa-check text-success mr-2"></i>${data.brand_name}`;
+                        branchDisplay.innerHTML = `<i class="fas fa-check text-success mr-2"></i>${data.branch_name}`;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching DR details:', error);
+                        alert('Error fetching DR details. Please try again.');
+                        drInfoSection.style.display = 'none';
+                    });
+            } else {
+                // Reset when no DR is selected
+                brandHiddenInput.value = '';
+                branchHiddenInput.value = '';
+                drInfoSection.style.display = 'none';
+            }
+        });
+    });
+
     // Function to create filtered product options HTML
-    function createProductOptions() {
+    function createProductOptions(preserveProductId = null) {
         let optionsHtml = '<option value="">Select Product</option>';
-        @foreach($products as $product)
-        if (!selectedProducts.has({{ $product->id }})) {
-            optionsHtml += `<option value="{{ $product->id }}" data-price="{{ $product->price }}">{{ $product->name }}</option>`;
-        }
-        @endforeach
+        
+        // Available products data
+        const availableProducts = [
+            @foreach($products as $product)
+            {
+                id: {{ $product->id }},
+                name: "{{ $product->name }}",
+                price: "{{ $product->price }}"
+            },
+            @endforeach
+        ];
+        
+        availableProducts.forEach(function(product) {
+            // Include if not selected by others, or if we need to preserve this specific product
+            if (!selectedProducts.has(product.id) || product.id == preserveProductId) {
+                optionsHtml += `<option value="${product.id}" data-price="${product.price}">${product.name}</option>`;
+            }
+        });
+        
         return optionsHtml;
     }
 
@@ -182,9 +266,13 @@
         rows.forEach(function(row) {
             const productSelect = row.querySelector('select[name*="product_id"]');
             if (productSelect && productSelect !== currentSelect) {
-                const currentValue = productSelect.value;
-                productSelect.innerHTML = createProductOptions();
-                if (currentValue && selectedProducts.has(parseInt(currentValue))) {
+                const currentValue = parseInt(productSelect.value) || null;
+                
+                // Create options while preserving the current selection
+                productSelect.innerHTML = createProductOptions(currentValue);
+                
+                // Restore the current value
+                if (currentValue) {
                     productSelect.value = currentValue;
                 }
             }
@@ -193,15 +281,31 @@
 
     // Function to update selected products when a product is changed
     function updateSelectedProduct(select) {
-        const productId = parseInt(select.value);
+        const productId = parseInt(select.value) || null;
         const oldId = select.dataset.oldValue ? parseInt(select.dataset.oldValue) : null;
+        
+        console.log('Updating product selection:', {
+            oldId: oldId,
+            newId: productId,
+            selectedProducts: Array.from(selectedProducts)
+        });
+        
+        // Remove old selection if it exists and is different
         if (oldId && oldId !== productId) {
             selectedProducts.delete(oldId);
         }
+        
+        // Add new selection if valid
         if (productId && productId > 0) {
             selectedProducts.add(productId);
         }
+        
+        // Update the old value tracker
         select.dataset.oldValue = productId || '';
+        
+        console.log('After update:', Array.from(selectedProducts));
+        
+        // Refresh other dropdowns
         refreshProductSelects(select);
         calculateTotalAmount();
     }
@@ -290,25 +394,36 @@
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
         selectedProducts.clear();
+        
         // Add event listeners to existing rows if any
         const existingRows = document.querySelectorAll('.form-row.mb-3');
         existingRows.forEach(function(row) {
             const productSelect = row.querySelector('select[name*="product_id"]');
             const quantityInput = row.querySelector('input[name*="quantity"]');
+            
             if (productSelect) {
+                // Set initial old value tracker
+                if (productSelect.value) {
+                    const productId = parseInt(productSelect.value);
+                    selectedProducts.add(productId);
+                    productSelect.dataset.oldValue = productId;
+                }
+                
                 productSelect.addEventListener('change', function() {
                     updateSelectedProduct(this);
                 });
                 productSelect.addEventListener('change', calculateTotalAmount);
-                if (productSelect.value) {
-                    selectedProducts.add(parseInt(productSelect.value));
-                }
             }
+            
             if (quantityInput) {
                 quantityInput.addEventListener('input', calculateTotalAmount);
             }
         });
+        
+        // Initial refresh to update all dropdowns based on existing selections
         refreshProductSelects();
+        
+        console.log('Initialization complete. Selected products:', Array.from(selectedProducts));
     });
     </script>
     @stack('scripts')

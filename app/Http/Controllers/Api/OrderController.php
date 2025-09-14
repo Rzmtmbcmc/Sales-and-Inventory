@@ -513,11 +513,15 @@ class OrderController extends Controller
                         // Find the order in the database
                         $order = Order::findOrFail($orderId);
                         
+                        // Generate DR number
+                        $drNumber = $this->generateDRNumber();
+                        
                         // Transfer the order to the past_orders table
                         $pastOrder = PastOrder::create([
                             'brand_id' => $order->brand_id,
                             'branch_id' => $order->branch_id,
                             'total_amount' => $order->total_amount,
+                            'dr_number' => $drNumber,
                             'created_at' => $order->created_at,
                             'updated_at' => $order->updated_at,
                         ]);
@@ -559,5 +563,28 @@ class OrderController extends Controller
                 'message' => 'Inventory deduction failed: ' . $e->getMessage()
             ], 400);
         }
+    }
+
+    /**
+     * Generate a unique DR (Delivery Receipt) number
+     */
+    private function generateDRNumber(): string
+    {
+        // Get current date in YYYYMMDD format
+        $datePrefix = now()->format('Ymd');
+        
+        // Get the count of past orders created today + 1
+        $todayCount = PastOrder::whereDate('created_at', now()->toDateString())->count() + 1;
+        
+        // Generate DR number in format: DR-YYYYMMDD-XXXX (e.g., DR-20250117-0001)
+        $drNumber = sprintf('DR-%s-%04d', $datePrefix, $todayCount);
+        
+        // Ensure uniqueness by checking if it already exists
+        while (PastOrder::where('dr_number', $drNumber)->exists()) {
+            $todayCount++;
+            $drNumber = sprintf('DR-%s-%04d', $datePrefix, $todayCount);
+        }
+        
+        return $drNumber;
     }
 }

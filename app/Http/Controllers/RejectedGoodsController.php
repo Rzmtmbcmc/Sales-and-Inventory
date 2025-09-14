@@ -28,7 +28,14 @@ class RejectedGoodsController extends Controller
         $brands = Brand::all();
         $branches = Branch::all();
         $products = Product::select('id', 'name', 'price')->get();
-        return view('owner.rejected-goods.create', compact('brands', 'branches', 'products'));
+        
+        // Get available DR numbers from past orders
+        $drNumbers = \App\Models\PastOrder::whereNotNull('dr_number')
+                     ->orderBy('created_at', 'desc')
+                     ->pluck('dr_number', 'dr_number')
+                     ->toArray();
+                     
+        return view('owner.rejected-goods.create', compact('brands', 'branches', 'products', 'drNumbers'));
     }
 
     public function store(Request $request)
@@ -104,5 +111,23 @@ class RejectedGoodsController extends Controller
         $this->authorize('delete', $rejectedGood);
         $rejectedGood->delete();
         return redirect()->route('owner.rejected-goods.index')->with('success', 'Rejected good deleted successfully.');
+    }
+
+    public function getDrDetails($drNumber)
+    {
+        $pastOrder = \App\Models\PastOrder::where('dr_number', $drNumber)
+                     ->with(['brand', 'branch'])
+                     ->first();
+        
+        if (!$pastOrder) {
+            return response()->json(['error' => 'DR number not found'], 404);
+        }
+        
+        return response()->json([
+            'brand_id' => $pastOrder->brand_id,
+            'brand_name' => $pastOrder->brand->name,
+            'branch_id' => $pastOrder->branch_id,
+            'branch_name' => $pastOrder->branch->name,
+        ]);
     }
 }

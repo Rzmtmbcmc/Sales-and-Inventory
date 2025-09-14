@@ -93,6 +93,23 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware('auth')->prefix('owner')->name('owner.')->group(function () {
+    // Discrepancy report routes
+    Route::get('discrepancy-report', [\App\Http\Controllers\Owner\DiscrepancyReportController::class, 'index'])->name('discrepancy-report.index');
+    Route::get('discrepancy-report/generate', [\App\Http\Controllers\Owner\DiscrepancyReportController::class, 'generate'])->name('discrepancy-report.generate');
+    
+
+    
+    // Rejected goods API routes (before resource routes)
+    Route::get('rejected-goods/dr-details/{drNumber}', [\App\Http\Controllers\RejectedGoodsController::class, 'getDrDetails'])->name('rejected-goods.drDetails');
+    
     Route::resource('rejected-goods', \App\Http\Controllers\RejectedGoodsController::class);
+    
+    // Past orders specific routes (before resource routes)
+    Route::get('past-orders/export-selected', [\App\Http\Controllers\Owner\PastOrderController::class, 'exportSelected'])->name('past-orders.exportSelected');
+    Route::post('past-orders/delete-selected', [\App\Http\Controllers\Owner\PastOrderController::class, 'deleteSelected'])->name('past-orders.deleteSelected');
+    Route::get('past-orders/test-delete', [\App\Http\Controllers\Owner\PastOrderController::class, 'testDelete'])->name('past-orders.testDelete');
+    Route::get('past-orders/summary-report', [\App\Http\Controllers\Owner\PastOrdersSummaryController::class, 'exportSummaryReport'])->name('past-orders.summaryReport');
+    
+    // Past orders resource routes
     Route::resource('past-orders', \App\Http\Controllers\Owner\PastOrderController::class);
 });

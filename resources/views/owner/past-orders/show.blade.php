@@ -144,9 +144,6 @@
                                         <a href="{{ route('owner.past-orders.index') }}" class="btn btn-secondary">
                                             <i class="fas fa-arrow-left mr-2"></i>Back to List
                                         </a>
-                                        <button class="btn btn-warning float-right" onclick="printOrder({{ $pastOrder->id }})">
-                                            <i class="fas fa-print mr-2"></i>Print Order
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -157,29 +154,5 @@
         </div>
     </div>
 
-    <script>
-        function printOrder(orderId) {
-            // Open new window with printable order details
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Order #${orderId}</title>
-                        <style>
-                            body { font-family: Arial, sans-serif; margin: 20px; }
-                            table { width: 100%; border-collapse: collapse; }
-                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                            th { background-color: #f2f2f2; }
-                        </style>
-                    </head>
-                    <body>
-                        <h2>Order Details #${orderId}</h2>
-                        <p>Please implement server-side printing or fetch details via AJAX.</p>
-                        <script>window.print();</script>
-                    </body>
-                </html>
-            `);
-            printWindow.document.close();
-        }
-    </script>
+
 @endsection

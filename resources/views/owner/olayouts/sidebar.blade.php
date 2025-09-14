@@ -129,6 +129,14 @@
               </a>
             </li>
 
+            <li class="nav-item">
+              <a href="{{route('owner.discrepancy-report.index')}}" class="nav-link{{ request()->routeIs('owner.discrepancy-report.*') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-chart-line"></i>
+                <p>
+                  Discrepancy Report
+                </p>
+              </a>
+            </li>
 
             <li class="nav-item">
               <a href="{{route('owner.brands')}}" class="nav-link {{ request()->routeIs('owner.brands') ? ' active' : '' }}"">

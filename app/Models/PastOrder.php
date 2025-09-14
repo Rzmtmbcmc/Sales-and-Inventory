@@ -12,7 +12,7 @@ use App\Models\Branch;
 class PastOrder extends Model
 {
     use HasFactory;
-    protected $fillable = ['brand_id', 'branch_id', 'total_amount'];
+    protected $fillable = ['dr_number', 'brand_id', 'branch_id', 'total_amount'];
 
     public function items(): HasMany
     {

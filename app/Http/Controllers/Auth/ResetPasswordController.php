@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class ResetPasswordController extends Controller
 {
@@ -13,12 +12,9 @@ class ResetPasswordController extends Controller
     |--------------------------------------------------------------------------
     |
     | This controller is responsible for handling password reset requests
-    | and uses a simple trait to include this behavior. You're free to
-    | explore this trait and override any methods you wish to tweak.
+    | and handles password reset functionality.
     |
     */
-
-    use ResetsPasswords;
 
     /**
      * Where to redirect users after resetting their password.
@@ -26,4 +22,12 @@ class ResetPasswordController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
+
+    /**
+     * Reset password functionality placeholder
+     */
+    public function showResetForm()
+    {
+        return view('auth.passwords.reset');
+    }
 }
