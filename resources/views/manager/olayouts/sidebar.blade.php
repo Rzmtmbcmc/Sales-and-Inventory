@@ -2,7 +2,7 @@
 
     <!-- Preloader -->
     <div class="preloader flex-column justify-content-center align-items-center">
-      <img class="animation__shake" src="" alt="AdminLTELogo" height="60" width="60" style="border-radius: 50%">
+      <img class="animation__shake" src="{{asset('/storage/icons/logo.jpg')}}" alt="AdminLTELogo" height="60" width="60" style="border-radius: 50%">
     </div>
 
     <!-- Navbar -->
@@ -16,7 +16,15 @@
       </ul>
 
       <!-- Right navbar links -->
-      <ul class="navbar-nav ml-auto">
+          <ul class="navbar-nav ml-auto">
+        <!-- Online Status Indicator -->
+        <li class="nav-item">
+          <span class="nav-link">
+            <i class="fas fa-circle text-success" id="online-status-icon" title="Online"></i>
+            <small id="online-users-count" class="d-none">0</small>
+          </span>
+        </li>
+        
         <!-- Navbar Search -->
         {{-- <li class="nav-item">
           <a class="nav-link" data-widget="navbar-search" href="#" role="button">
@@ -37,14 +45,12 @@
               </div>
             </form>
           </div>
-        </li> --}}
-
-        <!-- Messages Dropdown Menu -->
+        </li> --}}        <!-- Messages Dropdown Menu -->
 
 
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="fa fa-user"></i> Hello!, {{ Auth::user()->name }}
+            <i class="fa fa-user"></i> Hello!,   {{ Auth::user()->name }}  
           </a>
         </li>
 
@@ -69,7 +75,7 @@
               </a>
           </form>
           @endauth
-
+            
         </li>
 
 
@@ -80,11 +86,13 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="" class="brand-link">
-
-        <img src="" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Manager Panel</span>
-      </a>
+        <a class="navbar-brand" href="#brand">
+          <img src="{{asset('/storage/icons/logo.jpg')}}"  class="logo" alt="logo" style="width:50px; height:50px;">
+          <span class="brand-text font-weight-light">Isaac Fruit N' Vegetable</span>
+        </a>
+      <!--a href="" class="brand-link">
+        <span class="brand-text font-weight-light">Isaac Fruit N' Vegetable</span>
+      </a-->
 
       <!-- Sidebar -->
       <div class="sidebar">
@@ -98,9 +106,9 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                  with font-awesome or any other icon font library -->
-            <li class="nav-item menu-open">
-              <a href="" class="nav-link active">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
+            <li class="nav-item">
+              <a href="{{route('manager')}}" class="nav-link{{ request()->routeIs('manager') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-chart-line"></i>
                 <p>
                   Dashboard
                 </p>
@@ -110,21 +118,55 @@
 
 
             <li class="nav-item">
-              <a href="" class="nav-link">
-                  <i class="nav-icon fa fa-box"></i>
+              <a href="{{route('manager.products')}}" class="nav-link{{ request()->routeIs('manager.products') ? ' active' : '' }}">
+                  <i class="nav-icon fas fa-warehouse"></i>
                 <p>
-                  for edit
+                  Inventory
                 </p>
               </a>
             </li>
 
-
+            <li class="nav-item">
+              <a href="{{route('manager.rejected-goods.index')}}" class="nav-link{{ request()->routeIs('manager.rejected-goods.*') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-times-circle"></i>
+                <p>
+                  Rejected Goods
+                </p>
+              </a>
+            </li>
 
             <li class="nav-item">
-              <a href="" class="nav-link">
-                <i class="nav-icon fa fa-users"></i>
+              <a href="{{route('manager.discrepancy-report.index')}}" class="nav-link{{ request()->routeIs('manager.discrepancy-report.*') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-chart-line"></i>
                 <p>
-                   for edit
+                  Discrepancy Report
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{{route('manager.brands')}}" class="nav-link {{ request()->routeIs('manager.brands') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-handshake"></i>
+                <p>
+                   Brand and Branches
+                </p>
+              </a>
+            </li>
+
+             <li class="nav-item">
+              <a href="{{route('manager.orders')}}" class="nav-link {{ request()->routeIs('manager.orders') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-clipboard-list"></i>
+                <p>
+                   Order Creation
+                </p>
+              </a>
+            </li>
+
+             <li class="nav-item">
+              <a href="{{ route('manager.past-orders.index') }}" class="nav-link {{ request()->routeIs('manager.past-orders.*') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-history"></i>
+                <p>
+                   Past Orders
                 </p>
               </a>
             </li>
@@ -134,13 +176,14 @@
 
 
             <li class="nav-item">
-              <a href="" class="nav-link">
-                <i class="nav-icon fa fa-list"></i>
+              <a href="{{route('manager.managers')}}" class="nav-link {{ request()->routeIs('manager.managers') ? ' active' : '' }}">
+                <i class="nav-icon fas fa-clipboard-list"></i>
                 <p>
-                  for edit
+                   Manage Accounts
                 </p>
               </a>
             </li>
+            
             <li class="nav-item">
               <a href="" class="nav-link">
                 <i class="nav-icon fa fa-scroll"></i>

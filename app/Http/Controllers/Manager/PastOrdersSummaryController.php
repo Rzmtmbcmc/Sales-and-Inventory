@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Owner;
+namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
 use App\Models\PastOrder;
@@ -122,6 +122,4 @@ class PastOrdersSummaryController extends Controller
             return redirect()->back()->with('error', 'Error generating summary report: ' . $e->getMessage());
         }
     }
-
-
 }

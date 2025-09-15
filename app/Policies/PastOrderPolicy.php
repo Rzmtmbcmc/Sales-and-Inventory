@@ -15,7 +15,7 @@ class PastOrderPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->Role === 'Owner';
+        return in_array($user->Role, ['Owner', 'Manager', 'manager']);
     }
 
     /**
@@ -23,7 +23,7 @@ class PastOrderPolicy
      */
     public function view(User $user, PastOrder $pastOrder): bool
     {
-        return $user->Role === 'Owner' || $pastOrder->branch_id == $user->branch_id;
+        return in_array($user->Role, ['Owner', 'Manager', 'manager']) || $pastOrder->branch_id == $user->branch_id;
     }
 
     /**
@@ -31,6 +31,6 @@ class PastOrderPolicy
      */
     public function delete(User $user, PastOrder $pastOrder): bool
     {
-        return $user->Role === 'Owner' || $pastOrder->branch_id == $user->branch_id;
+        return in_array($user->Role, ['Owner', 'Manager', 'manager']) || $pastOrder->branch_id == $user->branch_id;
     }
 }

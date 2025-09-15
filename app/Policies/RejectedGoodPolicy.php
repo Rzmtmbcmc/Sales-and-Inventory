@@ -15,7 +15,7 @@ class RejectedGoodPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->Role === 'Owner' || $user->Role === 'Manager';
+        return in_array($user->Role, ['Owner', 'Manager', 'manager']);
     }
 
     /**
@@ -23,7 +23,7 @@ class RejectedGoodPolicy
      */
     public function view(User $user, RejectedGood $rejectedGood): bool
     {
-        return $user->Role === 'Owner' || $user->Role === 'Manager' || $rejectedGood->branch_id == $user->branch_id;
+        return in_array($user->Role, ['Owner', 'Manager', 'manager']) || $rejectedGood->branch_id == $user->branch_id;
     }
 
     /**
@@ -31,7 +31,7 @@ class RejectedGoodPolicy
      */
     public function create(User $user): bool
     {
-        return $user->Role === 'Owner' || $user->Role === 'Manager';
+        return in_array($user->Role, ['Owner', 'Manager', 'manager']);
     }
 
     /**
@@ -39,7 +39,7 @@ class RejectedGoodPolicy
      */
     public function update(User $user, RejectedGood $rejectedGood): bool
     {
-        return $user->Role === 'Owner' || $user->Role === 'Manager' || $rejectedGood->branch_id == $user->branch_id;
+        return in_array($user->Role, ['Owner', 'Manager', 'manager']) || $rejectedGood->branch_id == $user->branch_id;
     }
 
     /**
@@ -47,6 +47,6 @@ class RejectedGoodPolicy
      */
     public function delete(User $user, RejectedGood $rejectedGood): bool
     {
-        return $user->Role === 'Owner' || $user->Role === 'Manager' || $rejectedGood->branch_id == $user->branch_id;
+        return in_array($user->Role, ['Owner', 'Manager', 'manager']) || $rejectedGood->branch_id == $user->branch_id;
     }
 }

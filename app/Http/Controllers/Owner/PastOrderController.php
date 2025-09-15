@@ -144,18 +144,8 @@ class PastOrderController extends Controller
             $deletedCount++;
         }
 
-        return redirect()->route('past-orders.index')->with('success', "$deletedCount past order(s) deleted successfully.");
-    }
-
-    public function download($filename)
-    {
-        $filePath = storage_path('app/temp/' . $filename);
-        
-        if (!file_exists($filePath)) {
-            abort(404, 'File not found');
-        }
-
-        return response()->download($filePath)->deleteFileAfterSend(true);
+        return redirect()->route('owner.past-orders.index')
+            ->with('success', "Successfully deleted {$deletedCount} past orders.");
     }
 
     public function testDelete()
@@ -282,30 +272,9 @@ class PastOrderController extends Controller
         $filename = 'past_orders_detailed_' . $pastOrders->count() . 'orders_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
 
         try {
-            if ($request->ajax()) {
-                // Store file temporarily and return download URL
-                $tempPath = 'temp/' . $filename;
-                
-                // Ensure temp directory exists
-                if (!file_exists(storage_path('app/temp'))) {
-                    mkdir(storage_path('app/temp'), 0755, true);
-                }
-                
-                Excel::store(new PastOrdersExport($pastOrders, $filterCriteria), $tempPath);
-                
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Export generated successfully!',
-                    'download_url' => route('past-orders.download', ['filename' => $filename])
-                ]);
-            }
-
             // Create single Excel file with multiple sheets, passing filter info
             return Excel::download(new PastOrdersExport($pastOrders, $filterCriteria), $filename);
         } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json(['error' => 'Export failed: ' . $e->getMessage()], 500);
-            }
             return redirect()->back()->with('error', 'Export failed: ' . $e->getMessage());
         }
     }

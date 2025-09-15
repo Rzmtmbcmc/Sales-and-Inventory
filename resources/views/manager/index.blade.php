@@ -1,2 +1,2 @@
-@extends('manager.mlayouts.main')
+@extends('manager.olayouts.main')
 @section('content')

@@ -1,271 +1,455 @@
-@extends('manager.mlayouts.main')
+@extends('manager.olayouts.main')
 @section('content')
-<!-- The biggest battle is the war against ignorance. - Mustafa Kemal Atatürk-->
-<header>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        .card-analytics {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            border-radius: 12px;
-            transition: box-shadow 0.2s;
-        }
-        .card-analytics:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-        }
-        .analytics-icon {
-            font-size: 2rem;
-            color: #0d6efd;
-        }
-        .dashboard-header {
-            font-weight: 700;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        /* Activity Status Styles */
-        #activityStatus {
-            padding: 8px 15px;
-            border-radius: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        #activityStatus i {
-            display: inline-block;
-            margin-right: 5px;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        .alert-success #statusText { color: #155724; }
-        .alert-warning #statusText { color: #856404; }
-        .alert-danger #statusText { color: #721c24; }
-    </style>
-    <!-- CSRF Token for Heartbeat -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/heartbeat.js') }}"></script>
-</header>
-
-<!-- Activity Status Indicator -->
-<div id="activityStatus" style="position: fixed; top: 10px; right: 10px; z-index: 1050; display: none;" class="alert" role="alert">
-    <i class="fas fa-circle"></i> <span id="statusText">Online</span>
-</div>
-    
-<!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <div id="loader"></div>
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              {{--<li class="breadcrumb-item"><a href="{{ route('admin.dashboard')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="">Home</a></li>--}}
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-
-    <section class="content">
-      <div class="container-fluid">
-{{--Sample page--}}
-          <div class="row">
-
-
-    <div class="container py-4">
-        <div class="dashboard-header">Owner Dashboard</div>
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="card card-analytics text-center p-3">
-                    <div class="analytics-icon mb-2">
-                        <i class="bi bi-bar-chart-line"></i>
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">DASHBOARD</h1>
                     </div>
-                    <h5 class="card-title">Total Sales</h5>
-                    <p class="display-6 fw-bold">$12,340</p>
-                    <span class="text-success">+8% this month</span>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-analytics text-center p-3">
-                    <div class="analytics-icon mb-2">
-                        <i class="bi bi-people"></i>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
                     </div>
-                    <h5 class="card-title">Customers</h5>
-                    <p class="display-6 fw-bold">1,245</p>
-                    <span class="text-success">+5% growth</span>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-analytics text-center p-3">
-                    <div class="analytics-icon mb-2">
-                        <i class="bi bi-box-seam"></i>
-                    </div>
-                    <h5 class="card-title">Inventory</h5>
-                    <p class="display-6 fw-bold">320</p>
-                    <span class="text-danger">-2% this week</span>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-analytics text-center p-3">
-                    <div class="analytics-icon mb-2">
-                        <i class="bi bi-cash-stack"></i>
-                    </div>
-                    <h5 class="card-title">Revenue</h5>
-                    <p class="display-6 fw-bold">$8,900</p>
-                    <span class="text-success">+12% this month</span>
                 </div>
             </div>
         </div>
-        <div class="row g-4">
-            <div class="col-md-8">
-                <div class="card card-analytics p-4">
-                    <h5 class="card-title mb-3">Sales Analytics</h5>
-                    <canvas id="salesChart" height="120"></canvas>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-2 col-6">
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3 id="totalSalesYear">₱0</h3>
+                                <p>Total Sales (Year)</p>
+                            </div>
+                            <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-6">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3 id="totalOrdersYear">0</h3>
+                                <p>Total Orders (Year)</p>
+                            </div>
+                            <div class="icon"><i class="fas fa-shopping-basket"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-6">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3 id="totalSalesMonth">₱0</h3>
+                                <p>Total Sales (Month)</p>
+                            </div>
+                            <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-6">
+                        <div class="small-box bg-primary">
+                            <div class="inner">
+                                <h3 id="totalOrdersMonth">0</h3>
+                                <p>Total Orders (Month)</p>
+                            </div>
+                            <div class="icon"><i class="fas fa-shopping-basket"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-6">
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3 id="revenueLoss">₱0</h3>
+                                <p>Revenue Loss (Rejected)</p>
+                            </div>
+                            <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-6">
+                        <div class="small-box bg-secondary">
+                            <div class="inner">
+                                <h3 id="averageOrderValue">₱0</h3>
+                                <p>Avg Order Value</p>
+                            </div>
+                            <div class="icon"><i class="fas fa-chart-bar"></i></div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card card-analytics p-4">
-                    <h5 class="card-title mb-3">Top Products</h5>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Product A
-                            <span class="badge bg-primary rounded-pill">120</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Product B
-                            <span class="badge bg-primary rounded-pill">98</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Product C
-                            <span class="badge bg-primary rounded-pill">85</span>
-                        </li>
-                    </ul>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-store mr-2"></i>Sales per Store</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesPerStoreChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-tags mr-2"></i>Sales per Brand</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesPerBrandChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-boxes mr-2"></i>Sales per Product</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="productSalesChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card card-danger card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-ban mr-2"></i>Revenue Loss per Product</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="revenueLossPerProductChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-store mr-2"></i>Orders per Store</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="ordersPerStoreChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-tags mr-2"></i>Orders per Brand</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="ordersPerBrandChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-warning card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-box-open mr-2"></i>Inventory Status</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="inventoryStatusChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-calendar-alt mr-2"></i>Monthly Sales Trend</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="monthlySalesTrendChart" style="height: 300px; width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-filter mr-2"></i>Analytics Filters</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="yearFilter">Year</label>
+                                            <select id="yearFilter" class="form-control select2bs4"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="monthFilter">Month</label>
+                                            <select id="monthFilter" class="form-control select2bs4">
+                                                <option value="">All Months</option>
+                                                <option value="1">January</option>
+                                                <option value="2">February</option>
+                                                <option value="3">March</option>
+                                                <option value="4">April</option>
+                                                <option value="5">May</option>
+                                                <option value="6">June</option>
+                                                <option value="7">July</option>
+                                                <option value="8">August</option>
+                                                <option value="9">September</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="dayFilter">Day</label>
+                                            <select id="dayFilter" class="form-control select2bs4">
+                                                <option value="">All Days</option>
+                                                <!-- Days 1-31 -->
+                                                @for ($d = 1; $d <= 31; $d++)
+                                                    <option value="{{ $d }}">{{ $d }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="brandFilter">Brand</label>
+                                            <select id="brandFilter" class="form-control select2bs4"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="branchFilter">Branch</label>
+                                            <select id="branchFilter" class="form-control select2bs4"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="productFilter">Product</label>
+                                            <select id="productFilter" class="form-control select2bs4"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 text-right">
+                                        <button class="btn btn-primary" id="applyFiltersBtn">
+                                            <i class="fas fa-filter mr-1"></i> Apply Filters
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
             </div>
-        </div>
+        </section>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx = document.getElementById('salesChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Sales',
-                    data: [1200, 1900, 3000, 2500, 3200, 4000],
-                    borderColor: '#0d6efd',
-                    backgroundColor: 'rgba(13,110,253,0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
+        $(document).ready(function() {
+            let salesPerStoreChart, salesPerBrandChart, productSalesChart, revenueLossPerProductChart, ordersPerStoreChart, ordersPerBrandChart, inventoryStatusChart, monthlySalesTrendChart;
+
+            // Fetch brands, branches, and products for filters
+            async function fetchFilters() {
+                try {
+                    const [brands, branches, products] = await Promise.all([
+                        $.get('/api/brands'),
+                        $.get('/api/branches'),
+                        $.get('/api/products?all=true')
+                    ]);
+
+                    // Populate Year filter (keep this as it was)
+                    const currentYear = new Date().getFullYear();
+                    for (let i = currentYear; i >= currentYear - 5; i--) {
+                        $('#yearFilter').append(`<option value="${i}">${i}</option>`);
+                    }
+
+                    // Populate Brand filter
+                    $('#brandFilter').append('<option value="">All Brands</option>');
+                    brands.forEach(brand => {
+                        $('#brandFilter').append(`<option value="${brand.id}">${brand.name}</option>`);
+                    });
+
+                    // Populate Branch filter
+                    $('#branchFilter').append('<option value="">All Branches</option>');
+                    branches.forEach(branch => {
+                        $('#branchFilter').append(
+                            `<option value="${branch.id}">${branch.name}</option>`);
+                    });
+
+                    // Populate Product filter
+                    $('#productFilter').append('<option value="">All Products</option>');
+                    products.forEach(product => {
+                        $('#productFilter').append(
+                            `<option value="${product.id}">${product.name}</option>`);
+                    });
+
+                    // Initialize Select2 for better dropdown styling
+                    $('.select2bs4').select2({
+                        theme: 'bootstrap4'
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching filters:", error);
                 }
             }
-        });
-    </script>
-          </div>
-          {{--Sample Page End--}}
 
-          
+            // Fetch and display dashboard data
+            async function fetchDashboardData() {
+                const selectedYear = $('#yearFilter').val();
+                const selectedMonth = $('#monthFilter').val();
+                const selectedDay = $('#dayFilter').val();
+                const selectedBrand = $('#brandFilter').val();
+                const selectedBranch = $('#branchFilter').val();
+                const selectedProduct = $('#productFilter').val();
 
-      </div>
-    </section>
-
-  </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize the heartbeat system
-        const heartbeat = new UserHeartbeat({
-            heartbeatInterval: 30000, // 30 seconds
-            inactivityTimeout: 300000, // 5 minutes
-            onStatusUpdate: updateActivityStatus
-        });
-
-        // Function to update the status indicator
-        function updateActivityStatus(status) {
-            const statusIndicator = document.getElementById('activityStatus');
-            const statusText = document.getElementById('statusText');
-            const icon = statusIndicator.querySelector('i');
-
-            if (status.is_active) {
-                statusIndicator.className = 'alert alert-success';
-                statusText.textContent = 'Online';
-                icon.style.color = '#28a745';
-            } else {
-                statusIndicator.className = 'alert alert-warning';
-                statusText.textContent = 'Inactive';
-                icon.style.color = '#ffc107';
+                try {
+                    const response = await $.get('/api/analytics', {
+                        year: $('#yearFilter').val(),
+                        month: $('#monthFilter').val(),
+                        day: $('#dayFilter').val(),
+                        brand_id: $('#brandFilter').val(),
+                        branch_id: $('#branchFilter').val(),
+                        product_id: $('#productFilter').val()
+                    });
+                    if (response.success) {
+                        const data = response.rankings;
+                        // Update KPI cards with filtered data
+                        $('#totalSalesYear').text(`₱${data.total_sales_this_year.toLocaleString()}`);
+                        $('#totalOrdersYear').text(data.total_orders_this_year);
+                        $('#totalSalesMonth').text(`₱${data.total_sales_this_month.toLocaleString()}`);
+                        $('#totalOrdersMonth').text(data.most_orders_this_month);
+                        $('#revenueLoss').text(`₱${response.revenue_loss?.toLocaleString() || '0'}`);
+                        $('#averageOrderValue').text(`₱${response.average_order_value?.toLocaleString() || '0'}`);
+                        updateBarChart('salesPerStoreChart', response.sales_per_store, 'Sales per Store', salesPerStoreChart);
+                        updateBarChart('salesPerBrandChart', response.sales_per_brand, 'Sales per Brand', salesPerBrandChart);
+                        updateBarChart('productSalesChart', response.product_sales, 'Sales per Product', productSalesChart);
+                        updateBarChart('revenueLossPerProductChart', response.revenue_loss_per_product, 'Revenue Loss per Product', revenueLossPerProductChart);
+                        updateBarChart('ordersPerStoreChart', response.orders_per_store, 'Orders per Store', ordersPerStoreChart);
+                        updateBarChart('ordersPerBrandChart', response.orders_per_brand, 'Orders per Brand', ordersPerBrandChart);
+                        updateBarChart('inventoryStatusChart', response.inventory_status, 'Inventory Status', inventoryStatusChart);
+                        updateBarChart('monthlySalesTrendChart', response.monthly_sales_trend, 'Monthly Sales Trend', monthlySalesTrendChart);
+                    }
+                } catch (error) {
+                    console.error("Error fetching dashboard data:", error);
+                }
             }
 
-            // Show the status indicator
-            statusIndicator.style.display = 'block';
+            function updateBarChart(canvasId, data, label, chartInstance) {
+                if (!data || Object.keys(data).length === 0) {
+                    data = { 'No Data': 0 };
+                }
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(data),
+                        datasets: [{
+                            label: label,
+                            data: Object.values(data),
+                            backgroundColor: 'rgba(60,141,188,0.9)',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { callback: function(value) { return '₱' + value; } }
+                            },
+                            y: { beginAtZero: true }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+                switch(canvasId) {
+                    case 'salesPerStoreChart': salesPerStoreChart = chartInstance; break;
+                    case 'salesPerBrandChart': salesPerBrandChart = chartInstance; break;
+                    case 'productSalesChart': productSalesChart = chartInstance; break;
+                    case 'revenueLossPerProductChart': revenueLossPerProductChart = chartInstance; break;
+                    case 'ordersPerStoreChart': ordersPerStoreChart = chartInstance; break;
+                    case 'ordersPerBrandChart': ordersPerBrandChart = chartInstance; break;
+                    case 'inventoryStatusChart': inventoryStatusChart = chartInstance; break;
+                    case 'monthlySalesTrendChart': monthlySalesTrendChart = chartInstance; break;
+                }
+            }
 
-            // Hide after 3 seconds
-            setTimeout(() => {
-                statusIndicator.style.display = 'none';
-            }, 3000);
+            // Year dropdown always shows 5 years
+            $('#yearFilter').empty();
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear; i >= currentYear - 5; i--) {
+                $('#yearFilter').append(`<option value="${i}">${i}</option>`);
+            }
+
+            // Event listener for filter button
+            $('#applyFiltersBtn').on('click', fetchDashboardData);
+
+            // Initial data load
+            fetchFilters();
+            fetchDashboardData();
+        });
+        let productSalesChart;
+
+        function initProductSalesChart(data) {
+            const ctx = document.getElementById('productSalesChart').getContext('2d');
+
+            // Destroy existing chart
+            if (productSalesChart) {
+                productSalesChart.destroy();
+            }
+
+            productSalesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        label: 'Sales per Product',
+                        data: Object.values(data),
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderWidth: 0 // Add this to prevent border rendering issues
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '₱' + value;
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            position: 'nearest'
+                        }
+                    }
+                }
+            });
         }
-
-        // Start the heartbeat
-        heartbeat.start().catch(error => {
-            console.error('Failed to start heartbeat:', error);
-            // Show error notification
-            const statusIndicator = document.getElementById('activityStatus');
-            statusIndicator.className = 'alert alert-danger';
-            document.getElementById('statusText').textContent = 'Connection Error';
-            statusIndicator.style.display = 'block';
-        });
-
-        // Add idle detection warning
-        let idleWarningShown = false;
-        document.addEventListener('mousemove', resetIdleWarning);
-        document.addEventListener('keydown', resetIdleWarning);
-        document.addEventListener('click', resetIdleWarning);
-
-        function resetIdleWarning() {
-            if (idleWarningShown) {
-                const statusIndicator = document.getElementById('activityStatus');
-                statusIndicator.style.display = 'none';
-                idleWarningShown = false;
-            }
-        }
-
-        // Check for inactivity
-        setInterval(() => {
-            const lastActivity = heartbeat.lastActivityTime;
-            const inactiveTime = Date.now() - lastActivity;
-            
-            // Show warning when 4 minutes inactive (1 minute before being marked as inactive)
-            if (inactiveTime > 240000 && !idleWarningShown) {
-                const statusIndicator = document.getElementById('activityStatus');
-                statusIndicator.className = 'alert alert-warning';
-                document.getElementById('statusText').textContent = 'You will be marked as inactive soon';
-                statusIndicator.style.display = 'block';
-                idleWarningShown = true;
-            }
-        }, 30000); // Check every 30 seconds
-})
-.catch(error => {
-    console.error('Authentication test error:', error);
-});
     </script>
-  @endsection
+@endsection

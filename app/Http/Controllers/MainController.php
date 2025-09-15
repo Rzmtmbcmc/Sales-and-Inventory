@@ -55,4 +55,17 @@ class MainController extends Controller
         Auth::logout();
         return redirect()->route('Login')->with('status','Password Changed Successfully Login Again');
     }
+
+    public function managerUpdatePassword(Request $request):View|RedirectResponse{
+        $request->validate([
+            'email'=>'required',
+            'password'=>'required'
+        ]);
+        $userlog = Auth::user();
+        $userlog->password = bcrypt($request->password);
+        $userlog->save();
+        Session::flush();
+        Auth::logout();
+        return redirect()->route('Login')->with('status','Password Changed Successfully Login Again');
+    }
 }

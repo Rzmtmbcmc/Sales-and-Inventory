@@ -40,8 +40,17 @@ class UserHeartbeatController extends Controller
                 ? Carbon::parse($request->input('last_activity'))
                 : now();
 
-            // If user is inactive or last activity is too old, mark them as offline
-            $isOnline = $isActive && $lastActivity->gt(now()->subMinutes(5));
+            // More granular status determination
+            if (!$isActive) {
+                // User explicitly marked as inactive (browser closed, etc.)
+                $isOnline = false;
+            } elseif ($lastActivity->lt(now()->subMinutes(5))) {
+                // User hasn't been active for more than 5 minutes
+                $isOnline = false;
+            } else {
+                // User is active and within time threshold
+                $isOnline = true;
+            }
 
             Log::info('Heartbeat received:', [
                 'user_id' => $user->id,
@@ -61,8 +70,10 @@ class UserHeartbeatController extends Controller
                 'status' => 'success',
                 'user' => [
                     'id' => $user->id,
-                    'is_online' => true,
-                    'last_activity' => $user->last_activity
+                    'is_online' => $isOnline,
+                    'is_active' => $isActive,
+                    'last_activity' => $user->last_activity,
+                    'status_text' => $this->getStatusText($isActive, $isOnline, $lastActivity)
                 ]
             ]);
         } catch (\Exception $e) {
@@ -118,6 +129,30 @@ class UserHeartbeatController extends Controller
                 'error' => $e->getMessage()
             ]);
             throw $e;
+        }
+    }
+
+    /**
+     * Get human-readable status text
+     */
+    private function getStatusText($isActive, $isOnline, $lastActivity)
+    {
+        if (!$isOnline) {
+            return 'Offline';
+        }
+        
+        if (!$isActive) {
+            return 'Away';
+        }
+        
+        $minutesSinceActivity = now()->diffInMinutes($lastActivity);
+        
+        if ($minutesSinceActivity < 1) {
+            return 'Active';
+        } elseif ($minutesSinceActivity < 5) {
+            return 'Idle';
+        } else {
+            return 'Away';
         }
     }
 }
