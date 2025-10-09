@@ -16,7 +16,8 @@ class Inventory extends Model
     protected $casts = [
         'quantity' => 'integer',
     ];
-    public function product(){
+    public function product()
+    {
         // Each inventory entry belongs to a single product
         return $this->belongsTo(Product::class, 'product_id');
     }

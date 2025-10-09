@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,13 +11,13 @@ class Order extends Model
 
     protected $fillable = [
         'brand_id',
-        'branch_id', 
+        'branch_id',
         'total_amount',
-        'notes'
+        'notes',
     ];
 
     protected $casts = [
-        'total_amount' => 'decimal:2'
+        'total_amount' => 'decimal:2',
     ];
 
     public function brand()

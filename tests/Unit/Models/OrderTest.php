@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
+use App\Models\Branch;
+use App\Models\Brand;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
-use App\Models\Branch;
-use App\Models\Brand;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class OrderTest extends TestCase
 {
@@ -23,7 +23,7 @@ class OrderTest extends TestCase
             'branch_id' => $branch->id,
             'brand_id' => $brand->id,
             'total_amount' => 150.00,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $this->assertInstanceOf(Order::class, $order);
@@ -35,12 +35,12 @@ class OrderTest extends TestCase
     {
         $branch = Branch::create(['name' => 'Test Branch']);
         $brand = Brand::create(['name' => 'Test Brand']);
-        
+
         $order = Order::create([
             'branch_id' => $branch->id,
             'brand_id' => $brand->id,
             'total_amount' => 100.00,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $this->assertInstanceOf(Branch::class, $order->branch);
@@ -51,12 +51,12 @@ class OrderTest extends TestCase
     {
         $branch = Branch::create(['name' => 'Test Branch']);
         $brand = Brand::create(['name' => 'Test Brand']);
-        
+
         $order = Order::create([
             'branch_id' => $branch->id,
             'brand_id' => $brand->id,
             'total_amount' => 100.00,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $this->assertInstanceOf(Brand::class, $order->brand);
@@ -71,21 +71,21 @@ class OrderTest extends TestCase
             'name' => 'Test Product',
             'price' => 10.00,
             'quantity' => 100,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $order = Order::create([
             'branch_id' => $branch->id,
             'brand_id' => $brand->id,
             'total_amount' => 50.00,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $orderItem = OrderItem::create([
             'order_id' => $order->id,
             'product_id' => $product->id,
             'quantity' => 5,
-            'price' => 10.00
+            'price' => 10.00,
         ]);
 
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $order->items);
@@ -105,7 +105,7 @@ class OrderTest extends TestCase
                 'branch_id' => $branch->id,
                 'brand_id' => $brand->id,
                 'total_amount' => 100.00,
-                'status' => $status
+                'status' => $status,
             ]);
 
             $this->assertEquals($status, $order->status);
@@ -123,21 +123,21 @@ class OrderTest extends TestCase
             'branch_id' => $branch->id,
             'brand_id' => $brand->id,
             'total_amount' => 0,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         OrderItem::create([
             'order_id' => $order->id,
             'product_id' => $product1->id,
             'quantity' => 2,
-            'price' => 10.00
+            'price' => 10.00,
         ]);
 
         OrderItem::create([
             'order_id' => $order->id,
             'product_id' => $product2->id,
             'quantity' => 3,
-            'price' => 15.00
+            'price' => 15.00,
         ]);
 
         $expectedTotal = (2 * 10.00) + (3 * 15.00); // 20 + 45 = 65

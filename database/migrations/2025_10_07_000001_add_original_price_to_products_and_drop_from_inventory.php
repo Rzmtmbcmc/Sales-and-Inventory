@@ -5,12 +5,12 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class () extends Migration {
     public function up(): void
     {
         // Add original_price to products if not exists
         Schema::table('products', function (Blueprint $table) {
-            if (!Schema::hasColumn('products', 'original_price')) {
+            if (! Schema::hasColumn('products', 'original_price')) {
                 $table->decimal('original_price', 10, 2)->nullable()->after('price');
             }
         });
@@ -36,7 +36,7 @@ return new class extends Migration {
     public function down(): void
     {
         // Re-add column to inventory
-        if (Schema::hasTable('inventory') && !Schema::hasColumn('inventory', 'original_price')) {
+        if (Schema::hasTable('inventory') && ! Schema::hasColumn('inventory', 'original_price')) {
             Schema::table('inventory', function (Blueprint $table) {
                 $table->decimal('original_price', 10, 2)->nullable()->after('quantity');
             });

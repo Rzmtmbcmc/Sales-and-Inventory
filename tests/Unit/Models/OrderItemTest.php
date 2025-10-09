@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
-use App\Models\OrderItem;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class OrderItemTest extends TestCase
 {
@@ -18,14 +18,14 @@ class OrderItemTest extends TestCase
             'customer_name' => 'Test Customer',
             'customer_email' => 'test@example.com',
             'total_amount' => 100.00,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $product = Product::create([
             'name' => 'Test Product',
             'price' => 25.00,
             'quantity' => 100,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $orderItem = OrderItem::create([
@@ -33,7 +33,7 @@ class OrderItemTest extends TestCase
             'product_id' => $product->id,
             'quantity' => 4,
             'unit_price' => 25.00,
-            'total_price' => 100.00
+            'total_price' => 100.00,
         ]);
 
         $this->assertInstanceOf(OrderItem::class, $orderItem);
@@ -48,14 +48,14 @@ class OrderItemTest extends TestCase
             'customer_name' => 'Item Customer',
             'customer_email' => 'item@example.com',
             'total_amount' => 50.00,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $product = Product::create([
             'name' => 'Item Product',
             'price' => 12.50,
             'quantity' => 50,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $orderItem = OrderItem::create([
@@ -63,7 +63,7 @@ class OrderItemTest extends TestCase
             'product_id' => $product->id,
             'quantity' => 4,
             'unit_price' => 12.50,
-            'total_price' => 50.00
+            'total_price' => 50.00,
         ]);
 
         $this->assertInstanceOf(Order::class, $orderItem->order);
@@ -76,14 +76,14 @@ class OrderItemTest extends TestCase
             'customer_name' => 'Product Customer',
             'customer_email' => 'product@example.com',
             'total_amount' => 75.00,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $product = Product::create([
             'name' => 'Order Product',
             'price' => 25.00,
             'quantity' => 30,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $orderItem = OrderItem::create([
@@ -91,7 +91,7 @@ class OrderItemTest extends TestCase
             'product_id' => $product->id,
             'quantity' => 3,
             'unit_price' => 25.00,
-            'total_price' => 75.00
+            'total_price' => 75.00,
         ]);
 
         $this->assertInstanceOf(Product::class, $orderItem->product);
@@ -104,14 +104,14 @@ class OrderItemTest extends TestCase
             'customer_name' => 'Calc Customer',
             'customer_email' => 'calc@example.com',
             'total_amount' => 150.00,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $product = Product::create([
             'name' => 'Calc Product',
             'price' => 30.00,
             'quantity' => 20,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $quantity = 5;
@@ -123,7 +123,7 @@ class OrderItemTest extends TestCase
             'product_id' => $product->id,
             'quantity' => $quantity,
             'unit_price' => $unitPrice,
-            'total_price' => $expectedTotalPrice
+            'total_price' => $expectedTotalPrice,
         ]);
 
         $this->assertEquals(30.00, $orderItem->unit_price);
@@ -135,13 +135,13 @@ class OrderItemTest extends TestCase
     {
         $orderItem = new OrderItem();
         $fillable = $orderItem->getFillable();
-        
+
         $expectedFillable = [
             'order_id',
             'product_id',
             'quantity',
             'unit_price',
-            'total_price'
+            'total_price',
         ];
 
         $this->assertEquals($expectedFillable, $fillable);
@@ -151,12 +151,12 @@ class OrderItemTest extends TestCase
     {
         // Test that order_id is required
         $this->expectException(\Illuminate\Database\QueryException::class);
-        
+
         OrderItem::create([
             'product_id' => 1,
             'quantity' => 2,
             'unit_price' => 15.00,
-            'total_price' => 30.00
+            'total_price' => 30.00,
         ]);
     }
 
@@ -166,14 +166,14 @@ class OrderItemTest extends TestCase
             'customer_name' => 'Cast Customer',
             'customer_email' => 'cast@example.com',
             'total_amount' => 200.00,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $product = Product::create([
             'name' => 'Cast Product',
             'price' => 40.00,
             'quantity' => 25,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $orderItem = OrderItem::create([
@@ -181,7 +181,7 @@ class OrderItemTest extends TestCase
             'product_id' => $product->id,
             'quantity' => '5',
             'unit_price' => '40.00',
-            'total_price' => '200.00'
+            'total_price' => '200.00',
         ]);
 
         $this->assertIsInt($orderItem->quantity);

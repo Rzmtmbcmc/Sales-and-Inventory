@@ -6,18 +6,27 @@ use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class ExpenseController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
         $query = Expense::query();
-        if ($request->filled('brand_id')) $query->where('brand_id', $request->brand_id);
-        if ($request->filled('branch_id')) $query->where('branch_id', $request->branch_id);
-        if ($request->filled('from')) $query->where('date', '>=', $request->from);
-        if ($request->filled('to')) $query->where('date', '<=', $request->to);
-        if ($request->filled('category')) $query->where('category', $request->category);
+        if ($request->filled('brand_id')) {
+            $query->where('brand_id', $request->brand_id);
+        }
+        if ($request->filled('branch_id')) {
+            $query->where('branch_id', $request->branch_id);
+        }
+        if ($request->filled('from')) {
+            $query->where('date', '>=', $request->from);
+        }
+        if ($request->filled('to')) {
+            $query->where('date', '<=', $request->to);
+        }
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
 
         $expenses = $query->orderBy('date', 'desc')->get();
         $total = $expenses->sum('amount');
@@ -41,6 +50,7 @@ class ExpenseController extends Controller
         }
 
         $expense = Expense::create($data);
+
         return response()->json(['success' => true, 'data' => $expense], 201);
     }
 
@@ -65,12 +75,14 @@ class ExpenseController extends Controller
         }
 
         $expense->update($data);
+
         return response()->json(['success' => true, 'data' => $expense]);
     }
 
     public function destroy(Expense $expense): JsonResponse
     {
         $expense->delete();
+
         return response()->json(['success' => true]);
     }
 }

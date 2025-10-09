@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Controllers;
 
-use Tests\TestCase;
-use App\Models\Product;
 use App\Models\Branch;
 use App\Models\Brand;
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
 {
@@ -17,13 +17,13 @@ class ProductControllerTest extends TestCase
         // Create test data
         Branch::create(['name' => 'Test Branch']);
         Brand::create(['name' => 'Test Brand']);
-        
+
         Product::create([
             'name' => 'Apple',
             'price' => 32.00,
             'original_price' => 12.00,
             'quantity' => 50,
-            'perishable' => 'yes'
+            'perishable' => 'yes',
         ]);
 
         Product::create([
@@ -31,7 +31,7 @@ class ProductControllerTest extends TestCase
             'price' => 25.00,
             'original_price' => 15.00,
             'quantity' => 30,
-            'perishable' => 'yes'
+            'perishable' => 'yes',
         ]);
 
         $response = $this->getJson('/api/products');
@@ -45,12 +45,12 @@ class ProductControllerTest extends TestCase
                             'price',
                             'original_price',
                             'quantity',
-                            'perishable'
-                        ]
+                            'perishable',
+                        ],
                     ],
                     'current_page',
                     'per_page',
-                    'total'
+                    'total',
                 ]);
     }
 
@@ -58,22 +58,22 @@ class ProductControllerTest extends TestCase
     {
         Branch::create(['name' => 'Test Branch']);
         Brand::create(['name' => 'Test Brand']);
-        
+
         $product = Product::create([
             'name' => 'Apple',
             'price' => 32.00,
             'original_price' => 12.00,
             'quantity' => 50,
-            'perishable' => 'yes'
+            'perishable' => 'yes',
         ]);
 
         $response = $this->getJson('/api/products');
 
         $response->assertStatus(200);
-        
+
         $data = $response->json();
         $appleProduct = collect($data['data'])->firstWhere('name', 'Apple');
-        
+
         $this->assertNotNull($appleProduct);
         $this->assertEquals(12.00, $appleProduct['original_price']);
         $this->assertEquals(32.00, $appleProduct['price']);
@@ -83,13 +83,13 @@ class ProductControllerTest extends TestCase
     {
         Branch::create(['name' => 'Test Branch']);
         Brand::create(['name' => 'Test Brand']);
-        
+
         Product::create([
             'name' => 'Apple Juice',
             'price' => 25.00,
             'original_price' => 10.00,
             'quantity' => 40,
-            'perishable' => 'yes'
+            'perishable' => 'yes',
         ]);
 
         Product::create([
@@ -97,13 +97,13 @@ class ProductControllerTest extends TestCase
             'price' => 30.00,
             'original_price' => 15.00,
             'quantity' => 35,
-            'perishable' => 'yes'
+            'perishable' => 'yes',
         ]);
 
         $response = $this->getJson('/api/products?search=Apple');
 
         $response->assertStatus(200);
-        
+
         $data = $response->json();
         $this->assertEquals(1, count($data['data']));
         $this->assertEquals('Apple Juice', $data['data'][0]['name']);
@@ -113,7 +113,7 @@ class ProductControllerTest extends TestCase
     {
         Branch::create(['name' => 'Test Branch']);
         Brand::create(['name' => 'Test Brand']);
-        
+
         // Create 15 products to test pagination
         for ($i = 1; $i <= 15; $i++) {
             Product::create([
@@ -121,14 +121,14 @@ class ProductControllerTest extends TestCase
                 'price' => 20.00 + $i,
                 'original_price' => 10.00 + $i,
                 'quantity' => 50,
-                'perishable' => 'no'
+                'perishable' => 'no',
             ]);
         }
 
         $response = $this->getJson('/api/products?per_page=5&page=2');
 
         $response->assertStatus(200);
-        
+
         $data = $response->json();
         $this->assertEquals(2, $data['current_page']);
         $this->assertEquals(5, $data['per_page']);
@@ -143,7 +143,7 @@ class ProductControllerTest extends TestCase
         $response->assertStatus(200)
                 ->assertJson([
                     'data' => [],
-                    'total' => 0
+                    'total' => 0,
                 ]);
     }
 
@@ -151,13 +151,13 @@ class ProductControllerTest extends TestCase
     {
         Branch::create(['name' => 'Test Branch']);
         Brand::create(['name' => 'Test Brand']);
-        
+
         Product::create([
             'name' => 'Apple',
             'price' => 32.00,
             'original_price' => 12.00,
             'quantity' => 50,
-            'perishable' => 'yes'
+            'perishable' => 'yes',
         ]);
 
         $response = $this->getJson('/api/products?search=NonexistentProduct');
@@ -165,7 +165,7 @@ class ProductControllerTest extends TestCase
         $response->assertStatus(200)
                 ->assertJson([
                     'data' => [],
-                    'total' => 0
+                    'total' => 0,
                 ]);
     }
 
@@ -173,22 +173,22 @@ class ProductControllerTest extends TestCase
     {
         Branch::create(['name' => 'Test Branch']);
         Brand::create(['name' => 'Test Brand']);
-        
+
         Product::create([
             'name' => 'Profit Product',
             'price' => 50.00,
             'original_price' => 30.00,
             'quantity' => 25,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $response = $this->getJson('/api/products');
 
         $response->assertStatus(200);
-        
+
         $data = $response->json();
         $product = $data['data'][0];
-        
+
         // Verify the API returns the correct data for profit calculation
         $expectedProfit = $product['price'] - $product['original_price']; // 50 - 30 = 20
         $this->assertEquals(20.00, $expectedProfit);

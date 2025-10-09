@@ -20,7 +20,7 @@ class UpdateProductRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('products', 'name')->ignore($this->product->id)
+                Rule::unique('products', 'name')->ignore($this->product->id),
             ],
             'price' => 'required|numeric|min:0|max:999999.99',
             'original_price' => 'nullable|numeric|min:0|max:999999.99',
@@ -43,7 +43,7 @@ class UpdateProductRequest extends FormRequest
             'quantity.min' => 'Quantity cannot be negative.',
             'perishable.required' => 'Please specify if the product is perishable.',
             'perishable.in' => 'Perishable status must be either yes or no.',
-            'expiration_date.date' => 'Expiration date must be a valid date.'
+            'expiration_date.date' => 'Expiration date must be a valid date.',
         ];
     }
 }

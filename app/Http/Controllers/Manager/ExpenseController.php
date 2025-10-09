@@ -9,9 +9,10 @@ class ExpenseController extends Controller
 {
     public function showView()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('Login');
         }
+
         return view('manager.expenses');
     }
 }

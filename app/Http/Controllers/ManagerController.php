@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use view;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
 
 class ManagerController extends Controller
 {
     public function showView()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('Login');
         }
+
         return view('owner.manager');
     }
 
@@ -33,6 +32,7 @@ class ManagerController extends Controller
         }
 
         $users = $query->latest()->paginate(10);
+
         return response()->json($users);
     }
 
@@ -90,6 +90,7 @@ class ManagerController extends Controller
     public function destroy(User $manager)
     {
         $manager->delete();
+
         return response()->json(null, 200);
     }
 }

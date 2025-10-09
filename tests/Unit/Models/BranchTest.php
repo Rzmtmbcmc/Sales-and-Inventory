@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
 use App\Models\Branch;
-use App\Models\Sales;
 use App\Models\Inventory;
 use App\Models\Product;
+use App\Models\Sales;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class BranchTest extends TestCase
 {
@@ -19,7 +19,7 @@ class BranchTest extends TestCase
         $branch = Branch::create([
             'name' => 'Test Branch',
             'location' => 'Test Location',
-            'manager_id' => null
+            'manager_id' => null,
         ]);
 
         $this->assertInstanceOf(Branch::class, $branch);
@@ -33,13 +33,13 @@ class BranchTest extends TestCase
             'name' => 'Branch Manager',
             'email' => 'manager@test.com',
             'password' => bcrypt('password'),
-            'role' => 'manager'
+            'role' => 'manager',
         ]);
 
         $branch = Branch::create([
             'name' => 'Managed Branch',
             'location' => 'Manager Location',
-            'manager_id' => $manager->id
+            'manager_id' => $manager->id,
         ]);
 
         $this->assertInstanceOf(User::class, $branch->manager);
@@ -57,7 +57,7 @@ class BranchTest extends TestCase
             'branch_id' => $branch->id,
             'quantity_sold' => 5,
             'unit_price' => 20.00,
-            'total_amount' => 100.00
+            'total_amount' => 100.00,
         ]);
 
         $sales2 = Sales::create([
@@ -65,7 +65,7 @@ class BranchTest extends TestCase
             'branch_id' => $branch->id,
             'quantity_sold' => 3,
             'unit_price' => 20.00,
-            'total_amount' => 60.00
+            'total_amount' => 60.00,
         ]);
 
         $this->assertCount(2, $branch->sales);
@@ -83,7 +83,7 @@ class BranchTest extends TestCase
             'quantity_added' => 20,
             'unit_cost' => 10.00,
             'total_cost' => 200.00,
-            'date_added' => now()
+            'date_added' => now(),
         ]);
 
         $inventory2 = Inventory::create([
@@ -92,7 +92,7 @@ class BranchTest extends TestCase
             'quantity_added' => 15,
             'unit_cost' => 10.00,
             'total_cost' => 150.00,
-            'date_added' => now()
+            'date_added' => now(),
         ]);
 
         $this->assertCount(2, $branch->inventory);
@@ -102,9 +102,9 @@ class BranchTest extends TestCase
     public function test_branch_name_is_required()
     {
         $this->expectException(\Illuminate\Database\QueryException::class);
-        
+
         Branch::create([
-            'location' => 'Test Location'
+            'location' => 'Test Location',
         ]);
     }
 
@@ -112,11 +112,11 @@ class BranchTest extends TestCase
     {
         $branch = new Branch();
         $fillable = $branch->getFillable();
-        
+
         $expectedFillable = [
             'name',
             'location',
-            'manager_id'
+            'manager_id',
         ];
 
         $this->assertEquals($expectedFillable, $fillable);
@@ -127,7 +127,7 @@ class BranchTest extends TestCase
         $branch = Branch::create([
             'name' => 'No Manager Branch',
             'location' => 'Unmanaged Location',
-            'manager_id' => null
+            'manager_id' => null,
         ]);
 
         $this->assertNull($branch->manager_id);
@@ -140,13 +140,13 @@ class BranchTest extends TestCase
             'name' => 'Test Manager',
             'email' => 'test.manager@example.com',
             'password' => bcrypt('password'),
-            'role' => 'manager'
+            'role' => 'manager',
         ]);
 
         $branch = Branch::create([
             'name' => 'Test Branch',
             'location' => 'Test Location',
-            'manager_id' => $user->id
+            'manager_id' => $user->id,
         ]);
 
         $this->assertEquals($user->id, $branch->manager_id);

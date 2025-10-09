@@ -2,12 +2,12 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
 use App\Models\Brand;
+use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\Sales;
-use App\Models\Inventory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class BrandTest extends TestCase
 {
@@ -17,7 +17,7 @@ class BrandTest extends TestCase
     {
         $brand = Brand::create([
             'name' => 'Test Brand',
-            'description' => 'A test brand for unit testing'
+            'description' => 'A test brand for unit testing',
         ]);
 
         $this->assertInstanceOf(Brand::class, $brand);
@@ -34,7 +34,7 @@ class BrandTest extends TestCase
             'price' => 25.00,
             'quantity' => 100,
             'brand_id' => $brand->id,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $product2 = Product::create([
@@ -42,7 +42,7 @@ class BrandTest extends TestCase
             'price' => 35.00,
             'quantity' => 50,
             'brand_id' => $brand->id,
-            'perishable' => 'yes'
+            'perishable' => 'yes',
         ]);
 
         $this->assertCount(2, $brand->products);
@@ -60,7 +60,7 @@ class BrandTest extends TestCase
             'brand_id' => $brand->id,
             'quantity_sold' => 5,
             'unit_price' => 20.00,
-            'total_amount' => 100.00
+            'total_amount' => 100.00,
         ]);
 
         $sales2 = Sales::create([
@@ -68,7 +68,7 @@ class BrandTest extends TestCase
             'brand_id' => $brand->id,
             'quantity_sold' => 3,
             'unit_price' => 20.00,
-            'total_amount' => 60.00
+            'total_amount' => 60.00,
         ]);
 
         $this->assertCount(2, $brand->sales);
@@ -86,7 +86,7 @@ class BrandTest extends TestCase
             'quantity_added' => 20,
             'unit_cost' => 10.00,
             'total_cost' => 200.00,
-            'date_added' => now()
+            'date_added' => now(),
         ]);
 
         $inventory2 = Inventory::create([
@@ -95,7 +95,7 @@ class BrandTest extends TestCase
             'quantity_added' => 15,
             'unit_cost' => 10.00,
             'total_cost' => 150.00,
-            'date_added' => now()
+            'date_added' => now(),
         ]);
 
         $this->assertCount(2, $brand->inventory);
@@ -105,9 +105,9 @@ class BrandTest extends TestCase
     public function test_brand_name_is_required()
     {
         $this->expectException(\Illuminate\Database\QueryException::class);
-        
+
         Brand::create([
-            'description' => 'Brand without name'
+            'description' => 'Brand without name',
         ]);
     }
 
@@ -115,10 +115,10 @@ class BrandTest extends TestCase
     {
         $brand = new Brand();
         $fillable = $brand->getFillable();
-        
+
         $expectedFillable = [
             'name',
-            'description'
+            'description',
         ];
 
         $this->assertEquals($expectedFillable, $fillable);
@@ -128,7 +128,7 @@ class BrandTest extends TestCase
     {
         $brand = Brand::create([
             'name' => 'No Description Brand',
-            'description' => null
+            'description' => null,
         ]);
 
         $this->assertEquals('No Description Brand', $brand->name);
@@ -144,11 +144,11 @@ class BrandTest extends TestCase
             'price' => 30.00,
             'quantity' => 75,
             'brand_id' => $brand->id,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $retrievedBrand = Brand::with('products')->find($brand->id);
-        
+
         $this->assertCount(1, $retrievedBrand->products);
         $this->assertEquals('Related Product', $retrievedBrand->products->first()->name);
         $this->assertEquals($brand->id, $retrievedBrand->products->first()->brand_id);

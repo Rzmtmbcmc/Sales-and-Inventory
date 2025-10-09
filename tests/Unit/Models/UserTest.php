@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
 class UserTest extends TestCase
 {
@@ -17,7 +17,7 @@ class UserTest extends TestCase
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => Hash::make('password123'),
-            'role' => 'manager'
+            'role' => 'manager',
         ]);
 
         $this->assertInstanceOf(User::class, $user);
@@ -32,7 +32,7 @@ class UserTest extends TestCase
             'name' => 'Hash Test',
             'email' => 'hash@example.com',
             'password' => Hash::make('plainpassword'),
-            'role' => 'owner'
+            'role' => 'owner',
         ]);
 
         $this->assertNotEquals('plainpassword', $user->password);
@@ -45,14 +45,14 @@ class UserTest extends TestCase
             'name' => 'Manager User',
             'email' => 'manager@example.com',
             'password' => Hash::make('password'),
-            'role' => 'manager'
+            'role' => 'manager',
         ]);
 
         $ownerUser = User::create([
             'name' => 'Owner User',
             'email' => 'owner@example.com',
             'password' => Hash::make('password'),
-            'role' => 'owner'
+            'role' => 'owner',
         ]);
 
         $this->assertEquals('manager', $managerUser->role);
@@ -65,7 +65,7 @@ class UserTest extends TestCase
             'name' => 'First User',
             'email' => 'unique@example.com',
             'password' => Hash::make('password'),
-            'role' => 'manager'
+            'role' => 'manager',
         ]);
 
         $this->expectException(\Illuminate\Database\QueryException::class);
@@ -74,7 +74,7 @@ class UserTest extends TestCase
             'name' => 'Second User',
             'email' => 'unique@example.com', // Same email
             'password' => Hash::make('password'),
-            'role' => 'owner'
+            'role' => 'owner',
         ]);
     }
 
@@ -82,12 +82,12 @@ class UserTest extends TestCase
     {
         $user = new User();
         $fillable = $user->getFillable();
-        
+
         $expectedFillable = [
             'name',
             'email',
             'password',
-            'role'
+            'role',
         ];
 
         $this->assertEquals($expectedFillable, $fillable);
@@ -99,11 +99,11 @@ class UserTest extends TestCase
             'name' => 'Hidden Test',
             'email' => 'hidden@example.com',
             'password' => Hash::make('password'),
-            'role' => 'manager'
+            'role' => 'manager',
         ]);
 
         $userArray = $user->toArray();
-        
+
         $this->assertArrayNotHasKey('password', $userArray);
         $this->assertArrayNotHasKey('remember_token', $userArray);
     }
@@ -115,7 +115,7 @@ class UserTest extends TestCase
             'email' => 'cast@example.com',
             'password' => Hash::make('password'),
             'role' => 'manager',
-            'email_verified_at' => now()
+            'email_verified_at' => now(),
         ]);
 
         $this->assertInstanceOf(\Carbon\Carbon::class, $user->email_verified_at);

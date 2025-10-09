@@ -2,12 +2,12 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
-use App\Models\Sales;
-use App\Models\Product;
 use App\Models\Branch;
 use App\Models\Brand;
+use App\Models\Product;
+use App\Models\Sales;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class SalesTest extends TestCase
 {
@@ -22,7 +22,7 @@ class SalesTest extends TestCase
             'price' => 25.00,
             'original_price' => 15.00,
             'quantity' => 100,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $sales = Sales::create([
@@ -33,7 +33,7 @@ class SalesTest extends TestCase
             'unit_price' => 25.00,
             'total_amount' => 125.00,
             'profit_per_unit' => 10.00,
-            'total_profit' => 50.00
+            'total_profit' => 50.00,
         ]);
 
         $this->assertInstanceOf(Sales::class, $sales);
@@ -51,7 +51,7 @@ class SalesTest extends TestCase
             'name' => 'Sales Product',
             'price' => 20.00,
             'quantity' => 50,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $sales = Sales::create([
@@ -60,7 +60,7 @@ class SalesTest extends TestCase
             'brand_id' => $brand->id,
             'quantity_sold' => 3,
             'unit_price' => 20.00,
-            'total_amount' => 60.00
+            'total_amount' => 60.00,
         ]);
 
         $this->assertInstanceOf(Product::class, $sales->product);
@@ -79,7 +79,7 @@ class SalesTest extends TestCase
             'brand_id' => $brand->id,
             'quantity_sold' => 2,
             'unit_price' => 10.00,
-            'total_amount' => 20.00
+            'total_amount' => 20.00,
         ]);
 
         $this->assertInstanceOf(Branch::class, $sales->branch);
@@ -98,7 +98,7 @@ class SalesTest extends TestCase
             'brand_id' => $brand->id,
             'quantity_sold' => 1,
             'unit_price' => 10.00,
-            'total_amount' => 10.00
+            'total_amount' => 10.00,
         ]);
 
         $this->assertInstanceOf(Brand::class, $sales->brand);
@@ -114,7 +114,7 @@ class SalesTest extends TestCase
             'price' => 30.00,
             'original_price' => 20.00,
             'quantity' => 100,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $quantitySold = 4;
@@ -130,7 +130,7 @@ class SalesTest extends TestCase
             'unit_price' => $unitPrice,
             'total_amount' => $unitPrice * $quantitySold,
             'profit_per_unit' => $profitPerUnit,
-            'total_profit' => $totalProfit
+            'total_profit' => $totalProfit,
         ]);
 
         $this->assertEquals(10.00, $sales->profit_per_unit);
@@ -142,7 +142,7 @@ class SalesTest extends TestCase
     {
         $sales = new Sales();
         $fillable = $sales->getFillable();
-        
+
         $expectedFillable = [
             'product_id',
             'branch_id',
@@ -151,7 +151,7 @@ class SalesTest extends TestCase
             'unit_price',
             'total_amount',
             'profit_per_unit',
-            'total_profit'
+            'total_profit',
         ];
 
         $this->assertEquals($expectedFillable, $fillable);
@@ -171,7 +171,7 @@ class SalesTest extends TestCase
             'unit_price' => '15.99',
             'total_amount' => '47.97',
             'profit_per_unit' => '5.99',
-            'total_profit' => '17.97'
+            'total_profit' => '17.97',
         ]);
 
         $this->assertIsInt($sales->quantity_sold);

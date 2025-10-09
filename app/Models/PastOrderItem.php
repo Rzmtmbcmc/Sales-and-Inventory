@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Product; // Make sure this is at the top with other use statements
-use App\Models\PastOrder;
+
+// Make sure this is at the top with other use statements
 class PastOrderItem extends Model
 {
     use HasFactory;

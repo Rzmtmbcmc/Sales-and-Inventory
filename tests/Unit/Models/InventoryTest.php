@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
 use App\Models\Inventory;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class InventoryTest extends TestCase
 {
@@ -17,12 +17,12 @@ class InventoryTest extends TestCase
             'name' => 'Test Product',
             'price' => 25.00,
             'quantity' => 100,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $inventory = Inventory::create([
             'product_id' => $product->id,
-            'quantity' => 50
+            'quantity' => 50,
         ]);
 
         $this->assertInstanceOf(Inventory::class, $inventory);
@@ -36,12 +36,12 @@ class InventoryTest extends TestCase
             'name' => 'Inventory Product',
             'price' => 20.00,
             'quantity' => 50,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $inventory = Inventory::create([
             'product_id' => $product->id,
-            'quantity' => 30
+            'quantity' => 30,
         ]);
 
         $this->assertInstanceOf(Product::class, $inventory->product);
@@ -52,10 +52,10 @@ class InventoryTest extends TestCase
     {
         $inventory = new Inventory();
         $fillable = $inventory->getFillable();
-        
+
         $expectedFillable = [
             'product_id',
-            'quantity'
+            'quantity',
         ];
 
         $this->assertEquals($expectedFillable, $fillable);
@@ -67,13 +67,13 @@ class InventoryTest extends TestCase
             'name' => 'Test Product',
             'price' => 15.00,
             'quantity' => 50,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $this->expectException(\Illuminate\Database\QueryException::class);
-        
+
         Inventory::create([
-            'product_id' => $product->id
+            'product_id' => $product->id,
             // Missing required 'quantity' field
         ]);
     }
@@ -81,9 +81,9 @@ class InventoryTest extends TestCase
     public function test_inventory_product_id_is_required()
     {
         $this->expectException(\Illuminate\Database\QueryException::class);
-        
+
         Inventory::create([
-            'quantity' => 25
+            'quantity' => 25,
             // Missing required 'product_id' field
         ]);
     }
@@ -94,12 +94,12 @@ class InventoryTest extends TestCase
             'name' => 'Cast Product',
             'price' => 15.00,
             'quantity' => 50,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $inventory = Inventory::create([
             'product_id' => $product->id,
-            'quantity' => '15'
+            'quantity' => '15',
         ]);
 
         $this->assertIsInt($inventory->quantity);
@@ -112,16 +112,16 @@ class InventoryTest extends TestCase
             'name' => 'Relationship Product',
             'price' => 30.00,
             'quantity' => 75,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $inventory = Inventory::create([
             'product_id' => $product->id,
-            'quantity' => 25
+            'quantity' => 25,
         ]);
 
         $retrievedInventory = Inventory::with('product')->find($inventory->id);
-        
+
         $this->assertEquals('Relationship Product', $retrievedInventory->product->name);
         $this->assertEquals($product->id, $retrievedInventory->product->id);
     }

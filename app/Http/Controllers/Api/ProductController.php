@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use Illuminate\Http\Request;
+use App\Models\Product;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use App\Models\Inventory;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -20,15 +18,16 @@ class ProductController extends Controller
     {
         // Automatically delete expired products when accessing the product list
         //$this->deleteExpiredProducts();
-        
+
         $query = Product::query();
 
         // Get all products for dropdowns if 'all' parameter is present
         if ($request->has('all')) {
             $products = $query->get();
+
             return response()->json($products);
         }
-        
+
         // Search by product name
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -44,9 +43,11 @@ class ProductController extends Controller
             switch ($request->stock) {
                 case 'low':
                     $query->lowStock();//method name is scopeLowStock() in the Product model
+
                     break;
                 case 'out':
                     $query->outOfStock();//method name is scopeOutOfStock() in the Product model
+
                     break;
             }
         }
@@ -72,7 +73,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Product created successfully',
-            'data' => $product
+            'data' => $product,
         ], 201);
     }
 
@@ -89,9 +90,9 @@ class ProductController extends Controller
                 'message' => 'The requested product has expired and has been deleted'
             ], 404);
         }*/
-        
+
         return response()->json([
-            'data' => $product
+            'data' => $product,
         ]);
     }
 
@@ -103,7 +104,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Product updated successfully',
-            'data' => $product->fresh()
+            'data' => $product->fresh(),
         ]);
     }
 
@@ -115,7 +116,7 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->json([
-            'message' => 'Product deleted successfully'
+            'message' => 'Product deleted successfully',
         ]);
     }
 
@@ -129,19 +130,19 @@ class ProductController extends Controller
     {
         // Automatically delete expired products when getting stats
         //$this->deleteExpiredProducts();
-        
+
         $stats = [
             'total_products' => Product::count(),
             'total_quantity' => Product::sum('quantity'),
             'perishable_products' => Product::perishable('yes')->count(),
             'low_stock_products' => Product::lowStock()->count(),
             'out_of_stock_products' => Product::outOfStock()->count(),
-            'average_price' => Product::avg('price')
+            'average_price' => Product::avg('price'),
         ];
 
         return response()->json($stats);
     }
-    
+
     /**
      * Delete all expired products
      */
@@ -150,19 +151,19 @@ class ProductController extends Controller
         try {
             $expiredProducts = Product::expired()->get();
             $deletedCount = 0;
-            
+
             foreach ($expiredProducts as $product) {
                 $product->delete();
                 $deletedCount++;
             }
-            
+
             return response()->json([
                 'message' => "Successfully deleted {$deletedCount} expired products",
                 'deleted_count' => $deletedCount
             ]);
         } catch (\Exception $e) {
             \Log::error('Error deleting expired products: ' . $e->getMessage());
-            
+
             return response()->json([
                 'error' => 'Failed to delete expired products',
                 'message' => $e->getMessage()

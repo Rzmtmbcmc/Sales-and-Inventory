@@ -1,16 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BrandController;
-use App\Http\Controllers\BranchController;
-use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ExpenseController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\UserHeartbeatController;
-
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,20 +35,20 @@ Route::get('orders/final-summary', [OrderController::class, 'finalSummary']);
 Route::get('orders/statistics', [OrderController::class, 'statistics']);
 Route::apiResource('orders', OrderController::class);
 Route::apiResource('expenses', ExpenseController::class);
-Route::get('branches', function() {
+Route::get('branches', function () {
     return response()->json([
-        'data' => \App\Models\Branch::with('brand')->get()->map(function($branch) {
+        'data' => \App\Models\Branch::with('brand')->get()->map(function ($branch) {
             return [
                 'id' => $branch->id,
                 'name' => $branch->name,
-                'brand_name' => $branch->brand->name
+                'brand_name' => $branch->brand->name,
             ];
-        })
+        }),
     ]);
 });
-Route::get('productss', function() {
+Route::get('productss', function () {
     return response()->json([
-        'data' => \App\Models\Product::all(['id', 'name','quantity', 'price'])
+        'data' => \App\Models\Product::all(['id', 'name','quantity', 'price']),
     ]);
 });
 

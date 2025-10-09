@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
-use Exception;
-use App\Models\Brand;
-use App\Models\Branch;
-use App\Models\Product;
-use App\Models\PastOrder;
-use Illuminate\Http\Request;
-use App\Models\PastOrderItem;
-use Illuminate\Support\Carbon;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Branch;
+use App\Models\Brand;
 use App\Models\Expense;
+use App\Models\PastOrder;
+use App\Models\PastOrderItem;
+use App\Models\Product;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -70,17 +70,17 @@ class DashboardController extends Controller
                     return Carbon::parse($order->created_at)->month === Carbon::now()->month;
                 })
                 ->count();
-            
+
             $totalSalesThisMonth = $filteredOrders
                 ->filter(function ($order) {
                     return Carbon::parse($order->created_at)->month === Carbon::now()->month;
                 })
                 ->sum('total_amount');
-            
+
             // Find the top and bottom products based on the filtered orders' IDs
             $pastOrderIds = $filteredOrders->pluck('id');
 
-            
+
             // Find top 10 products
             $top10Products = PastOrderItem::select('past_order_items.product_id', DB::raw('SUM(past_order_items.quantity) as total_quantity_sold'), 'products.name')
                 ->join('products', 'past_order_items.product_id', '=', 'products.id')
@@ -98,83 +98,138 @@ class DashboardController extends Controller
                 ->orderBy('total_quantity_sold')
                 ->take(10)
                 ->get();
-            
-                $productSales = PastOrderItem::select('past_order_items.product_id', DB::raw('SUM(past_order_items.quantity * price) as total_sales'))
-                ->whereIn('past_order_id', $pastOrderIds)
-                ->with('product:id,name')
-                ->groupBy('product_id')
-                ->get()
-                ->mapWithKeys(function ($item) {
-                    return [$item->product->name => $item->total_sales];
-                });
+
+            $productSales = PastOrderItem::select('past_order_items.product_id', DB::raw('SUM(past_order_items.quantity * price) as total_sales'))
+            ->whereIn('past_order_id', $pastOrderIds)
+            ->with('product:id,name')
+            ->groupBy('product_id')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->product->name => $item->total_sales];
+            });
             // Total revenue loss from rejected goods
             $revenueLossQuery = DB::table('rejected_goods')->whereYear('date', $year);
-            if ($month) $revenueLossQuery->whereMonth('date', $month);
-            if ($day) $revenueLossQuery->whereDay('date', $day);
-            if ($request->filled('branch_id')) $revenueLossQuery->where('branch_id', $request->branch_id);
-            if ($request->filled('brand_id')) $revenueLossQuery->where('brand_id', $request->brand_id);
+            if ($month) {
+                $revenueLossQuery->whereMonth('date', $month);
+            }
+            if ($day) {
+                $revenueLossQuery->whereDay('date', $day);
+            }
+            if ($request->filled('branch_id')) {
+                $revenueLossQuery->where('branch_id', $request->branch_id);
+            }
+            if ($request->filled('brand_id')) {
+                $revenueLossQuery->where('brand_id', $request->brand_id);
+            }
             $revenueLoss = $revenueLossQuery->sum('amount');
 
             // Average order value
             $averageOrderValue = $totalOrdersThisYear > 0 ? round($totalSalesThisYear / $totalOrdersThisYear, 2) : 0;
 
             // Sales per store (branch)
-            $salesPerStore = Branch::all()->mapWithKeys(function($branch) use ($year, $month, $day, $request) {
+            $salesPerStore = Branch::all()->mapWithKeys(function ($branch) use ($year, $month, $day, $request) {
                 $query = PastOrder::where('branch_id', $branch->id)->whereYear('created_at', $year);
-                if ($month) $query->whereMonth('created_at', $month);
-                if ($day) $query->whereDay('created_at', $day);
-                if ($request->filled('brand_id')) $query->where('brand_id', $request->brand_id);
+                if ($month) {
+                    $query->whereMonth('created_at', $month);
+                }
+                if ($day) {
+                    $query->whereDay('created_at', $day);
+                }
+                if ($request->filled('brand_id')) {
+                    $query->where('brand_id', $request->brand_id);
+                }
                 $sum = $query->sum('total_amount');
+
                 return [$branch->name => $sum];
             });
-            if ($salesPerStore->isEmpty()) $salesPerStore = collect(['No Data' => 0]);
+            if ($salesPerStore->isEmpty()) {
+                $salesPerStore = collect(['No Data' => 0]);
+            }
 
             // Sales per brand
-            $salesPerBrand = Brand::all()->mapWithKeys(function($brand) use ($year, $month, $day, $request) {
+            $salesPerBrand = Brand::all()->mapWithKeys(function ($brand) use ($year, $month, $day, $request) {
                 $query = PastOrder::where('brand_id', $brand->id)->whereYear('created_at', $year);
-                if ($month) $query->whereMonth('created_at', $month);
-                if ($day) $query->whereDay('created_at', $day);
-                if ($request->filled('branch_id')) $query->where('branch_id', $request->branch_id);
+                if ($month) {
+                    $query->whereMonth('created_at', $month);
+                }
+                if ($day) {
+                    $query->whereDay('created_at', $day);
+                }
+                if ($request->filled('branch_id')) {
+                    $query->where('branch_id', $request->branch_id);
+                }
                 $sum = $query->sum('total_amount');
+
                 return [$brand->name => $sum];
             });
-            if ($salesPerBrand->isEmpty()) $salesPerBrand = collect(['No Data' => 0]);
+            if ($salesPerBrand->isEmpty()) {
+                $salesPerBrand = collect(['No Data' => 0]);
+            }
 
             // Orders per store
-            $ordersPerStore = Branch::all()->mapWithKeys(function($branch) use ($year, $month, $day, $request) {
+            $ordersPerStore = Branch::all()->mapWithKeys(function ($branch) use ($year, $month, $day, $request) {
                 $query = PastOrder::where('branch_id', $branch->id)->whereYear('created_at', $year);
-                if ($month) $query->whereMonth('created_at', $month);
-                if ($day) $query->whereDay('created_at', $day);
-                if ($request->filled('brand_id')) $query->where('brand_id', $request->brand_id);
+                if ($month) {
+                    $query->whereMonth('created_at', $month);
+                }
+                if ($day) {
+                    $query->whereDay('created_at', $day);
+                }
+                if ($request->filled('brand_id')) {
+                    $query->where('brand_id', $request->brand_id);
+                }
                 $count = $query->count();
+
                 return [$branch->name => $count];
             });
-            if ($ordersPerStore->isEmpty()) $ordersPerStore = collect(['No Data' => 0]);
+            if ($ordersPerStore->isEmpty()) {
+                $ordersPerStore = collect(['No Data' => 0]);
+            }
 
             // Orders per brand
-            $ordersPerBrand = Brand::all()->mapWithKeys(function($brand) use ($year, $month, $day, $request) {
+            $ordersPerBrand = Brand::all()->mapWithKeys(function ($brand) use ($year, $month, $day, $request) {
                 $query = PastOrder::where('brand_id', $brand->id)->whereYear('created_at', $year);
-                if ($month) $query->whereMonth('created_at', $month);
-                if ($day) $query->whereDay('created_at', $day);
-                if ($request->filled('branch_id')) $query->where('branch_id', $request->branch_id);
+                if ($month) {
+                    $query->whereMonth('created_at', $month);
+                }
+                if ($day) {
+                    $query->whereDay('created_at', $day);
+                }
+                if ($request->filled('branch_id')) {
+                    $query->where('branch_id', $request->branch_id);
+                }
                 $count = $query->count();
+
                 return [$brand->name => $count];
             });
-            if ($ordersPerBrand->isEmpty()) $ordersPerBrand = collect(['No Data' => 0]);
+            if ($ordersPerBrand->isEmpty()) {
+                $ordersPerBrand = collect(['No Data' => 0]);
+            }
 
             // Revenue loss per product (rejected goods)
-            $revenueLossPerProduct = Product::all()->mapWithKeys(function($product) use ($year, $month, $day, $request) {
+            $revenueLossPerProduct = Product::all()->mapWithKeys(function ($product) use ($year, $month, $day, $request) {
                 $sum = $product->rejectedGoodItems()
-                    ->whereHas('rejectedGood', function($q) use ($year, $month, $day, $request) {
+                    ->whereHas('rejectedGood', function ($q) use ($year, $month, $day, $request) {
                         $q->whereYear('date', $year);
-                        if ($month) $q->whereMonth('date', $month);
-                        if ($day) $q->whereDay('date', $day);
-                        if ($request->filled('branch_id')) $q->where('branch_id', $request->branch_id);
-                        if ($request->filled('brand_id')) $q->where('brand_id', $request->brand_id);
+                        if ($month) {
+                            $q->whereMonth('date', $month);
+                        }
+                        if ($day) {
+                            $q->whereDay('date', $day);
+                        }
+                        if ($request->filled('branch_id')) {
+                            $q->where('branch_id', $request->branch_id);
+                        }
+                        if ($request->filled('brand_id')) {
+                            $q->where('brand_id', $request->brand_id);
+                        }
                     })->sum('quantity');
+
                 return [$product->name => $sum];
             });
-            if ($revenueLossPerProduct->isEmpty()) $revenueLossPerProduct = collect(['No Data' => 0]);
+            if ($revenueLossPerProduct->isEmpty()) {
+                $revenueLossPerProduct = collect(['No Data' => 0]);
+            }
 
             // Inventory status
             $inventoryStatusQuery = Product::query();
@@ -190,18 +245,28 @@ class DashboardController extends Controller
             // Monthly sales trend
             $monthlySalesTrendQuery = PastOrder::selectRaw('MONTH(created_at) as month, SUM(total_amount) as total')
                 ->whereYear('created_at', $year);
-            if ($request->filled('brand_id')) $monthlySalesTrendQuery->where('brand_id', $request->brand_id);
-            if ($request->filled('branch_id')) $monthlySalesTrendQuery->where('branch_id', $request->branch_id);
-            if ($month) $monthlySalesTrendQuery->whereMonth('created_at', $month);
-            if ($day) $monthlySalesTrendQuery->whereDay('created_at', $day);
+            if ($request->filled('brand_id')) {
+                $monthlySalesTrendQuery->where('brand_id', $request->brand_id);
+            }
+            if ($request->filled('branch_id')) {
+                $monthlySalesTrendQuery->where('branch_id', $request->branch_id);
+            }
+            if ($month) {
+                $monthlySalesTrendQuery->whereMonth('created_at', $month);
+            }
+            if ($day) {
+                $monthlySalesTrendQuery->whereDay('created_at', $day);
+            }
             $monthlySalesTrend = $monthlySalesTrendQuery
                 ->groupBy('month')
                 ->orderBy('month')
                 ->get()
-                ->mapWithKeys(function($row) {
-                    return [date('M', mktime(0,0,0,$row->month,1)) => $row->total];
+                ->mapWithKeys(function ($row) {
+                    return [date('M', mktime(0, 0, 0, $row->month, 1)) => $row->total];
                 });
-            if ($monthlySalesTrend->isEmpty()) $monthlySalesTrend = collect(['No Data' => 0]);
+            if ($monthlySalesTrend->isEmpty()) {
+                $monthlySalesTrend = collect(['No Data' => 0]);
+            }
 
             // Compute profit vs expenses in the same filtered period dynamically from past_order_items and product original_price
             $profitTotal = PastOrderItem::query()
@@ -212,10 +277,18 @@ class DashboardController extends Controller
             $expenseQuery = Expense::query();
             // Map PastOrder created_at filters to Expense date
             $expenseQuery->whereYear('date', $year);
-            if ($month) $expenseQuery->whereMonth('date', $month);
-            if ($day) $expenseQuery->whereDay('date', $day);
-            if ($request->filled('brand_id')) $expenseQuery->where('brand_id', $request->brand_id);
-            if ($request->filled('branch_id')) $expenseQuery->where('branch_id', $request->branch_id);
+            if ($month) {
+                $expenseQuery->whereMonth('date', $month);
+            }
+            if ($day) {
+                $expenseQuery->whereDay('date', $day);
+            }
+            if ($request->filled('brand_id')) {
+                $expenseQuery->where('brand_id', $request->brand_id);
+            }
+            if ($request->filled('branch_id')) {
+                $expenseQuery->where('branch_id', $request->branch_id);
+            }
             $expenseTotal = (float) $expenseQuery->sum('amount');
 
             // Monthly profit vs expenses trend
@@ -223,28 +296,28 @@ class DashboardController extends Controller
                 ->join('past_order_items as poi', 'poi.past_order_id', '=', 'past_orders.id')
                 ->join('products as p', 'p.id', '=', 'poi.product_id')
                 ->whereYear('past_orders.created_at', $year)
-                ->when($request->filled('brand_id'), fn($q) => $q->where('past_orders.brand_id', $request->brand_id))
-                ->when($request->filled('branch_id'), fn($q) => $q->where('past_orders.branch_id', $request->branch_id))
-                ->when($month, fn($q) => $q->whereMonth('past_orders.created_at', $month))
-                ->when($day, fn($q) => $q->whereDay('past_orders.created_at', $day))
+                ->when($request->filled('brand_id'), fn ($q) => $q->where('past_orders.brand_id', $request->brand_id))
+                ->when($request->filled('branch_id'), fn ($q) => $q->where('past_orders.branch_id', $request->branch_id))
+                ->when($month, fn ($q) => $q->whereMonth('past_orders.created_at', $month))
+                ->when($day, fn ($q) => $q->whereDay('past_orders.created_at', $day))
                 ->groupBy('month')
                 ->orderBy('month')
                 ->get()
-                ->mapWithKeys(function($row) {
-                    return [date('M', mktime(0,0,0,$row->month,1)) => (float) $row->profit_total];
+                ->mapWithKeys(function ($row) {
+                    return [date('M', mktime(0, 0, 0, $row->month, 1)) => (float) $row->profit_total];
                 });
 
             $monthlyExpenseTrend = Expense::selectRaw('MONTH(date) as month, SUM(amount) as total')
                 ->whereYear('date', $year)
-                ->when($request->filled('brand_id'), fn($q) => $q->where('brand_id', $request->brand_id))
-                ->when($request->filled('branch_id'), fn($q) => $q->where('branch_id', $request->branch_id))
-                ->when($month, fn($q) => $q->whereMonth('date', $month))
-                ->when($day, fn($q) => $q->whereDay('date', $day))
+                ->when($request->filled('brand_id'), fn ($q) => $q->where('brand_id', $request->brand_id))
+                ->when($request->filled('branch_id'), fn ($q) => $q->where('branch_id', $request->branch_id))
+                ->when($month, fn ($q) => $q->whereMonth('date', $month))
+                ->when($day, fn ($q) => $q->whereDay('date', $day))
                 ->groupBy('month')
                 ->orderBy('month')
                 ->get()
-                ->mapWithKeys(function($row) {
-                    return [date('M', mktime(0,0,0,$row->month,1)) => (float) $row->total];
+                ->mapWithKeys(function ($row) {
+                    return [date('M', mktime(0, 0, 0, $row->month, 1)) => (float) $row->total];
                 });
 
             return response()->json([
@@ -283,16 +356,17 @@ class DashboardController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to retrieve analytics: ' . $e->getMessage()
+                'message' => 'Failed to retrieve analytics: ' . $e->getMessage(),
             ], 500);
         }
     }
 
     public function showView()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('Login');
         }
+
         return view('owner.dashboard');
     }
 }

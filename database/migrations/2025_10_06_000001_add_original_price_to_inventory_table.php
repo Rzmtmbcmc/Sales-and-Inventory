@@ -4,15 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::table('inventory', function (Blueprint $table) {
-            if (!Schema::hasColumn('inventory', 'original_price')) {
+            if (! Schema::hasColumn('inventory', 'original_price')) {
                 $table->decimal('original_price', 10, 2)->nullable()->after('quantity');
             }
         });

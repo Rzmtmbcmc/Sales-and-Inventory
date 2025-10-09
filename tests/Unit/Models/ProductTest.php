@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
-use App\Models\Product;
 use App\Models\Inventory;
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
@@ -19,7 +19,7 @@ class ProductTest extends TestCase
             'original_price' => 12.00,
             'quantity' => 50,
             'perishable' => 'yes',
-            'expiration_date' => '2025-12-31'
+            'expiration_date' => '2025-12-31',
         ]);
 
         $this->assertInstanceOf(Product::class, $product);
@@ -37,7 +37,7 @@ class ProductTest extends TestCase
             'price' => 25.00,
             'original_price' => 15.00,
             'quantity' => 100,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $expectedProfit = (float)$product->price - (float)$product->original_price;
@@ -51,7 +51,7 @@ class ProductTest extends TestCase
         Product::create(['name' => 'High Stock', 'price' => 20.00, 'quantity' => 100, 'perishable' => 'no']);
 
         $lowStockProducts = Product::lowStock()->get();
-        
+
         $this->assertEquals(1, $lowStockProducts->count());
         $this->assertEquals('Low Stock', $lowStockProducts->first()->name);
     }
@@ -63,7 +63,7 @@ class ProductTest extends TestCase
         Product::create(['name' => 'High Stock', 'price' => 20.00, 'quantity' => 100, 'perishable' => 'no']);
 
         $outOfStockProducts = Product::outOfStock()->get();
-        
+
         $this->assertEquals(1, $outOfStockProducts->count());
         $this->assertEquals('Out of Stock', $outOfStockProducts->first()->name);
     }
@@ -72,14 +72,14 @@ class ProductTest extends TestCase
     {
         $product = new Product();
         $fillable = $product->getFillable();
-        
+
         $expectedFillable = [
             'name',
             'price',
             'original_price',
             'quantity',
             'perishable',
-            'expiration_date'
+            'expiration_date',
         ];
 
         $this->assertEquals($expectedFillable, $fillable);
@@ -93,7 +93,7 @@ class ProductTest extends TestCase
             'original_price' => '15.50',
             'quantity' => '100',
             'perishable' => 'yes',
-            'expiration_date' => '2025-12-31'
+            'expiration_date' => '2025-12-31',
         ]);
 
         // Laravel decimal casting returns strings, not floats
@@ -111,12 +111,12 @@ class ProductTest extends TestCase
             'name' => 'Inventory Test',
             'price' => 20.00,
             'quantity' => 50,
-            'perishable' => 'no'
+            'perishable' => 'no',
         ]);
 
         $inventory = Inventory::create([
             'product_id' => $product->id,
-            'quantity' => 25
+            'quantity' => 25,
         ]);
 
         $this->assertInstanceOf(Inventory::class, $product->inventory);
@@ -127,10 +127,10 @@ class ProductTest extends TestCase
     {
         // Test that required fields are enforced
         $this->expectException(\Illuminate\Database\QueryException::class);
-        
+
         Product::create([
             'price' => 25.00,
-            'quantity' => 50
+            'quantity' => 50,
             // Missing required 'name' field should cause an error
         ]);
     }
