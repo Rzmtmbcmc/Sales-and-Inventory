@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Expense;
 
 class DashboardController extends Controller
 {
@@ -202,6 +203,50 @@ class DashboardController extends Controller
                 });
             if ($monthlySalesTrend->isEmpty()) $monthlySalesTrend = collect(['No Data' => 0]);
 
+            // Compute profit vs expenses in the same filtered period dynamically from past_order_items and product original_price
+            $profitTotal = PastOrderItem::query()
+                ->whereIn('past_order_id', $pastOrderIds)
+                ->join('products', 'past_order_items.product_id', '=', 'products.id')
+                ->selectRaw('COALESCE(SUM((past_order_items.price - COALESCE(products.original_price, 0)) * past_order_items.quantity),0) as profit_total')
+                ->value('profit_total');
+            $expenseQuery = Expense::query();
+            // Map PastOrder created_at filters to Expense date
+            $expenseQuery->whereYear('date', $year);
+            if ($month) $expenseQuery->whereMonth('date', $month);
+            if ($day) $expenseQuery->whereDay('date', $day);
+            if ($request->filled('brand_id')) $expenseQuery->where('brand_id', $request->brand_id);
+            if ($request->filled('branch_id')) $expenseQuery->where('branch_id', $request->branch_id);
+            $expenseTotal = (float) $expenseQuery->sum('amount');
+
+            // Monthly profit vs expenses trend
+            $monthlyProfitTrend = PastOrder::selectRaw('MONTH(past_orders.created_at) as month, COALESCE(SUM((poi.price - COALESCE(p.original_price,0)) * poi.quantity),0) as profit_total')
+                ->join('past_order_items as poi', 'poi.past_order_id', '=', 'past_orders.id')
+                ->join('products as p', 'p.id', '=', 'poi.product_id')
+                ->whereYear('past_orders.created_at', $year)
+                ->when($request->filled('brand_id'), fn($q) => $q->where('past_orders.brand_id', $request->brand_id))
+                ->when($request->filled('branch_id'), fn($q) => $q->where('past_orders.branch_id', $request->branch_id))
+                ->when($month, fn($q) => $q->whereMonth('past_orders.created_at', $month))
+                ->when($day, fn($q) => $q->whereDay('past_orders.created_at', $day))
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get()
+                ->mapWithKeys(function($row) {
+                    return [date('M', mktime(0,0,0,$row->month,1)) => (float) $row->profit_total];
+                });
+
+            $monthlyExpenseTrend = Expense::selectRaw('MONTH(date) as month, SUM(amount) as total')
+                ->whereYear('date', $year)
+                ->when($request->filled('brand_id'), fn($q) => $q->where('brand_id', $request->brand_id))
+                ->when($request->filled('branch_id'), fn($q) => $q->where('branch_id', $request->branch_id))
+                ->when($month, fn($q) => $q->whereMonth('date', $month))
+                ->when($day, fn($q) => $q->whereDay('date', $day))
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get()
+                ->mapWithKeys(function($row) {
+                    return [date('M', mktime(0,0,0,$row->month,1)) => (float) $row->total];
+                });
+
             return response()->json([
                 'success' => true,
                 'product_sales' => $productSales,
@@ -228,6 +273,12 @@ class DashboardController extends Controller
                 'revenue_loss_per_product' => $revenueLossPerProduct,
                 'inventory_status' => $inventoryStatus,
                 'monthly_sales_trend' => $monthlySalesTrend,
+                'profit_vs_expenses' => [
+                    'profit_total' => $profitTotal,
+                    'expense_total' => $expenseTotal,
+                    'monthly_profit' => $monthlyProfitTrend,
+                    'monthly_expense' => $monthlyExpenseTrend,
+                ],
             ]);
         } catch (Exception $e) {
             return response()->json([

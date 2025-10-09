@@ -8,6 +8,8 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use App\Models\Inventory;
 
 class ProductController extends Controller
 {
@@ -23,9 +25,10 @@ class ProductController extends Controller
 
         // Get all products for dropdowns if 'all' parameter is present
         if ($request->has('all')) {
-            $products = $query->get(['id', 'name']);
+            $products = $query->get();
             return response()->json($products);
         }
+        
         // Search by product name
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -55,25 +58,23 @@ class ProductController extends Controller
         $perPage = $request->get('per_page', 10);
         $products = $query->paginate($perPage);
 
-        return response()->json($products);
+        return response()->json($products)
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
-      public function store(StoreProductRequest $request): JsonResponse
-   {
-       $validatedData = $request->validated();
-       
-       // Ensure expiration_date is properly handled
-       /*if (isset($validatedData['expiration_date'])) {
-           $validatedData['expiration_date'] = $validatedData['expiration_date'] ?: null;
-       }*/
+    public function store(StoreProductRequest $request): JsonResponse
+    {
+        $validatedData = $request->validated();
 
-       $product = Product::create($validatedData);
+        $product = Product::create($validatedData);
 
-       return response()->json([
-           'message' => 'Product created successfully',
-           'data' => $product
-       ], 201);
-   }
+        return response()->json([
+            'message' => 'Product created successfully',
+            'data' => $product
+        ], 201);
+    }
 
     /**
      * Display the specified product
@@ -97,11 +98,6 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
         $validatedData = $request->validated();
-        
-        // Ensure expiration_date is properly handled
-        /*if (isset($validatedData['expiration_date'])) {
-            $validatedData['expiration_date'] = $validatedData['expiration_date'] ?: null;
-        }*/
 
         $product->update($validatedData);
 

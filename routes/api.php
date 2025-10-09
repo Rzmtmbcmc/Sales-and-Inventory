@@ -7,6 +7,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\UserHeartbeatController;
 
 
@@ -36,6 +37,7 @@ Route::get('rejected-goods', [App\Http\Controllers\RejectedGoodController::class
 Route::get('orders/final-summary', [OrderController::class, 'finalSummary']);
 Route::get('orders/statistics', [OrderController::class, 'statistics']);
 Route::apiResource('orders', OrderController::class);
+Route::apiResource('expenses', ExpenseController::class);
 Route::get('branches', function() {
     return response()->json([
         'data' => \App\Models\Branch::with('brand')->get()->map(function($branch) {

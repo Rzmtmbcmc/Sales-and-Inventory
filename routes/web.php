@@ -26,6 +26,7 @@ use App\Http\Controllers\UserHeartbeatController;
 use App\Http\Controllers\Owner\PastOrderController;
 use App\Http\Controllers\Owner\DiscrepancyReportController;
 use App\Http\Controllers\Owner\PastOrdersSummaryController;
+use App\Http\Controllers\Owner\ExpenseController as OwnerExpenseController;
 
 // Manager Controllers
 use App\Http\Controllers\Manager\ProductController as ManagerProductController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\Manager\PastOrderController as ManagerPastOrderControll
 use App\Http\Controllers\Manager\RejectedGoodsController as ManagerRejectedGoodsController;
 use App\Http\Controllers\Manager\DiscrepancyReportController as ManagerDiscrepancyReportController;
 use App\Http\Controllers\Manager\PastOrdersSummaryController as ManagerPastOrdersSummaryController;
+use App\Http\Controllers\Manager\ExpenseController as ManagerExpenseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +96,38 @@ Route::get('password/reset', [App\Http\Controllers\Auth\ForgotPasswordController
 Route::post('password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/update', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
+
+// Password Reset Testing Route (Remove in production)
+Route::get('/test-password-reset', function () {
+    // Check if all required components exist
+    $checks = [
+        'Password Reset Token Table' => \Schema::hasTable('password_reset_tokens'),
+        'User Model Exists' => class_exists(\App\Models\User::class),
+        'ForgotPasswordController Exists' => class_exists(\App\Http\Controllers\Auth\ForgotPasswordController::class),
+        'ResetPasswordController Exists' => class_exists(\App\Http\Controllers\Auth\ResetPasswordController::class),
+        'Mail Configuration' => !empty(config('mail.mailers.smtp')),
+        'Password Reset Config' => !empty(config('auth.passwords.users')),
+    ];
+
+    // Test user creation
+    $testUser = \App\Models\User::first();
+    if (!$testUser) {
+        $checks['Test User Available'] = false;
+    } else {
+        $checks['Test User Available'] = true;
+        $checks['Test User Email'] = $testUser->email;
+    }
+
+    // Check mail configuration
+    $mailConfig = [
+        'MAIL_MAILER' => env('MAIL_MAILER'),
+        'MAIL_HOST' => env('MAIL_HOST'),
+        'MAIL_PORT' => env('MAIL_PORT'),
+        'MAIL_FROM_ADDRESS' => env('MAIL_FROM_ADDRESS'),
+    ];
+
+    return view('password-reset-test', compact('checks', 'mailConfig'));
+})->name('test.password.reset');
 
 /*
 |--------------------------------------------------------------------------
@@ -170,6 +204,9 @@ Route::middleware('auth')->prefix('owner')->name('owner.')->group(function () {
     Route::get('past-orders/test-delete', [PastOrderController::class, 'testDelete'])->name('past-orders.testDelete');
     Route::get('past-orders/summary-report', [PastOrdersSummaryController::class, 'exportSummaryReport'])->name('past-orders.summaryReport');
     Route::resource('past-orders', PastOrderController::class);
+
+    // Expenses (Owner)
+    Route::get('expenses', [OwnerExpenseController::class, 'showView'])->name('expenses');
 });
 
 /*
@@ -202,4 +239,7 @@ Route::middleware('auth')->prefix('manager')->name('manager.')->group(function (
     Route::get('past-orders/test-delete', [ManagerPastOrderController::class, 'testDelete'])->name('past-orders.testDelete');
     Route::get('past-orders/summary-report', [ManagerPastOrdersSummaryController::class, 'exportSummaryReport'])->name('past-orders.summaryReport');
     Route::resource('past-orders', ManagerPastOrderController::class);
+
+    // Expenses
+    Route::get('expenses', [ManagerExpenseController::class, 'showView'])->name('expenses');
 });

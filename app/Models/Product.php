@@ -19,6 +19,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'price',
+        'original_price',
         'quantity',
         'perishable',
         'expiration_date'
@@ -26,9 +27,15 @@ class Product extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
+        'original_price' => 'decimal:2',
         'quantity' => 'integer',
         'expiration_date' => 'date'
     ];
+
+    public function inventory()
+    {
+        return $this->hasOne(\App\Models\Inventory::class, 'product_id');
+    }
 
     // Scope for low stock products
     public function scopeLowStock($query)

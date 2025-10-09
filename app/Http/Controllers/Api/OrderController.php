@@ -528,6 +528,7 @@ class OrderController extends Controller
 
                         // Transfer the order items to the past_order_items table
                         foreach ($order->items as $item) {
+                            $product = Product::findOrFail($item->product_id);
                             PastOrderItem::create([
                                 'past_order_id' => $pastOrder->id,
                                 'product_id' => $item->product_id,
@@ -536,7 +537,6 @@ class OrderController extends Controller
                             ]);
 
                             // Decrement product inventory
-                            $product = Product::findOrFail($item->product_id);
                             $product->decrement('quantity', $item->quantity);
                             
                             // Set quantity to zero instead of deleting product
@@ -545,6 +545,7 @@ class OrderController extends Controller
                                 $product->save();
                             }
                         }
+                        // No profit persistence as requested
                         
                         // Delete the original order
                         $order->delete();
