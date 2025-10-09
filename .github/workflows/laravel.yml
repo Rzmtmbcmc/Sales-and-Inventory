@@ -50,7 +50,14 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-        cache: 'npm'
+
+    - name: Cache Node modules
+      uses: actions/cache@v4
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
 
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -61,7 +68,7 @@ jobs:
     - name: Install NPM Dependencies (if package.json exists)
       run: |
         if [ -f package.json ]; then
-          npm ci
+          npm install
         else
           echo "No package.json found, skipping npm install"
         fi
