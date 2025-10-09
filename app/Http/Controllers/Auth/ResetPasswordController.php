@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use App\Models\User;
 
 class ResetPasswordController extends Controller
 {
@@ -39,7 +39,7 @@ class ResetPasswordController extends Controller
     {
         return view('auth.passwords.reset')->with([
             'token' => $token,
-            'email' => $request->email
+            'email' => $request->email,
         ]);
     }
 
@@ -57,7 +57,8 @@ class ResetPasswordController extends Controller
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
         $response = $this->broker()->reset(
-            $this->credentials($request), function ($user, $password) {
+            $this->credentials($request),
+            function ($user, $password) {
                 $this->resetPassword($user, $password);
             }
         );
@@ -103,7 +104,10 @@ class ResetPasswordController extends Controller
     protected function credentials(Request $request)
     {
         return $request->only(
-            'email', 'password', 'password_confirmation', 'token'
+            'email',
+            'password',
+            'password_confirmation',
+            'token'
         );
     }
 

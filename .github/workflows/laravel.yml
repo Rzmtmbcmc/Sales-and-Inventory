@@ -54,6 +54,7 @@ jobs:
 
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+<<<<<<< HEAD
 
     - name: Install Composer Dependencies
       run: composer install --${{ matrix.dependency-version }} --no-ansi --no-interaction --no-scripts --no-progress --optimize-autoloader
@@ -67,6 +68,11 @@ jobs:
         fi
 
     - name: Generate Application Key
+=======
+    - name: Install Dependencies
+      run: composer update
+    - name: Generate key
+>>>>>>> dda413df0b2b2d1edcc6541a629c497e5a0ac5d7
       run: php artisan key:generate
 
     - name: Set Directory Permissions

@@ -19,7 +19,7 @@ class ResetPasswordNotification extends BaseResetPassword
             return call_user_func(static::$toMailCallback, $notifiable, $this->token);
         }
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('Reset Password Notification - '.config('app.name'))
             ->line('You are receiving this email because we received a password reset request for your account.')
             ->action('Reset Password', url(config('app.url').route('password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
