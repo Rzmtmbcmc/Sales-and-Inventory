@@ -46,12 +46,14 @@ jobs:
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, mysql, pdo_mysql
         coverage: xdebug
 
-    - name: Setup Node.js
+    - name: Setup Node.js (if package.json exists)
+      if: hashFiles('package.json') != ''
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    - name: Cache Node modules
+    - name: Cache Node modules (if package.json exists)
+      if: hashFiles('package.json') != ''
       uses: actions/cache@v4
       with:
         path: ~/.npm
@@ -66,11 +68,16 @@ jobs:
       run: composer install --${{ matrix.dependency-version }} --no-ansi --no-interaction --no-scripts --no-progress --optimize-autoloader
 
     - name: Install NPM Dependencies (if package.json exists)
+      if: hashFiles('package.json') != ''
+      run: npm install
+
+    - name: Build Assets (if package.json exists and has build script)
+      if: hashFiles('package.json') != ''
       run: |
-        if [ -f package.json ]; then
-          npm install
+        if npm run --silent build 2>/dev/null; then
+          npm run build
         else
-          echo "No package.json found, skipping npm install"
+          echo "No build script found in package.json, skipping asset build"
         fi
 
     - name: Generate Application Key
@@ -92,14 +99,6 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
       run: php artisan migrate --force
-
-    - name: Build Assets (if build script exists)
-      run: |
-        if [ -f package.json ] && npm run --silent build 2>/dev/null; then
-          npm run build
-        else
-          echo "No build script found or no package.json, skipping asset build"
-        fi
 
     - name: Execute Tests (Unit and Feature tests) via PHPUnit
       env:
