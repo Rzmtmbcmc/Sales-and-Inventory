@@ -65,7 +65,12 @@ jobs:
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
     - name: Install Composer Dependencies
-      run: composer install --${{ matrix.dependency-version }} --no-ansi --no-interaction --no-scripts --no-progress --optimize-autoloader
+      run: |
+        if [ "${{ matrix.dependency-version }}" = "prefer-lowest" ]; then
+          composer update --prefer-lowest --no-ansi --no-interaction --no-scripts --no-progress --optimize-autoloader
+        else
+          composer install --no-ansi --no-interaction --no-scripts --no-progress --optimize-autoloader
+        fi
 
     - name: Install NPM Dependencies (if package.json exists)
       if: hashFiles('package.json') != ''
