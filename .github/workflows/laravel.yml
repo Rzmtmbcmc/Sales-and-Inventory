@@ -74,7 +74,7 @@ jobs:
     - name: Install Composer Dependencies
       run: |
         if [ "${{ matrix.dependency-version }}" = "prefer-lowest" ]; then
-          composer update --prefer-lowest --no-ansi --no-interaction --no-progress --optimize-autoloader
+          composer update --prefer-lowest --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
         else
           composer install --no-ansi --no-interaction --no-progress --optimize-autoloader
         fi
@@ -84,6 +84,9 @@ jobs:
 
     - name: Verify Composer Autoload
       run: composer dump-autoload --optimize
+
+    - name: Run Laravel Package Discovery
+      run: php artisan package:discover --ansi
 
     - name: Install NPM Dependencies (if package.json exists)
       if: hashFiles('package.json') != ''
