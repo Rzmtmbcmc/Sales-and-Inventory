@@ -11,7 +11,8 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('brands', function (Blueprint $table) {
-            $table->json('standard_items')->nullable()->after('description');
+            // Avoid MySQL-specific column placement for SQLite portability
+            $table->json('standard_items')->nullable();
         });
     }
 

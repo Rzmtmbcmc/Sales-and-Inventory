@@ -29,16 +29,19 @@ return new class () extends Migration {
         // Recreate dropped columns on rollback
         Schema::table('past_orders', function (Blueprint $table) {
             if (! Schema::hasColumn('past_orders', 'total_profit')) {
-                $table->decimal('total_profit', 12, 2)->default(0)->after('total_amount');
+                // Avoid MySQL-specific column placement for SQLite portability
+                $table->decimal('total_profit', 12, 2)->default(0);
             }
         });
 
         Schema::table('past_order_items', function (Blueprint $table) {
             if (! Schema::hasColumn('past_order_items', 'cost_price')) {
-                $table->decimal('cost_price', 10, 2)->nullable()->after('price');
+                // Avoid MySQL-specific column placement for SQLite portability
+                $table->decimal('cost_price', 10, 2)->nullable();
             }
             if (! Schema::hasColumn('past_order_items', 'profit')) {
-                $table->decimal('profit', 12, 2)->default(0)->after('cost_price');
+                // Avoid MySQL-specific column placement for SQLite portability
+                $table->decimal('profit', 12, 2)->default(0);
             }
         });
     }

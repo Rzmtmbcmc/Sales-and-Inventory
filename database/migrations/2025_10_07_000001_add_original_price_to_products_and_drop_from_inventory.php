@@ -11,18 +11,25 @@ return new class () extends Migration {
         // Add original_price to products if not exists
         Schema::table('products', function (Blueprint $table) {
             if (! Schema::hasColumn('products', 'original_price')) {
-                $table->decimal('original_price', 10, 2)->nullable()->after('price');
+                // Avoid MySQL-specific column placement for SQLite portability
+                $table->decimal('original_price', 10, 2)->nullable();
             }
         });
 
         // Migrate existing data from inventory.original_price to products.original_price
         if (Schema::hasTable('inventory') && Schema::hasColumn('inventory', 'original_price')) {
-            DB::statement(
-                'UPDATE products p 
-                 JOIN inventory i ON i.product_id = p.id 
-                 SET p.original_price = i.original_price 
-                 WHERE i.original_price IS NOT NULL'
-            );
+            // Use a portable approach instead of MySQL-specific UPDATE ... JOIN
+            DB::table('inventory')
+                ->whereNotNull('original_price')
+                ->select('product_id', 'original_price')
+                ->orderBy('product_id')
+                ->chunk(1000, function ($rows) {
+                    foreach ($rows as $row) {
+                        DB::table('products')
+                            ->where('id', $row->product_id)
+                            ->update(['original_price' => $row->original_price]);
+                    }
+                });
         }
 
         // Drop original_price from inventory if exists
@@ -38,18 +45,24 @@ return new class () extends Migration {
         // Re-add column to inventory
         if (Schema::hasTable('inventory') && ! Schema::hasColumn('inventory', 'original_price')) {
             Schema::table('inventory', function (Blueprint $table) {
-                $table->decimal('original_price', 10, 2)->nullable()->after('quantity');
+                // Avoid MySQL-specific column placement for SQLite portability
+                $table->decimal('original_price', 10, 2)->nullable();
             });
         }
 
         // Move data back from products to inventory where possible
         if (Schema::hasTable('inventory') && Schema::hasColumn('inventory', 'original_price')) {
-            DB::statement(
-                'UPDATE inventory i 
-                 JOIN products p ON p.id = i.product_id 
-                 SET i.original_price = p.original_price 
-                 WHERE p.original_price IS NOT NULL'
-            );
+            DB::table('products')
+                ->whereNotNull('original_price')
+                ->select('id', 'original_price')
+                ->orderBy('id')
+                ->chunk(1000, function ($rows) {
+                    foreach ($rows as $row) {
+                        DB::table('inventory')
+                            ->where('product_id', $row->id)
+                            ->update(['original_price' => $row->original_price]);
+                    }
+                });
         }
 
         // Drop from products

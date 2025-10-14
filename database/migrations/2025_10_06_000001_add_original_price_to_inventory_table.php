@@ -12,7 +12,8 @@ return new class () extends Migration {
     {
         Schema::table('inventory', function (Blueprint $table) {
             if (! Schema::hasColumn('inventory', 'original_price')) {
-                $table->decimal('original_price', 10, 2)->nullable()->after('quantity');
+                // Avoid MySQL-specific column placement for SQLite portability
+                $table->decimal('original_price', 10, 2)->nullable();
             }
         });
     }

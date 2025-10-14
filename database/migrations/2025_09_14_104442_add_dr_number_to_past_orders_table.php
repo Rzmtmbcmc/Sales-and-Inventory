@@ -11,7 +11,8 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('past_orders', function (Blueprint $table) {
-            $table->string('dr_number')->nullable()->after('id');
+            // Avoid MySQL-specific column placement for SQLite portability
+            $table->string('dr_number')->nullable();
             $table->index('dr_number'); // Add index for faster lookups
         });
     }
@@ -22,7 +23,8 @@ return new class () extends Migration {
     public function down(): void
     {
         Schema::table('past_orders', function (Blueprint $table) {
-            $table->dropIndex(['dr_number']);
+            // Use the index name to drop index portably
+            $table->dropIndex('past_orders_dr_number_index');
             $table->dropColumn('dr_number');
         });
     }
