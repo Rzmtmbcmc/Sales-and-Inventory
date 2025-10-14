@@ -82,9 +82,9 @@ jobs:
       timeout-minutes: 10
       run: |
         if [ "${{ matrix.dependency-version }}" = "prefer-lowest" ]; then
-          composer update --prefer-lowest --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader --timeout=300
+          composer update --prefer-lowest --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
         else
-          composer install --no-ansi --no-interaction --no-progress --optimize-autoloader --timeout=300
+          composer install --no-ansi --no-interaction --no-progress --optimize-autoloader
         fi
 
     - name: Clear Composer Cache (if needed)
