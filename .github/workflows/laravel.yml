@@ -14,12 +14,7 @@ jobs:
       COMPOSER_NO_INTERACTION: 1
       COMPOSER_PROCESS_TIMEOUT: 300
 
-    strategy:
-      matrix:
-        php-version: ['8.1', '8.2', '8.3']
-        dependency-version: [prefer-lowest, prefer-stable]
-
-    name: PHP ${{ matrix.php-version }} - ${{ matrix.dependency-version }}
+    name: PHP 8.4 - stable
 
     services:
       mysql:
@@ -39,14 +34,14 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.composer/cache/files
-        key: dependencies-php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.json') }}
+        key: dependencies-php-8.4-composer-${{ hashFiles('composer.json') }}
         restore-keys: |
-          dependencies-php-${{ matrix.php-version }}-composer-
+          dependencies-php-8.4-composer-
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: ${{ matrix.php-version }}
+        php-version: '8.4'
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, mysql, pdo_mysql
         coverage: xdebug
 
@@ -81,11 +76,7 @@ jobs:
     - name: Install Composer Dependencies
       timeout-minutes: 10
       run: |
-        if [ "${{ matrix.dependency-version }}" = "prefer-lowest" ]; then
-          composer update --prefer-lowest --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
-        else
-          composer install --no-ansi --no-interaction --no-progress --optimize-autoloader
-        fi
+        composer install --no-ansi --no-interaction --no-progress --optimize-autoloader
 
     - name: Clear Composer Cache (if needed)
       run: composer clear-cache || echo "Cache clear completed"
@@ -158,7 +149,7 @@ jobs:
       run: php artisan test --coverage --coverage-clover=coverage.xml
 
     - name: Upload coverage reports to Codecov
-      if: matrix.php-version == '8.3' && matrix.dependency-version == 'prefer-stable'
+      if: ${{ secrets.CODECOV_TOKEN != '' }}
       uses: codecov/codecov-action@v4
       with:
         file: ./coverage.xml
