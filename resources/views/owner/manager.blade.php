@@ -346,6 +346,10 @@
             }
 
             // 💓 Heartbeat Functions
+            let heartbeatInterval;
+            let heartbeatFailureCount = 0;
+            const MAX_HEARTBEAT_FAILURES = 3;
+
             async function startHeartbeat() {
                 // Send initial heartbeat
                 await sendHeartbeat();
@@ -356,9 +360,64 @@
 
             async function sendHeartbeat() {
                 try {
-                    await apiRequest('/heartbeat', { method: 'POST' });
+                    // Check if user is still authenticated before sending heartbeat
+                    const response = await fetch(`${API_BASE_URL}/heartbeat`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'same-origin',
+                    });
+
+                    // If we get HTML response (like login page), user session expired
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        console.warn('Session expired - heartbeat received HTML instead of JSON');
+                        heartbeatFailureCount++;
+                        
+                        // Stop heartbeat after multiple failures to prevent spam
+                        if (heartbeatFailureCount >= MAX_HEARTBEAT_FAILURES) {
+                            if (heartbeatInterval) {
+                                clearInterval(heartbeatInterval);
+                                console.warn('Heartbeat stopped due to repeated authentication failures');
+                            }
+                        }
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        console.warn('Heartbeat failed with status:', response.status);
+                        heartbeatFailureCount++;
+                        
+                        // Stop heartbeat if unauthorized
+                        if (response.status === 401 || response.status === 403) {
+                            if (heartbeatInterval) {
+                                clearInterval(heartbeatInterval);
+                                console.warn('Heartbeat stopped due to authentication error');
+                            }
+                        }
+                        return;
+                    }
+
+                    // Try to parse JSON only if we confirmed it's JSON
+                    await response.json();
+                    
+                    // Reset failure count on success
+                    heartbeatFailureCount = 0;
                 } catch (error) {
                     console.error('Heartbeat failed:', error);
+                    heartbeatFailureCount++;
+                    
+                    // Stop heartbeat after too many failures
+                    if (heartbeatFailureCount >= MAX_HEARTBEAT_FAILURES) {
+                        if (heartbeatInterval) {
+                            clearInterval(heartbeatInterval);
+                            console.warn('Heartbeat stopped due to repeated errors');
+                        }
+                    }
                     // Don't show notification for heartbeat failures to avoid spam
                 }
             }
@@ -438,11 +497,24 @@
                     // Try to get online status, but don't fail if it errors
                     let onlineStatusMap = {};
                     try {
-                        const onlineStatus = await apiRequest('/online-users');
-                        onlineStatusMap = onlineStatus.reduce((acc, user) => {
-                            acc[user.id] = user.is_online;
-                            return acc;
-                        }, {});
+                        const onlineResponse = await fetch(`${API_BASE_URL}/online-users`, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
+                                'X-Requested-With': 'XMLHttpRequest',
+                            },
+                            credentials: 'same-origin',
+                        });
+
+                        // Check if response is JSON before parsing
+                        const contentType = onlineResponse.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            const onlineStatus = await onlineResponse.json();
+                            onlineStatusMap = onlineStatus.reduce((acc, user) => {
+                                acc[user.id] = user.is_online;
+                                return acc;
+                            }, {});
+                        }
                     } catch (error) {
                         console.warn('Could not fetch online status:', error);
                         // Continue without online status
