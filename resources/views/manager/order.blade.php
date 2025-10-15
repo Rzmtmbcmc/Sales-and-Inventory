@@ -1,4 +1,4 @@
-@extends('manager.olayouts.main')
+@extends('owner.olayouts.main')
 @section('content')
 
     <head>
