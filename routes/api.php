@@ -19,7 +19,12 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::apiResource('managers', App\Http\Controllers\ManagerController::class);
+
+// Manager routes with web middleware for session support (InfinityFree compatibility)
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::apiResource('managers', App\Http\Controllers\ManagerController::class);
+});
+
 Route::apiResource('brands', BrandController::class);
 Route::get('brands/{brand}/standard-items', [BrandController::class, 'getStandardItems']);
 Route::put('brands/{brand}/standard-items', [BrandController::class, 'updateStandardItems']);

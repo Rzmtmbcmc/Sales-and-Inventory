@@ -41,8 +41,8 @@ class ManagerController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'nullable|string|max:20',
-            'notes' => 'nullable|string',
+            'phone' => 'required|nullable|string|max:20',
+            'notes' => 'required|nullable|string',
         ]);
 
         if ($validator->fails()) {

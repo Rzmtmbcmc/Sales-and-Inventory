@@ -247,7 +247,6 @@
                         ...options,
                         headers: {
                             'Accept': 'application/json',
-                            'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': csrfToken,
                             'X-Requested-With': 'XMLHttpRequest',
                             ...options.headers
@@ -255,6 +254,7 @@
                         credentials: 'same-origin',
                     };
 
+                    // Handle FormData separately
                     if (!(options.body instanceof FormData)) {
                         fetchOptions.headers['Content-Type'] = 'application/json';
                         if (options.body && typeof options.body !== 'string') {
@@ -262,20 +262,42 @@
                         }
                     }
 
-                    const response = await fetch(`${API_BASE_URL}${endpoint}`, fetchOptions);
-
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({}));
-                        let errorMessage = errorData.message || `HTTP ${response.status}: ${response.statusText}`;
-                        if (response.status === 422 && errorData.errors) {
-                            const errorMessages = Object.values(errorData.errors).flat();
-                            errorMessage = errorMessages.join(' ');
-                        }
-                        throw new Error(errorMessage);
+                    // Use POST with _method for PUT/DELETE to ensure compatibility with InfinityFree
+                    if (options.method === 'PUT' || options.method === 'DELETE') {
+                        const body = fetchOptions.body ? JSON.parse(fetchOptions.body) : {};
+                        body._method = options.method;
+                        fetchOptions.body = JSON.stringify(body);
+                        fetchOptions.method = 'POST';
                     }
 
-                    const responseText = await response.text();
-                    return responseText ? JSON.parse(responseText) : {};
+                    // Add timeout for InfinityFree (30 seconds)
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 30000);
+                    fetchOptions.signal = controller.signal;
+
+                    try {
+                        const response = await fetch(`${API_BASE_URL}${endpoint}`, fetchOptions);
+                        clearTimeout(timeoutId);
+
+                        if (!response.ok) {
+                            const errorData = await response.json().catch(() => ({}));
+                            let errorMessage = errorData.message || `HTTP ${response.status}: ${response.statusText}`;
+                            if (response.status === 422 && errorData.errors) {
+                                const errorMessages = Object.values(errorData.errors).flat();
+                                errorMessage = errorMessages.join(' ');
+                            }
+                            throw new Error(errorMessage);
+                        }
+
+                        const responseText = await response.text();
+                        return responseText ? JSON.parse(responseText) : {};
+                    } catch (fetchError) {
+                        clearTimeout(timeoutId);
+                        if (fetchError.name === 'AbortError') {
+                            throw new Error('Request timeout - please try again');
+                        }
+                        throw fetchError;
+                    }
                 } catch (error) {
                     console.error('API Error:', error);
                     showNotification(`${error.message}`, 'error');
@@ -323,13 +345,13 @@
                 }
             }
 
-            // � Heartbeat Functions
+            // 💓 Heartbeat Functions
             async function startHeartbeat() {
                 // Send initial heartbeat
                 await sendHeartbeat();
                 
-                // Set up interval for periodic heartbeats
-                heartbeatInterval = setInterval(sendHeartbeat, 3000);
+                // Set up interval for periodic heartbeats (increased to 30 seconds for InfinityFree compatibility)
+                heartbeatInterval = setInterval(sendHeartbeat, 30000); // Changed from 3000ms to 30000ms
             }
 
             async function sendHeartbeat() {
@@ -337,6 +359,7 @@
                     await apiRequest('/heartbeat', { method: 'POST' });
                 } catch (error) {
                     console.error('Heartbeat failed:', error);
+                    // Don't show notification for heartbeat failures to avoid spam
                 }
             }
 
@@ -412,14 +435,18 @@
                 try {
                     const response = await apiRequest(endpoint);
                     
-                    // Get online status for all managers
-                    const onlineStatus = await apiRequest('/online-users');
-                    
-                    // Create a map of online status
-                    const onlineStatusMap = onlineStatus.reduce((acc, user) => {
-                        acc[user.id] = user.is_online;
-                        return acc;
-                    }, {});
+                    // Try to get online status, but don't fail if it errors
+                    let onlineStatusMap = {};
+                    try {
+                        const onlineStatus = await apiRequest('/online-users');
+                        onlineStatusMap = onlineStatus.reduce((acc, user) => {
+                            acc[user.id] = user.is_online;
+                            return acc;
+                        }, {});
+                    } catch (error) {
+                        console.warn('Could not fetch online status:', error);
+                        // Continue without online status
+                    }
 
                     // Merge online status with manager data
                     if (response.data) {

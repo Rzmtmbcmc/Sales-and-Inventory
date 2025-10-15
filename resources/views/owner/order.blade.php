@@ -293,10 +293,18 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Order Items</label>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <label class="mb-0">
+                                        <input type="checkbox" id="selectAllItems" style="width: 16px; height: 16px; margin-right: 8px;">
+                                        Order Items (Select All)
+                                    </label>
+                                </div>
                                 <div id="orderItemsContainer">
                                     <div class="order-item-row">
-                                        <div class="row mb-2">
+                                        <div class="row mb-2 align-items-center">
+                                            <div class="col-md-auto px-2">
+                                                <input type="checkbox" class="item-checkbox" style="width: 18px; height: 18px;">
+                                            </div>
                                             <div class="col-md-4">
                                                 <select class="form-control item-product" required>
                                                     <option value="">Select Product</option>
@@ -306,7 +314,7 @@
                                                 <input type="number" class="form-control item-quantity"
                                                     placeholder="Qty" min="1" required>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <input type="number" class="form-control item-price" placeholder="Price"
                                                     step="0.01" min="0" readonly>
                                             </div>
@@ -322,9 +330,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-success btn-sm" id="addItemBtn">
-                                    <i class="fas fa-plus mr-1"></i>Add Product
-                                </button>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <button type="button" class="btn btn-success btn-sm" id="addItemBtn">
+                                        <i class="fas fa-plus mr-1"></i>Add Product
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm" id="massDeleteBtn" style="display: none;">
+                                        <i class="fas fa-trash-alt mr-1"></i>Delete Selected Items
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -576,6 +589,11 @@
                 $(document).on('click', '.remove-item', removeOrderItem);
                 $(document).on('input', '.item-quantity', calculateOrderTotal);
                 $(document).on('change', '.item-product', handleProductSelection);
+
+                // Mass delete functionality
+                $('#massDeleteBtn').click(handleMassDelete);
+                $(document).on('change', '.item-checkbox', toggleMassDeleteButton);
+                $('#selectAllItems').change(handleSelectAll);
 
                 // Brand/Branch cascading
                 $('#orderBrand').change(handleBrandChange);
@@ -882,7 +900,10 @@
                 // Reset to single item row
                 $('#orderItemsContainer').html(`
                 <div class="order-item-row">
-                    <div class="row mb-2">
+                    <div class="row mb-2 align-items-center">
+                        <div class="col-md-auto px-2">
+                            <input type="checkbox" class="item-checkbox" style="width: 18px; height: 18px;">
+                        </div>
                         <div class="col-md-4">
                             <select class="form-control item-product" required>
                                 <option value="">Select Product</option>
@@ -891,7 +912,7 @@
                         <div class="col-md-2">
                             <input type="number" class="form-control item-quantity" placeholder="Qty" min="1" required>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <input type="number" class="form-control item-price" placeholder="Price" step="0.01" min="0" readonly>
                         </div>
                         <div class="col-md-2">
@@ -915,7 +936,10 @@
             function addOrderItem() {
                 const newItem = $(`
                 <div class="order-item-row">
-                    <div class="row mb-2">
+                    <div class="row mb-2 align-items-center">
+                        <div class="col-md-auto px-2">
+                            <input type="checkbox" class="item-checkbox" style="width: 18px; height: 18px;">
+                        </div>
                         <div class="col-md-4">
                             <select class="form-control item-product" required>
                                 <option value="">Select Product</option>
@@ -924,7 +948,7 @@
                         <div class="col-md-2">
                             <input type="number" class="form-control item-quantity" placeholder="Qty" min="1" required>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <input type="number" class="form-control item-price" placeholder="Price" step="0.01" min="0" readonly>
                         </div>
                         <div class="col-md-2">
@@ -987,6 +1011,55 @@
                 } else {
                     $('.remove-item').hide();
                 }
+            }
+
+            // Mass delete functionality
+            function toggleMassDeleteButton() {
+                const checkedItems = $('.item-checkbox:checked').length;
+                if (checkedItems > 0) {
+                    $('#massDeleteBtn').show();
+                } else {
+                    $('#massDeleteBtn').hide();
+                }
+            }
+
+            function handleMassDelete() {
+                const checkedItems = $('.item-checkbox:checked');
+                const totalItems = $('.order-item-row').length;
+                
+                if (checkedItems.length === 0) {
+                    showNotification('Please select items to delete', 'error');
+                    return;
+                }
+
+                // Prevent deleting all items if it would leave the form empty
+                if (checkedItems.length >= totalItems) {
+                    if (!confirm('This will delete all items. Are you sure?')) {
+                        return;
+                    }
+                }
+
+                // Remove checked items
+                checkedItems.closest('.order-item-row').remove();
+                
+                // Ensure at least one item row exists
+                if ($('.order-item-row').length === 0) {
+                    addOrderItem();
+                }
+                
+                // Update UI
+                updateRemoveButtons();
+                toggleMassDeleteButton();
+                calculateOrderTotal();
+                $('#selectAllItems').prop('checked', false);
+                
+                showNotification(`${checkedItems.length} item(s) deleted successfully`, 'success');
+            }
+
+            function handleSelectAll() {
+                const isChecked = $('#selectAllItems').is(':checked');
+                $('.item-checkbox').prop('checked', isChecked);
+                toggleMassDeleteButton();
             }
 
             async function addStandardItems(standardItems) {
