@@ -728,9 +728,9 @@
                    <tr>
                        <td><strong>#${product.id}</strong></td>
                        <td>${product.name}</td>
-                       <td><span class="product-price">$${parseFloat(product.price).toFixed(2)}</span></td>
-                       <td>$${originalCost.toFixed(2)}</td>
-                       <td>${unitProfit >= 0 ? '<span class="text-success">' : '<span class="text-danger">'}$${unitProfit.toFixed(2)}</span></td>
+                       <td><span class="product-price">₱${parseFloat(product.price).toFixed(2)}</span></td>
+                       <td>₱${originalCost.toFixed(2)}</td>
+                       <td>${unitProfit >= 0 ? '<span class="text-success">' : '<span class="text-danger">'}₱${unitProfit.toFixed(2)}</span></td>
                        <td>
                            <span class="quantity-badge ${quantityClass}">
                                ${product.quantity} ${product.quantity === 1 ? 'unit' : 'units'}
@@ -962,7 +962,6 @@
                 const productData = {
                     name: document.getElementById('productName').value.trim(),
                     price: parseFloat(document.getElementById('productPrice').value),
-                    // Only include original_price if user provided a value
                     ...(document.getElementById('productOriginalCost').value !== '' && {
                         original_price: parseFloat(document.getElementById('productOriginalCost').value)
                     }),
@@ -989,7 +988,7 @@
 
                 if (product) {
                     document.getElementById('deleteProductInfo').textContent =
-                        `${product.name} - $${parseFloat(product.price).toFixed(2)} (Qty: ${product.quantity})`;
+                        `${product.name} - ₱${parseFloat(product.price).toFixed(2)} (Qty: ${product.quantity})`;
                     $('#deleteModal').modal('show');
                 }
             }

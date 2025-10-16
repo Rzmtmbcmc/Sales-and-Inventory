@@ -194,14 +194,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="managerPhone">Phone</label>
-                                        <input type="tel" class="form-control" id="managerPhone" name="phone">
+                                        <label for="managerPhone">Phone <span class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control" id="managerPhone" name="phone" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="managerPassword">Password</label>
-                                        <input type="password" class="form-control" id="managerPassword" name="password" autocomplete="new-password">
+                                        <label for="managerPassword">Password <span class="text-danger">*</span></label>
+                                        <input type="password" class="form-control" id="managerPassword" name="password" autocomplete="new-password" required>
                                         <small id="passwordHelp" class="form-text text-muted" style="display: none;">Leave blank to keep current password.</small>
                                     </div>
                                 </div>
@@ -209,8 +209,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="managerNotes">Notes</label>
-                                        <textarea class="form-control" id="managerNotes" name="notes" rows="3" placeholder="Additional notes..."></textarea>
+                                        <label for="managerNotes">Notes <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="managerNotes" name="notes" rows="3" placeholder="Additional notes..." required></textarea>
                                     </div>
                                 </div>
                             </div>
