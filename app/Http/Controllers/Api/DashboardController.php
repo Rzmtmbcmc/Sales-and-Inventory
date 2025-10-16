@@ -237,8 +237,9 @@ class DashboardController extends Controller
                 // Optionally filter inventory by created_at if needed
             }
             $inventoryStatus = [
-                'In Stock' => $inventoryStatusQuery->where('quantity', '>', 0)->count(),
-                'Low Stock' => Product::where('quantity', '<', 10)->count(),
+                'In Stock' => $inventoryStatusQuery->where('quantity', '>=', 10)->count(),
+                'Low Stock' => Product::whereBetween('quantity', [6, 9])->count(),
+                'Critical' => Product::whereBetween('quantity', [1, 5])->count(),
                 'Out of Stock' => Product::where('quantity', '<=', 0)->count(),
             ];
 
