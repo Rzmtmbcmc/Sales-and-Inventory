@@ -10,7 +10,6 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'brand_id',
         'branch_id',
         'total_amount',
@@ -20,11 +19,6 @@ class Order extends Model
     protected $casts = [
         'total_amount' => 'decimal:2',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function brand()
     {

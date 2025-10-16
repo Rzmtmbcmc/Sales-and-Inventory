@@ -34,8 +34,7 @@ class OrderController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $query = Order::with(['brand', 'branch', 'items'])
-                ->where('user_id', Auth::id()); // Filter by authenticated user
+            $query = Order::with(['brand', 'branch', 'items']);
 
             // Search functionality
             if ($request->has('search') && ! empty($request->search)) {
@@ -150,7 +149,6 @@ class OrderController extends Controller
         try {
             // Create the order
             $order = Order::create([
-                'user_id' => Auth::id(), // Save authenticated user's ID
                 'brand_id' => $request->brand_id,
                 'branch_id' => $request->branch_id,
                 'total_amount' => $request->total_amount,
@@ -204,10 +202,7 @@ class OrderController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            $order = Order::with(['brand', 'branch', 'items'])
-                ->where('id', $id)
-                ->where('user_id', Auth::id()) // Ensure user owns this order
-                ->firstOrFail();
+            $order = Order::with(['brand', 'branch', 'items'])->findOrFail($id);
 
             return response()->json([
                 'success' => true,
@@ -268,9 +263,7 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
-            $order = Order::where('id', $id)
-                ->where('user_id', Auth::id()) // Ensure user owns this order
-                ->firstOrFail();
+            $order = Order::findOrFail($id);
 
             // Update order details
             $order->update([
@@ -332,9 +325,7 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
-            $order = Order::where('id', $id)
-                ->where('user_id', Auth::id()) // Ensure user owns this order
-                ->firstOrFail();
+            $order = Order::findOrFail($id);
 
             // Delete order items first (due to foreign key constraints)
             $order->items()->delete();
@@ -365,8 +356,8 @@ class OrderController extends Controller
     public function finalSummary(): JsonResponse
     {
         try {
-            // Check if any orders exist for the authenticated user
-            $orderCount = Order::where('user_id', Auth::id())->count();
+            // Check if any orders exist
+            $orderCount = Order::count();
 
             if ($orderCount === 0) {
                 return response()->json([
@@ -379,10 +370,8 @@ class OrderController extends Controller
                 ]);
             }
 
-            // Get all orders with relationships for the authenticated user
-            $orders = Order::with(['brand', 'branch', 'items'])
-                ->where('user_id', Auth::id())
-                ->get();
+            // Get all orders with relationships
+            $orders = Order::with(['brand', 'branch', 'items'])->get();
 
             // Group orders by brand, then by branch
             $groupedData = [];

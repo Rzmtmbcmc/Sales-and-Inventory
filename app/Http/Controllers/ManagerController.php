@@ -41,7 +41,7 @@ class ManagerController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone' => ['required', 'regex:/^(09|\+639)\d{9}$|^(0[2-8]|\+63[2-8])\d{7,8}$/'],
+            'phone' => 'required|nullable|string|max:20',
             'notes' => 'required|nullable|string',
         ]);
 
@@ -69,7 +69,7 @@ class ManagerController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $manager->id,
             'password' => 'nullable|string|min:8',
-            'phone' => ['required', 'regex:/^(09|\+639)\d{9}$|^(0[2-8]|\+63[2-8])\d{7,8}$/'],
+            'phone' => 'nullable|string|max:20',
             'notes' => 'nullable|string',
         ]);
 

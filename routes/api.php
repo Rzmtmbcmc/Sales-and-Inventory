@@ -36,13 +36,10 @@ Route::post('products/delete-expired', [App\Http\Controllers\Api\ProductControll
 Route::post('rejected-goods', [App\Http\Controllers\RejectedGoodController::class, 'store']);
 Route::get('rejected-goods', [App\Http\Controllers\RejectedGoodController::class, 'index']);
 
-// Orders and Expenses routes - require authentication
-Route::middleware(['web', 'auth'])->group(function () {
-    Route::get('orders/final-summary', [OrderController::class, 'finalSummary']);
-    Route::get('orders/statistics', [OrderController::class, 'statistics']);
-    Route::apiResource('orders', OrderController::class);
-    Route::apiResource('expenses', ExpenseController::class);
-});
+Route::get('orders/final-summary', [OrderController::class, 'finalSummary']);
+Route::get('orders/statistics', [OrderController::class, 'statistics']);
+Route::apiResource('orders', OrderController::class);
+Route::apiResource('expenses', ExpenseController::class);
 Route::get('branches', function () {
     return response()->json([
         'data' => \App\Models\Branch::with('brand')->get()->map(function ($branch) {
